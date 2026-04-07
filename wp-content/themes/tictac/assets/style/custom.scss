@@ -1,0 +1,393 @@
+$verdeclaro: #b4b847;
+$verde: #305E48;
+$verdeoscuro: #233D33;
+
+.boton-principal {
+    box-shadow: 0px 2.5px 5px 0px #2F2E2D99;
+
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    gap: 10px;
+    background: #b4b847;
+    color: #212221;
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-family: "Montserrat",
+        sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all .3s ease;
+}
+
+.boton-secundario {
+    box-shadow: 0px 2.5px 5px 0px #2F2E2D99;
+
+
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    gap: 10px;
+    background: #305E48;
+    color: white;
+    padding: 15px 35px;
+    border-radius: 50px;
+    font-family: "Montserrat",
+        sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: all .3s ease;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+.containerancho {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.containerancho2 {
+    width: 90%;
+    margin: 0 auto;
+}
+
+
+
+html {
+    margin: 0px !important;
+}
+
+
+/* Animaciones */
+@keyframes fadeInContainer {
+    from {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes autoHover {
+    0% {
+        transform: scale(1);
+        background-color: #D72173;
+    }
+
+    10%,
+    90% {
+        transform: scale(1.06);
+        background-color: #2E2D2C;
+    }
+
+    100% {
+        transform: scale(1);
+        background-color: #D72173;
+    }
+}
+
+/* Banner lateral flotante */
+.banner_lateral {
+    position: fixed;
+    right: 20px;
+    top: 80%;
+    transform: translateY(-50%);
+    z-index: 9999;
+}
+
+.banner_lateral .sticky-header {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background-color: white;
+    border-radius: 50px;
+    padding: 18px;
+    animation: fadeInContainer 0.4s ease-out;
+    box-shadow: 0 0 12px 0 rgba(47, 46, 45, 0.25);
+}
+
+/* Animación inicial para cada item */
+.banner_lateral .sticky-header section.animate-item {
+    opacity: 0;
+    animation: slideInUp 0.8s ease-out forwards;
+}
+
+/* Auto-hover después de que aparezcan todos los elementos */
+.banner_lateral .sticky-header section:first-child .borde_int {
+    animation: autoHover 2.5s ease-in-out 5s;
+}
+
+.banner_lateral .sticky-header section:nth-child(2) .borde_int {
+    animation: autoHover 2.5s ease-in-out 7.5s;
+}
+
+.banner_lateral .sticky-header section:nth-child(3) .borde_int {
+    animation: autoHover 2.5s ease-in-out 10s;
+}
+
+.borde_int {
+    border-radius: 50%;
+    display: flex;
+    align-content: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    transition: transform 0.3s ease;
+}
+
+.borde_int:hover {
+
+
+    transform: scale(1.06);
+}
+
+/* Estilo común para todos los botones */
+.banner_lateral .sticky-header section .borde_int {
+    position: relative;
+}
+
+/* Primer botón */
+.banner_lateral .sticky-header section:first-child .borde_int::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Segundo botón */
+.banner_lateral .sticky-header section:nth-child(2) .borde_int::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Tercer botón */
+.banner_lateral .sticky-header section:nth-child(3) .borde_int::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+/* Hover para todos los botones */
+.banner_lateral .sticky-header section:hover .borde_int::after {
+    opacity: 1;
+}
+
+.social-iconsresponsive {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    position: relative;
+}
+
+.social-iconsresponsive::before,
+.social-iconsresponsive::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background-color: #ccc;
+}
+
+.social-iconsresponsive::before {
+    margin-right: 15px;
+}
+
+.social-iconsresponsive::after {
+    margin-left: 15px;
+}
+
+.social-iconsresponsive a {
+    display: inline-flex;
+    width: 20px;
+    height: 20px;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease;
+    margin: 0 10px;
+}
+
+.social-iconsresponsive a:hover {
+    transform: scale(1.1);
+}
+
+.social-iconsresponsive img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+/* Responsive para móvil */
+@media (max-width: 1500px) {
+    .custom-product-container {
+        margin-top: 20px !important;
+    }
+
+    .introtienda-imagen {
+        top: 25%;
+        right: 4%;
+    }
+
+    .custom-postblog-content {
+        margin-top: 60px;
+    }
+
+    .containerancho {
+        width: 95%;
+        margin: 0 auto;
+    }
+
+    .custom-btn {
+        width: 100% !important;
+    }
+
+    .custom-related-info h4 {
+        font-size: 22px;
+    }
+
+
+
+    .garantia-item {
+        flex-direction: column;
+    }
+
+    .custom-price-container {
+        justify-content: space-between;
+    }
+
+
+    .banner_lateral {
+        right: auto;
+        top: auto;
+        bottom: 5px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+
+
+    .social-icons {
+        display: none !important;
+    }
+
+    .banner_lateral .sticky-header {
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+        padding: 12px;
+    }
+
+    .banner_lateral .sticky-header section {
+        flex: 1;
+        max-width: 120px;
+    }
+
+    /* Ajuste de animación para móvil */
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+
+
+    .logo-central {
+        order: 1 !important;
+    }
+
+    .info-contacto {
+        order: 2 !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 80%;
+        margin: 0 auto;
+        margin-top: -80px;
+    }
+
+    .menu-politicas {
+        order: 3 !important;
+    }
+
+    .footer {
+        padding-bottom: 120px;
+    }
+
+    .social-icons {
+        display: none;
+    }
+
+    .logo-central img {
+        top: -90px;
+        position: relative;
+        width: 90%;
+    }
+
+    .contacto-item {
+        text-align: center;
+    }
+}
+
+
+@media (max-width: 800px) {
+
+    .boton-principal,
+    .boton-secundario {
+        font-size: 11px;
+        padding: 15px 13px;
+    }
+}

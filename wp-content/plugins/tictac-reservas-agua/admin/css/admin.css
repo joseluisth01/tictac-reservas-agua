@@ -1,0 +1,10 @@
+/* TicTac Reservas Agua - Admin Styles */
+/* Por implementar en la fase de desarrollo del admin panel */
+.ttra-admin-wrap { max-width: 1200px; }
+.ttra-admin-card { background: #fff; border: 1px solid #ccd0d4; border-radius: 4px; padding: 20px; margin-bottom: 20px; }
+.ttra-admin-card h2 { margin-top: 0; }
+.ttra-stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.ttra-stat-card { background: #fff; border-left: 4px solid #0073aa; padding: 16px; }
+.ttra-stat-card__value { font-size: 28px; font-weight: 700; }
+.ttra-stat-card__label { color: #666; margin-top: 4px; }
+.ttra-badge { display: inline-block; padding: 3px 8px; border-radius: 3px; color: #fff; font-size: 12px; }

@@ -1,0 +1,297 @@
+/* Empresas */
+.empresas {
+    padding: 0;
+    margin-top: 80px;
+}
+
+.empresas .containerancho {
+    box-shadow: 0px 0px 10px 0px #05050640;
+    border-radius: 40px;
+    overflow: hidden;
+}
+
+/* Header con título */
+.empresas-header {
+    background: var(--Lila-TICTAC, #817DBA);
+    padding: 25px 10px;
+    text-align: center;
+}
+
+.empresas-titulo {
+    color: var(--Blanco, #FFF);
+    font-family: Montserrat, sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 115%;
+    letter-spacing: -1px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* Contenido del slider */
+.empresas-contenido {
+    background: #FFFFFF;
+    padding: 50px;
+    position: relative;
+}
+
+/* CRÍTICO: Sobrescribir el visibility hidden de Splide */
+.slider-empresas,
+.slider-empresas .splide__track,
+.slider-empresas .splide__list,
+.slider-empresas .splide__slide {
+    visibility: visible !important;
+}
+
+/* Splide Slider */
+.slider-empresas {
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.slider-empresas .splide__track {
+    overflow: visible;
+}
+
+.slider-empresas .splide__list {
+    align-items: center;
+    display: flex;
+}
+
+.slider-empresas .splide__slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Logo de empresa */
+.empresa-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 30px;
+    border-left: 1px solid #E0E0E0;
+    border-right: none;
+    width: 100%;
+}
+
+.empresa-logo img {
+    max-width: 150px;
+    max-height: 80px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Controles del slider */
+.empresas-controles {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    z-index: 10;
+}
+
+/* Navegación (flechas) - JUNTAS */
+.empresas-navigation {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.empresas-prev :hover,
+.empresas-next :hover{
+    background-color: transparent !important;
+    border-color: transparent !important;
+}
+
+.empresas-prev,
+.empresas-next {
+    width: 30px;
+    height: 30px;
+    background: transparent;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: static;
+    margin: 0;
+    padding: 0;
+    opacity: 1;
+}
+
+.empresas-prev img,
+.empresas-next img {
+    max-width: 40px;
+    max-height: 40px;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.empresas-prev[disabled],
+.empresas-next[disabled] {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+/* Paginación */
+.empresas-pagination {
+    position: static;
+    display: flex;
+    gap: 8px;
+    width: auto;
+}
+
+.empresas-pagination .pagination-dot {
+    width: 10px;
+    height: 10px;
+    background: #D0D0D0;
+    opacity: 1;
+    transition: all 0.3s ease;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.empresas-pagination .pagination-dot.active {
+    background: var(--Negro-TICTAC, #2E2D2C);
+}
+
+.empresas-pagination li {
+    margin: 0;
+}
+
+.empresas-pagination button {
+    width: 10px;
+    height: 10px;
+    background: #D0D0D0;
+    opacity: 1;
+    transition: all 0.3s ease;
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.empresas-pagination button.is-active {
+    background: var(--Negro-TICTAC, #2E2D2C);
+}
+
+/* Enlace centrado */
+.empresas-enlace-contenedor {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.empresas-enlace {
+    border-radius: 40px;
+    background: var(--Rosa-01-TICTAC, #D72173);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, .5);
+    transition: .3s all;
+    color: var(--Blanco, #FFF);
+    text-align: center;
+    border: none !important;
+    font-family: Montserrat;
+    font-size: 17px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 115%;
+    letter-spacing: .425px;
+    padding: 15px 90px;
+    cursor: pointer;
+    white-space: nowrap;
+    width: auto;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.empresas-enlace:hover{
+    color: var(--Blanco, #FFF);
+    background: var(--Negro-TICTAC, #2E2D2C);
+}
+
+.empresas-next:hover, .empresas-prev:hover{
+    background: #2e2d2c00;
+    color: var(--Blanco, #FFF);
+}
+
+@media (max-width: 800px) {
+    .empresas{
+        margin-top: 50px;
+    }
+
+    .empresas-titulo {
+        font-size: 20px;
+    }
+
+    .empresa-logo{
+        padding: 0px;
+    }
+
+    .empresas-contenido {
+        padding: 25px;
+    }
+
+    .empresa-logo {
+        border-right: none;
+    }
+
+    .empresa-logo img {
+        max-height: 100%;
+        max-width: 100%;
+    }
+
+    .empresas-enlace-contenedor{
+        margin-top: 40px;
+    }
+
+    /* Wrapper del slider con posición relativa */
+    .slider-empresas {
+        position: relative;
+        margin-bottom: 40px;
+    }
+
+    /* Controles reorganizados */
+    .empresas-controles {
+        flex-direction: column;
+        gap: 15px;
+        align-items: center;
+        position: static;
+    }
+
+    /* Navegación con flechas en los laterales */
+    .empresas-navigation {
+        position: absolute;
+        top: 28%;
+        transform: translateY(-50%);
+        left: 0;
+        right: 0;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        pointer-events: none;
+        z-index: 20;
+        padding: 0 10px;
+    }
+
+
+
+    /* Paginación debajo del slider */
+    .empresas-pagination {
+        order: 1;
+        position: static;
+    }
+
+    .empresas-enlace {
+        font-size: 15px;
+        padding: 12px 30px;
+        width: 100%;
+    }
+}

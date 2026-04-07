@@ -1,0 +1,291 @@
+/* ===================================
+   GARANTÍAS AJOS - SECCIÓN
+   =================================== */
+
+.garantiasajos-section {
+    padding: 0px;
+    background: #F5F5F5;
+}
+
+/* ===================================
+   GRID DE ELEMENTOS CON FLEXBOX
+   =================================== */
+
+.garantiasajos-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+
+    /* 2 elementos por fila */
+    &.garantiasajos-grid-2 {
+        .garantiasajos-card {
+            flex: 0 0 calc(50% - 15px);
+        }
+    }
+
+    /* 3 elementos por fila */
+    &.garantiasajos-grid-3 {
+        .garantiasajos-card {
+            flex: 0 0 calc(33.333% - 20px);
+        }
+    }
+
+    /* 4 elementos por fila */
+    &.garantiasajos-grid-4 {
+        .garantiasajos-card {
+            flex: 0 0 calc(25% - 22.5px);
+        }
+    }
+
+    /* 5 elementos por fila */
+    &.garantiasajos-grid-5 {
+        .garantiasajos-card {
+            flex: 0 0 calc(20% - 24px);
+        }
+    }
+}
+
+/* ===================================
+   CARD INDIVIDUAL
+   =================================== */
+
+.garantiasajos-card {
+    background: #FFFFFF;
+    border-radius: 25px;
+    padding: 35px 30px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+}
+
+/* ===================================
+   HEADER (Icono + Título)
+   =================================== */
+
+.garantiasajos-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+}
+
+/* Icono Circular */
+.garantiasajos-card-icono {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background: #F3F4F1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+    }
+}
+
+/* Título */
+.garantiasajos-card-titulo {
+    flex: 1;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    strong {
+        font-family: "DM Serif Display";
+        font-size: 28px;
+        color: #2C3E50;
+        margin: 0;
+
+
+
+        font-weight: 400;
+        font-style: Regular;
+        font-size: 34px;
+        line-height: 36px;
+        letter-spacing: 0.04em;
+
+    }
+
+    p {
+        margin-top: 0;
+    }
+}
+
+/* ===================================
+   TEXTO DESCRIPTIVO
+   =================================== */
+
+.garantiasajos-card-texto {
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #233D33;
+    ;
+
+    p {
+        margin: 0 0 12px 0;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    ul,
+    ol {
+        margin: 0;
+        padding-left: 20px;
+
+        li {
+            margin-bottom: 8px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    strong {
+        font-weight: 600;
+        color: #2C3E50;
+    }
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
+@media (max-width: 1200px) {
+    .garantiasajos-grid {
+
+        /* 5 elementos → 3 por fila */
+        &.garantiasajos-grid-5 {
+            .garantiasajos-card {
+                flex: 0 0 calc(33.333% - 20px);
+            }
+        }
+
+        /* 4 elementos → 3 por fila */
+        &.garantiasajos-grid-4 {
+            .garantiasajos-card {
+                flex: 0 0 calc(33.333% - 20px);
+            }
+        }
+    }
+
+    .garantiasajos-card {
+        padding: 30px 25px;
+    }
+}
+
+@media (max-width: 900px) {
+
+
+    .garantiasajos-grid {
+        gap: 25px;
+
+        /* 5, 4, 3 elementos → 2 por fila */
+        &.garantiasajos-grid-5,
+        &.garantiasajos-grid-4,
+        &.garantiasajos-grid-3 {
+            .garantiasajos-card {
+                flex: 0 0 calc(50% - 12.5px);
+            }
+        }
+    }
+
+    .garantiasajos-card-titulo {
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        strong {
+            font-size: 20px;
+        }
+    }
+
+    .garantiasajos-card-icono {
+        width: 70px;
+        height: 70px;
+
+        img {
+            width: 45px;
+            height: 45px;
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .garantiasajos-section {
+        padding: 30px 0;
+    }
+
+    .garantiasajos-grid {
+        gap: 20px;
+
+        /* Todos los elementos → 1 por fila (100%) */
+        &.garantiasajos-grid-2,
+        &.garantiasajos-grid-3,
+        &.garantiasajos-grid-4,
+        &.garantiasajos-grid-5 {
+            .garantiasajos-card {
+                flex: 0 0 100%;
+            }
+        }
+    }
+
+    .garantiasajos-card {
+        padding: 25px 20px;
+        gap: 18px;
+    }
+
+    .garantiasajos-card-header {
+        gap: 15px;
+    }
+
+    .garantiasajos-card-icono {
+        width: 60px;
+        height: 60px;
+
+        img {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    .garantiasajos-card-titulo {
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        strong {
+            font-size: 20px;
+        }
+    }
+
+    .garantiasajos-card-texto {
+        font-size: 14px;
+    }
+}

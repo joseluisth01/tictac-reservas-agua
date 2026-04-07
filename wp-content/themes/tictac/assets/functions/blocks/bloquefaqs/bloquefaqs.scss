@@ -1,0 +1,312 @@
+/* ===================================
+   FAQS - SECCIÓN
+   =================================== */
+.faqs-section {
+    padding-top: 30px;
+    padding-bottom: 30px;
+}
+
+.faqs-wrapper {
+    display: grid;
+    grid-template-columns: 30% 68%;
+    gap: 30px;
+    align-items: stretch;
+}
+
+/* ===================================
+   ESTILOS COMUNES
+   =================================== */
+
+.faqs-etiqueta {
+    display: inline-block;
+    padding: 4px 24px;
+    border-radius: 25px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    text-align: center;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    width: fit-content;
+}
+
+.faqs-etiqueta-verde {
+    background: white;
+    color: #305E48;
+}
+
+.faqs-etiqueta-gris {
+    background: #F3F4F1;
+    color: #305E48;
+}
+
+.faqs-titulo {
+    font-family: "DM Serif Display", serif;
+    font-size: 42px;
+    line-height: 1.2;
+    font-weight: 400;
+    color: white;
+    margin: 0 0 50px 0;
+}
+
+/* ===================================
+   COLUMNA IZQUIERDA
+   =================================== */
+
+.faqs-izquierda {
+    background: #305E48;
+    padding: 40px;
+    border-radius: 50px;
+    display: flex;
+    flex-direction: column;
+}
+
+.faqs-pasos {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 25px;
+    margin-bottom: 40px;
+    flex: 1;
+}
+
+.faqs-paso {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.faqs-paso-icono {
+    flex-shrink: 0;
+
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.faqs-paso-icono img {
+    width: 100%;
+    height: 80px;
+    object-fit: contain;
+}
+
+.faqs-paso-contenido {
+    flex: 1;
+}
+
+.faqs-paso-titulo {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin: 0 0 8px 0;
+}
+
+.faqs-paso-texto {
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+}
+
+/* ===================================
+   COLUMNA DERECHA
+   =================================== */
+
+.faqs-derecha {
+    background-color: white;
+    box-shadow: 0 0 8px 0 rgba(47, 46, 45, 0.15);
+    border-radius: 50px;
+    text-align: center;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.faqs-derecha .faqs-titulo {
+    color: #233D33;
+}
+
+.faqs-paso span{
+    color: white;
+}
+
+.faqs-paso li::marker{
+    color: white;
+}
+
+.faqs-paso b{
+    color: white;
+}
+
+.faqs-acordeon {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 30px;
+    flex: 1;
+    width: 100%;
+}
+
+.faqs-item {
+    background: #F3F4F1;
+    border-radius: 40px;
+    overflow: hidden;
+}
+
+.faqs-pregunta {
+    width: 100%;
+    padding: 20px 25px;
+    background: #F3F4F1;
+    border: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    text-align: left;
+}
+
+.faqs-pregunta h3 {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #233D33;
+    margin: 0;
+    padding-right: 20px;
+}
+
+.faqs-icono {
+    flex-shrink: 0;
+    transition: transform 0.3s ease;
+    color: #233D33;
+}
+
+.faqs-pregunta.active .faqs-icono {
+    transform: rotate(180deg);
+}
+
+.faqs-respuesta {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faqs-respuesta.active {
+    max-height: 500px;
+}
+
+.faqs-respuesta-contenido {
+    padding: 0px 25px 20px 25px;
+}
+
+.faqs-respuesta-contenido p {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    line-height: 1.6;
+    color: #233D33;
+    margin: 0;
+    text-align: left;
+    border-top: 1px solid #233D33;
+    padding-top: 15px;
+}
+
+/* ===================================
+   BOTONES
+   =================================== */
+
+.faqs-boton {
+
+    display: inline-block;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 30px;
+    border-radius: 30px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+    justify-content: center;
+}
+
+.faqs-boton:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.faqs-boton-amarillo {
+    background: #B4B847;
+    color: #1A2E25;
+}
+
+.faqs-boton-verde {
+    background: #305E48;
+    color: white;
+}
+
+.faqs-boton-icono {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+
+@media (max-width: 1100px) {
+    .faqs-wrapper {
+        grid-template-columns: 1fr;
+    }
+
+    .faqs-izquierda,
+    .faqs-derecha {
+        padding: 30px;
+    }
+
+    .faqs-etiqueta {
+        padding: 8px;
+        margin: 0 0 30px 0;
+    }
+
+    .faqs-titulo {
+        font-size: 35px;
+    }
+
+    .faqs-boton {
+        width: 100%;
+    }
+
+    .faqs-pregunta h3 {
+        line-height: 25px;
+        font-size: 16px;
+        padding-right: 5px;
+    }
+
+}
+
+
+@media (max-width: 1100px) {
+    .faqs-titulo {
+        display: flex;
+        justify-content: center;
+        margin: 0 0 30px 0;
+    }
+
+    .faqs-izquierda {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .faqs-boton {
+        font-size: 16px;
+        padding: 14px 0px;
+    }
+}

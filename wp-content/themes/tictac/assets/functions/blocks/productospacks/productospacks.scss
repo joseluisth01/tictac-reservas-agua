@@ -1,0 +1,325 @@
+/* Productos Packs */
+.productospacks {
+    position: relative;
+    width: 100%;
+    padding: 60px 0;
+}
+
+/* Título Principal */
+.productospacks-titulo {
+    font-family: "Public Sans", sans-serif;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #1E3562;
+    text-align: center;
+    margin: 0 0 30px 0;
+    text-transform: uppercase;
+}
+
+.productospacks-parrafo{
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+.productospacks-card ul li{
+color: white !important;
+}
+
+.productospacks-card-active ul li{
+color: #1E3562 !important;
+}
+
+.productospacks-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 25px;
+    margin-bottom: 40px;
+}
+
+/* Cuando solo hay un pack */
+.productospacks-grid-single {
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Card de Pack */
+.productospacks-card {
+    background: #FFFFFF;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.productospacks-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+}
+
+/* Imagen de fondo del Pack */
+.productospacks-card-imagen {
+    position: relative;
+    width: 100%;
+    height: 280px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 15px;
+}
+
+/* Etiqueta superior izquierda (roja) */
+.productospacks-etiqueta {
+    background: #DF1717;
+    color: #FFFFFF;
+    font-family: "Public Sans", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 5px;
+    border-radius: 5px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    line-height: 1.3;
+    text-align: center;
+}
+
+/* Badge de Precio (amarillo) */
+.productospacks-precio {
+    background: #e9a613;
+    color: #1e3562;
+    padding: 10px 15px;
+    top: 0px !important;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 3px 0 rgba(33, 34, 33, 0.50);
+    min-width: 120px;
+    position: absolute;
+    right: 20px;
+}
+
+.productospacks-precio-label {
+    font-family: "Public Sans", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+}
+
+.productospacks-precio-valor {
+    font-family: "Poppins", sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.productospacks-card2-contenido{
+    background-color: #E9A613;
+    color: var(--Azul-LOW-FACTORY, #1E3562);
+}
+
+.productospacks-card2-contenido h3{
+    color: var(--Azul-LOW-FACTORY, #1E3562);
+
+    /* Categorias 03 LOW FACTORY */
+    font-family: "Public Sans";
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 700;
+    letter-spacing: -0.6px;
+    padding: 8px;
+}
+
+/* Contenido inferior del Card */
+.productospacks-card-contenido {
+    background: #1E3562;
+    padding: 20px;
+}
+
+
+.productospacks-card-titulo {
+    font-family: "Public Sans", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #E9A613;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+.productospacks-card-descripcion {
+    color: var(--Blanco, #FFF);
+
+font-family: "Poppins", sans-serif;
+font-size: 15px;
+font-style: normal;
+font-weight: 500;
+line-height: 24px; /* 120% */
+margin: 0px !important;
+}
+
+/* Wrapper del Botón */
+.productospacks-boton-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 0 20px;
+}
+
+/* Botón Ver Todos */
+.productospacks-boton {
+    background: #DF1717;
+    color: #FFFFFF;
+    font-family: "Poppins", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    text-align: center;
+    text-decoration: none;
+    padding: 6px 50px;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    display: inline-block;
+    box-shadow: 0 3px 3px 0 rgba(33, 34, 33, 0.50);
+}
+
+.productospacks-boton:hover {
+    background: #E9A613;
+    color: #1E3562;
+    transform: translateY(-3px);
+}
+
+
+
+@media (max-width: 1100px) {
+    .productospacks {
+        padding: 0px;
+        padding-bottom: 50px;
+    }
+
+    .productospacks-titulo {
+        font-size: 25px;
+        margin-bottom: 30px;
+        padding: 0px;
+        margin-top: 70px;
+    }
+
+    .bloquehero-icono-text p{
+        text-align: center;
+    }
+
+    .productospacks-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 0px;
+        margin-bottom: 30px;
+    }
+
+    .productospacks-card-imagen {
+        height: 220px;
+        padding: 12px;
+    }
+
+    .productospacks-etiqueta {
+        font-size: 10px;
+        padding: 6px 10px;
+    }
+
+    .productospacks-precio {
+        min-width: 100px;
+        padding: 8px 10px;
+    }
+
+    .productospacks-precio-label {
+        font-size: 10px;
+    }
+
+    .productospacks-precio-valor {
+        font-size: 18px;
+    }
+
+    .productospacks-card2-contenido h3{
+        font-size: 19px;
+    }
+
+    .productospacks-card-contenido {
+        padding: 15px;
+    }
+
+    .productospacks-card-titulo {
+        font-size: 16px;
+    }
+
+    .productospacks-card-descripcion {
+        font-size: 14px;
+    }
+    .productospacks-boton-wrapper{
+        padding: 0px;
+    }
+
+    .productospacks-boton {
+        font-size: 18px;
+        padding: 10px 10px;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .productospacks-card-imagen {
+        height: 200px;
+    }
+
+
+}
+
+
+/* Animación de Cards */
+.productospacks-card {
+    transition: all 0.4s ease;
+}
+
+/* Estado activo del precio */
+.productospacks-card-active .productospacks-precio {
+    background: #DF1717;
+    transition: background 0.4s ease;
+}
+
+/* Spans del precio en blanco cuando está activo */
+.productospacks-card-active .productospacks-precio-label,
+.productospacks-card-active .productospacks-precio-valor {
+    color: #FFFFFF;
+    transition: color 0.4s ease;
+}
+
+/* Estado activo del título (fondo azul, letras blancas) */
+.productospacks-card-active .productospacks-card2-contenido {
+    background-color: #1E3562;
+    transition: background-color 0.4s ease;
+}
+
+.productospacks-card-active .productospacks-card2-contenido h3 {
+    color: #FFFFFF;
+    transition: color 0.4s ease;
+}
+
+/* Estado activo del contenido (fondo amarillo, letras azules) */
+.productospacks-card-active .productospacks-card-contenido {
+    background: #E9A613;
+    transition: background 0.4s ease;
+}
+
+.productospacks-card-active .productospacks-card-contenido .productospacks-card-descripcion {
+    color: #1E3562;
+    transition: color 0.4s ease;
+}
+

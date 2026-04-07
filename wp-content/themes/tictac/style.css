@@ -1,0 +1,1886 @@
+.hero-formulario {
+    border-radius: 30px !important;
+}
+
+.hero-valoracion {
+    background: #fff;
+    border-radius: 30px;
+}
+
+/* ============================================
+   ESTILOS PERSONALIZADOS PRODUCTO INDIVIDUAL - AJOS
+   ============================================ */
+
+/* Reset y Contenedor Principal */
+.custom-single-product {
+    width: 100%;
+}
+
+
+
+header .contacto {
+font-family: 'Montserrat';
+font-size: 14px;
+font-style: normal;
+font-weight: 800;
+line-height: 20px; /* 133.333% */
+	box-shadow: 0 2.5px 5px 0 rgba(36, 36, 34, 0.60);
+
+}
+
+
+
+a:focus
+ {
+    outline: 0px !important;
+    outline-offset: 0px !important;
+    box-shadow: 0 0 0 0px #fff, 0 0 0 0px #ffffff !important;
+}
+
+.bloquehero-secundario-descripcion strong{
+	font-weight:700;
+}
+h1{
+	text-shadow: 0px 0px 8px  #00000080;
+
+}
+.custom-product-container {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+
+body a:focus,
+body button:focus,
+body input:focus,
+body textarea:focus,
+body select:focus,
+.header-logo a:focus,
+*:focus{
+    box-shadow: none !important;
+    outline: none !important;
+}
+
+
+
+
+
+/* ============================================
+   PARTE IZQUIERDA (75%)
+   ============================================ */
+
+.custom-product-left {
+    width: 75%;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+/* ============================================
+   PARTE SUPERIOR IZQUIERDA
+   ============================================ */
+
+.custom-product-top {
+    display: flex;
+    gap: 20px;
+}
+
+/* Columna de Imágenes (40%) */
+.custom-images-column {
+    flex: 0 0 40%;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Imagen Principal */
+.custom-main-image {
+    width: 100%;
+    border-radius: 30px;
+    overflow: hidden;
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 8px 0 rgba(47, 46, 45, 0.15);
+    position: relative;
+    background: white;
+    cursor: zoom-in;
+}
+
+.custom-main-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.4s ease;
+}
+
+/* ===== EFECTO DE ZOOM SIMPLE AL PASAR EL MOUSE ===== */
+.custom-main-image:hover img {
+    transform: scale(1.15);
+}
+
+/* ===== ESTILOS PARA PANTALLA COMPLETA ===== */
+.custom-fullscreen-modal {
+    display: block;
+    position: fixed;
+    z-index: 999999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0);
+    backdrop-filter: blur(0px);
+    transition: all 0.3s ease;
+    opacity: 0;
+}
+
+.custom-fullscreen-modal.active {
+    background-color: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(5px);
+    opacity: 1;
+}
+
+.custom-fullscreen-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+}
+
+.custom-fullscreen-content img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.3s ease;
+}
+
+.custom-fullscreen-modal.active .custom-fullscreen-content img {
+    transform: scale(1);
+}
+
+.custom-fullscreen-close {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    color: #fff;
+    font-size: 50px;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    line-height: 1;
+}
+
+.custom-fullscreen-close:hover {
+    color: #3D5A4F;
+    background: rgba(255, 255, 255, 0.2);
+    transform: rotate(90deg);
+}
+
+/* Galería de Miniaturas */
+.custom-thumbnails-gallery {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.custom-thumbnail {
+    width: calc(25% - 8px);
+    aspect-ratio: 1 / 1;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-thumbnail:hover {
+    border-color: #3D5A4F;
+    transform: scale(1.05);
+}
+
+.custom-thumbnail.active {
+    border-color: #3D5A4F;
+    box-shadow: 0 0 10px rgba(61, 90, 79, 0.3);
+}
+
+.custom-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+/* Columna de Información (60%) */
+.custom-info-column {
+    flex: 0 0 60%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 0px 20px 0px 0px;
+}
+
+/* Título del Producto */
+.custom-product-title {
+    font-family: "DM Serif Display", serif;
+    font-size: 40px;
+    line-height: 1.2;
+    font-weight: 400;
+    color: #233D33;
+    margin: 0;
+}
+
+/* Ocultar título duplicado */
+.custom-product-left h2.custom-postblog-title,
+h2.custom-postblog-title {
+    display: none !important;
+}
+
+/* Precios */
+.custom-product-price {
+    margin: 10px 0;
+}
+
+.custom-price-container {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.custom-old-price {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    color: #999;
+    text-decoration: line-through;
+    font-weight: 500;
+}
+
+.custom-discount-badge {
+    background: #B4B847;
+    color: #233D33;
+    padding: 4px 10px;
+    border-radius: 15px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.custom-sale-price {
+    font-family: "Montserrat", sans-serif;
+    font-size: 40px;
+    color: #3D5A4F;
+    font-weight: 700;
+}
+
+.custom-regular-price {
+    font-family: "Montserrat", sans-serif;
+    font-size: 36px;
+    color: #233D33;
+    font-weight: 700;
+}
+
+/* Descripción Corta */
+.custom-short-description {
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #233D33;
+    margin: 15px 0;
+}
+
+.custom-short-description p {
+    margin-bottom: 10px;
+    font-family: "Montserrat", sans-serif !important;
+    color: #233D33 !important;
+}
+
+/* Notificación de Carrito */
+.custom-cart-notification {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #3D5A4F 0%, #233D33 100%);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 20px;
+    margin-bottom: 15px;
+    animation: slideInFromTop 0.4s ease;
+    box-shadow: 0 4px 15px rgba(61, 90, 79, 0.3);
+}
+
+.custom-cart-notification svg {
+    flex-shrink: 0;
+}
+
+.custom-cart-notification span {
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+@keyframes slideInFromTop {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Botones de Acción */
+.custom-action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.custom-btn {
+    padding: 12px 30px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    width: 100%;
+    letter-spacing: 0.5px;
+    position: relative;
+    overflow: hidden;
+}
+
+.custom-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.custom-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.custom-btn:hover:not(:disabled)::before {
+    width: 100%;
+    height: 300px;
+}
+
+/* Botón Añadir al Carrito */
+.custom-btn-add-to-cart {
+    background: linear-gradient(135deg, #3D5A4F 0%, #233D33 100%);
+    color: #fff;
+}
+
+.custom-btn-add-to-cart:hover:not(:disabled) {
+    background: linear-gradient(135deg, #233D33 0%, #1a2b25 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(61, 90, 79, 0.4);
+}
+
+/* Botón Comprar Ahora */
+.custom-btn-buy-now {
+    background: linear-gradient(135deg, #B4B847 0%, #9da03d 100%);
+    color: #233D33;
+}
+
+.custom-btn-buy-now:hover:not(:disabled) {
+    background: linear-gradient(135deg, #9da03d 0%, #8a8f35 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(180, 184, 71, 0.4);
+}
+
+/* Mensaje de stock */
+.custom-stock-info {
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    color: #999;
+    text-align: center;
+    padding: 15px;
+    background: #f5f5f5;
+    border-radius: 20px;
+}
+
+/* ============================================
+   PARTE INFERIOR IZQUIERDA: Descripción Larga
+   ============================================ */
+
+.custom-description-title {
+    font-family: "DM Serif Display", serif;
+    font-size: 32px;
+    font-weight: 400;
+    color: #233D33;
+    margin: 0 0 20px 0;
+    border-bottom: 3px solid #3D5A4F;
+    padding-bottom: 10px;
+}
+
+.custom-long-description {
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+    color: #233D33;
+}
+
+.custom-long-description p {
+    margin-bottom: 15px;
+}
+
+.custom-long-description h2,
+.custom-long-description h3 {
+    font-family: "DM Serif Display", serif !important;
+    color: #233D33;
+    font-weight: 400;
+    margin: 25px 0 15px 0;
+    font-size: 28px !important;
+}
+
+.custom-long-description ul,
+.custom-long-description ol {
+    margin: 15px 0;
+    padding-left: 30px;
+}
+
+.custom-long-description li {
+    margin-bottom: 8px;
+}
+
+/* ============================================
+   PARTE DERECHA: Productos Relacionados (25%)
+   ============================================ */
+
+.custom-product-right {
+    flex: 0 0 25%;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    border-radius: 30px;
+    padding: 20px;
+    align-self: flex-start;
+    position: sticky;
+    top: 20px;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+}
+
+.custom-related-header {
+    margin-bottom: 20px;
+}
+
+.custom-related-header h3 {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: #233D33;
+    text-transform: uppercase;
+    margin: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #3D5A4F;
+}
+
+/* Productos Relacionados */
+.custom-related-products {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.custom-related-item {
+    display: flex;
+    background: #fff;
+    overflow: hidden;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.custom-related-image {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #F5F5F5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.custom-related-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.custom-related-discount {
+    position: absolute;
+    bottom: 6px;
+    right: 10px;
+    background: #B4B847;
+    color: #233D33;
+    padding: 4px;
+    border-radius: 10px;
+    font-family: "Montserrat", sans-serif !important;
+    font-size: 10px;
+    font-weight: 700;
+    width: 35px;
+}
+
+.etiquetaenviogratis {
+    position: absolute;
+    top: 10px;
+    background: #B4B847;
+    color: #233D33;
+    padding: 8px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    left: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.etiquetaenviogratis p {
+    font-family: "Montserrat", sans-serif !important;
+    font-size: 13px;
+    color: #233D33;
+    font-weight: 600;
+    margin: 0px !important;
+}
+
+.etiquetaenviogratis img {
+    width: 25px !important;
+    height: auto !important;
+    object-fit: contain !important;
+}
+
+.garantias {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    justify-content: space-around;
+}
+
+.garantia-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.garantia-item img {
+    width: 55px;
+    height: auto;
+    object-fit: contain;
+}
+
+.garantia-item p {
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 600;
+    color: #233D33;
+    margin: 0px !important;
+    text-align: left;
+}
+
+.custom-related-info {
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.custom-related-info h4 {
+    font-family: "DM Serif Display", serif;
+    font-size: 18px;
+    font-weight: 400;
+    color: #233D33;
+    margin: 0 0 8px 0;
+    line-height: 1.4;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.custom-related-prices {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.custom-related-old-price {
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    color: #999;
+    text-decoration: line-through;
+}
+
+.custom-related-price {
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    color: #3D5A4F;
+    font-weight: 700;
+}
+
+/* ============================================
+   ESTILOS PARA LOS MODALES
+   ============================================ */
+
+/* Modal Overlay */
+.custom-modal {
+    display: none;
+    position: fixed;
+    z-index: 999999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(3px);
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Modal Content */
+.custom-modal-content {
+    background: #fff;
+    margin: 5% auto;
+    padding: 0;
+    border-radius: 30px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    position: relative;
+    animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Modal Content para Tienda (más ancho) */
+.custom-modal-tienda {
+    max-width: 700px;
+}
+
+/* Botón de Cerrar */
+.custom-modal-close {
+    position: absolute;
+    right: 20px;
+    top: 13px;
+    color: #999;
+    font-size: 32px;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s ease;
+    width: 35px;
+    height: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: transparent;
+}
+
+.custom-modal-close:hover,
+.custom-modal-close:focus {
+    color: #3D5A4F;
+    background: #f5f5f5;
+    transform: rotate(90deg);
+}
+
+/* Título del Modal */
+.custom-modal-title {
+    background: linear-gradient(135deg, #3D5A4F 0%, #233D33 100%);
+    color: #fff;
+    padding: 18px 30px;
+    margin: 0;
+    border-radius: 30px 30px 0 0;
+    font-family: "DM Serif Display", serif;
+    font-size: 24px;
+    font-weight: 400;
+    text-align: center;
+}
+
+/* Cuerpo del Modal */
+.custom-modal-body {
+    padding: 30px;
+}
+
+/* Información de la Tienda */
+.custom-tienda-info {
+    padding: 30px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    border-bottom: 3px solid #3D5A4F;
+}
+
+.custom-horario-section,
+.custom-direccion-section {
+    padding: 20px;
+    background: #fff;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.custom-horario-section h3,
+.custom-direccion-section h3 {
+    color: #233D33;
+    font-family: "DM Serif Display", serif;
+    font-size: 20px;
+    font-weight: 400;
+    margin: 0 0 15px 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #B4B847;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.custom-horario-section h3 i,
+.custom-direccion-section h3 i {
+    color: #B4B847;
+    font-size: 20px;
+}
+
+.custom-horario-section p,
+.custom-direccion-section p {
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    color: #233D33;
+    margin: 8px 0;
+    line-height: 1.6;
+}
+
+.custom-horario-section p strong {
+    color: #3D5A4F;
+    font-weight: 600;
+}
+
+/* Subtítulo del Formulario */
+.custom-form-subtitle {
+    color: #233D33;
+    font-family: "DM Serif Display", serif;
+    font-size: 22px;
+    font-weight: 400;
+    margin: 0 0 10px 0;
+    text-align: center;
+}
+
+.custom-form-description {
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    color: #666;
+    text-align: center;
+    margin: 0 0 25px 0;
+}
+
+/* Estilos para Contact Form 7 dentro del Modal */
+.custom-modal-body .wpcf7-form {
+    margin: 0;
+}
+
+.custom-modal-body .wpcf7-form p {
+    margin-bottom: 0px;
+}
+
+.custom-modal-body .wpcf7-form label {
+    display: block;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #233D33;
+    margin-bottom: 8px;
+}
+
+.custom-modal-body .wpcf7-form input[type="text"],
+.custom-modal-body .wpcf7-form input[type="email"],
+.custom-modal-body .wpcf7-form input[type="tel"],
+.custom-modal-body .wpcf7-form textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 15px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-sizing: border-box;
+}
+
+.custom-modal-body .wpcf7-form input[type="text"]:focus,
+.custom-modal-body .wpcf7-form input[type="email"]:focus,
+.custom-modal-body .wpcf7-form input[type="tel"]:focus,
+.custom-modal-body .wpcf7-form textarea:focus {
+    border-color: #3D5A4F;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(61, 90, 79, 0.1);
+}
+
+.custom-modal-body .wpcf7-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.custom-modal-body .wpcf7-form input[type="submit"] {
+    background: linear-gradient(135deg, #3D5A4F 0%, #233D33 100%);
+    color: #fff;
+    padding: 14px 40px;
+    border: none;
+    border-radius: 25px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+}
+
+.custom-modal-body .wpcf7-form input[type="submit"]:hover {
+    background: linear-gradient(135deg, #B4B847 0%, #9da03d 100%);
+    color: #233D33;
+    transform: translateY(-2px);
+}
+
+/* Mensajes de Contact Form 7 */
+.custom-modal-body .wpcf7-response-output {
+    margin: 20px 0 0 0;
+    padding: 15px;
+    border-radius: 15px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    text-align: center;
+}
+
+.custom-modal-body .wpcf7-validation-errors {
+    border: 2px solid #3D5A4F;
+    background: #f0f5f3;
+    color: #233D33;
+}
+
+.custom-modal-body .wpcf7-mail-sent-ok {
+    border: 2px solid #B4B847;
+    background: #fafbeb;
+    color: #233D33;
+}
+
+/* Spinner de carga */
+.custom-modal-body .wpcf7-spinner {
+    margin: 0 auto;
+    display: block;
+}
+
+/* Prevenir scroll del body cuando el modal está abierto */
+body.modal-open {
+    overflow: hidden;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* Tablets */
+@media (max-width: 1024px) {
+    .custom-product-container {
+        flex-direction: column;
+    }
+    
+    .custom-product-left {
+        flex: 0 0 100%;
+        width: 100%;
+    }
+
+    .custom-postblog-content {
+        margin-top: 0px;
+    }
+    
+    .custom-product-right {
+        flex: 0 0 100%;
+        position: static;
+        max-height: none;
+    }
+    
+    .custom-related-products {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .custom-related-item {
+        flex: 0 0 calc(33.333% - 10px);
+    }
+
+    .custom-info-column {
+        gap: 0px;
+    }
+    
+    .custom-tienda-info {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .custom-price-container {
+        gap: 0px;
+    }
+}
+
+@media (max-width: 768px) {
+    .custom-product-top {
+        flex-direction: column;
+    }
+    
+    .custom-images-column,
+    .custom-info-column {
+        flex: 0 0 100%;
+    }
+    
+    .custom-product-title {
+        font-size: 28px;
+    }
+    
+    .custom-sale-price,
+    .custom-regular-price {
+        font-size: 35px;
+    }
+    
+    .custom-related-item {
+        flex: 0 0 calc(50% - 8px);
+    }
+    
+    .custom-thumbnail {
+        width: calc(20% - 8px);
+    }
+    
+    .custom-modal-content {
+        width: 95%;
+        margin: 10% auto;
+    }
+    
+    .custom-modal-title {
+        font-size: 20px;
+        padding: 20px 25px;
+    }
+    
+    .custom-modal-body {
+        padding: 20px;
+    }
+    
+    .custom-tienda-info {
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .custom-single-product {
+        padding: 10px;
+    }
+    
+    .custom-product-container {
+        gap: 20px;
+    }
+    
+    .custom-product-left {
+        gap: 25px;
+    }
+    
+    .custom-action-buttons {
+        gap: 10px;
+    }
+    
+    .custom-btn {
+        padding: 14px 20px;
+        font-size: 16px;
+    }
+    
+    .custom-related-item {
+        flex: 0 0 100%;
+    }
+    
+    .custom-product-bottom {
+        padding: 0px;
+    }
+    
+    .custom-description-title {
+        font-size: 24px;
+    }
+    
+    .custom-horario-section h3,
+    .custom-direccion-section h3 {
+        font-size: 18px;
+    }
+    
+    .custom-fullscreen-close {
+        font-size: 40px;
+        width: 50px;
+        height: 50px;
+        top: 10px;
+        right: 20px;
+    }
+}
+
+/* Scrollbar personalizado para productos relacionados */
+.custom-product-right::-webkit-scrollbar {
+    width: 6px;
+}
+
+.custom-product-right::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.custom-product-right::-webkit-scrollbar-thumb {
+    background: #3D5A4F;
+    border-radius: 10px;
+}
+
+.custom-product-right::-webkit-scrollbar-thumb:hover {
+    background: #233D33;
+}
+
+/* Sidebar de Productos Relacionados */
+.custom-product-sidebar {
+    background: #FFFFFF;
+    border-radius: 30px;
+    padding: 0;
+    box-shadow: 0 0 8px 0 rgba(47, 46, 45, 0.15);
+    height: fit-content;
+    position: sticky;
+    top: 20px;
+    width: 25%;
+}
+
+.custom-sidebar-title {
+    background: #3D5A4F;
+    color: #FFFFFF;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    padding: 20px;
+    margin: 0;
+    border-radius: 30px 30px 0 0;
+    text-align: center;
+    letter-spacing: 0.5px;
+}
+
+.custom-related-products {
+    padding: 15px;
+}
+
+.custom-related-item {
+    display: flex;
+    gap: 0px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #E5E5E5;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.custom-related-item:last-child {
+    border-bottom: none;
+}
+
+.custom-related-image {
+    position: relative;
+    width: 100px;
+    height: 130px;
+    flex-shrink: 0;
+    border-radius: 15px;
+    overflow: hidden;
+    background: #F5F5F5;
+}
+
+.custom-related-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.custom-related-discount {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background: #B4B847;
+    color: #233D33;
+    font-family: "Montserrat", sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 3px;
+    border-radius: 10px;
+}
+
+.custom-related-info {
+    flex: 1;
+}
+
+.custom-related-prices {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.custom-related-old-price {
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    color: #999999;
+    text-decoration: line-through;
+}
+
+.custom-related-price {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    color: #3D5A4F;
+}
+
+/* Estilos adicionales para los campos del formulario */
+.custom-modal-body .wpcf7-form .form-row {
+    margin-bottom: 0px;
+}
+
+.custom-modal-body .wpcf7 {
+    width: 100% !important;
+}
+
+.custom-modal-body .wpcf7-form .form-row {
+    display: block !important;
+}
+
+.custom-modal-body .wpcf7-form .form-row.full-width {
+    width: 100%;
+}
+
+.custom-modal-body .wpcf7 form.sent .wpcf7-response-output {
+    margin: 0px;
+    color: black !important;
+}
+
+.custom-modal-body .wpcf7-form .wpcf7-not-valid-tip {
+    color: white;
+    font-size: 12px;
+    margin-top: 5px;
+    display: block;
+}
+
+.custom-modal-body .wpcf7-form br {
+    display: none;
+}
+
+.custom-modal-body .wpcf7-form input.wpcf7-not-valid,
+.custom-modal-body .wpcf7-form textarea.wpcf7-not-valid {
+    border-color: #3D5A4F;
+}
+
+/* Animación del botón de envío cuando se está enviando */
+.custom-modal-body .wpcf7-form.submitting input[type="submit"] {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .custom-product-layout {
+        grid-template-columns: 1fr 1fr;
+        gap: 30px;
+    }
+    
+    .custom-product-sidebar {
+        grid-column: 1 / -1;
+        position: static;
+        width: 100%;
+    }
+    
+    .custom-related-products {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+}
+
+@media (max-width: 768px) {
+    .custom-product-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .custom-product-summary .product_title {
+        font-size: 22px;
+    }
+    
+    .custom-price-wrapper .price ins {
+        font-size: 28px;
+    }
+    
+    .custom-related-products {
+        grid-template-columns: 1fr;
+    }
+    
+    .flex-control-thumbs li {
+        width: 60px;
+    }
+    
+    .flex-control-thumbs li img {
+        height: 60px;
+    }
+}
+
+/* ============================================
+   ESTILOS PARA VARIABLES DE PRODUCTO
+   ============================================ */
+
+.custom-product-variables {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+.custom-variable-group {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Bloque verde */
+.custom-variable-group::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 30px;
+    height: 100%;
+    background-color: #3D5A4F;
+    border-radius: 0 6px 6px 0;
+    pointer-events: none;
+}
+
+/* Flecha blanca */
+.custom-variable-group::before {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    width: 12px;
+    height: 12px;
+    transform: translateY(-50%);
+    background: url('https://dev-tictac.com/lowfactory/wp-content/uploads/2026/01/Vector-50.svg') no-repeat center;
+    background-size: contain;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Select base */
+.custom-variable-select {
+    width: 100%;
+    height: 42px;
+    padding: 8px 55px 8px 14px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #233D33;
+    cursor: pointer;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+}
+
+/* Evita flecha negra en IE/Edge antiguo */
+.custom-variable-select::-ms-expand {
+    display: none;
+}
+
+/* Focus */
+.custom-variable-select:focus {
+    outline: none;
+    border-color: #3D5A4F;
+}
+
+.custom-variable-label {
+    display: block;
+    font-family: "Montserrat", sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    color: #233D33;
+    margin-bottom: 0px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.custom-variable-select option {
+    padding: 10px;
+    background: white;
+    color: #233D33;
+}
+
+.custom-variable-select option:first-child {
+    color: #999;
+}
+
+.custom-variable-select.error-variable {
+    border-color: #3D5A4F;
+    background-color: #fff5f5;
+}
+
+.custom-variable-select.error-variable:focus {
+    border-color: #3D5A4F;
+    box-shadow: 0 0 0 3px rgba(61, 90, 79, 0.1);
+}
+
+.custom-variable-select option:checked {
+    background-color: #3D5A4F;
+    color: white;
+}
+
+@media (max-width: 768px) {
+    .custom-product-variables {
+        padding: 0px;
+        margin: 20px 0px;
+        gap: 10px;
+    }
+
+    .garantia-item p {
+        text-align: center;
+    }
+
+    .garantia-item {
+        width: 50%;
+    }
+
+    .custom-info-column {
+        padding: 0px;
+    }
+
+    .custom-variable-group {
+        width: 100%;
+    }
+
+    .custom-variable-label {
+        font-size: 13px;
+    }
+
+    .custom-variable-select {
+        padding: 10px 50px 10px 12px;
+        font-size: 14px;
+    }
+}
+
+.custom-variable-select:disabled {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.custom-variable-select option {
+    font-weight: 400;
+}
+
+.custom-variable-select option:hover {
+    background-color: #f0f0f0;
+}
+
+/* ===== ESTILOS PARA FLECHAS DE NAVEGACIÓN EN FULLSCREEN ===== */
+
+.custom-fullscreen-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    font-size: 30px;
+    font-weight: 700;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    z-index: 10;
+    user-select: none;
+    backdrop-filter: blur(5px);
+}
+
+.custom-fullscreen-arrow:hover {
+    background: rgba(255, 255, 255, 0.4);
+    transform: translateY(-50%) scale(1.1);
+}
+
+.custom-fullscreen-prev {
+    left: 40px;
+}
+
+.custom-fullscreen-next {
+    right: 40px;
+}
+
+/* Responsive para las flechas */
+@media (max-width: 768px) {
+    .custom-fullscreen-arrow {
+        font-size: 35px;
+        width: 50px;
+        height: 50px;
+    }
+    
+    .custom-fullscreen-prev {
+        left: 20px;
+    }
+    
+    .custom-fullscreen-next {
+        right: 20px;
+    }
+    
+    .custom-fullscreen-close {
+        font-size: 40px;
+        width: 50px;
+        height: 50px;
+        top: 10px;
+        right: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .custom-fullscreen-arrow {
+        font-size: 30px;
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .custom-fullscreen-prev {
+        left: 10px;
+    }
+    
+    .custom-fullscreen-next {
+        right: 10px;
+    }
+
+    .bloquehero {
+        width: 100% !important;
+    }
+
+    .bloquehero-iconos {
+        padding: 25px 10px;
+    }
+}
+
+
+
+
+
+/* ============================================
+   CARRITO WOOCOMMERCE - VERSIÓN MINIMALISTA
+   ============================================ */
+
+/* Contenedor principal */
+.wp-block-woocommerce-cart {
+    width: 95% !important;
+    margin: 0 auto;
+    padding: 40px 0;
+}
+
+.wc-block-components-sidebar-layout{
+    flex-wrap: nowrap !important;
+}
+
+/* Layout - Productos izquierda, Resumen derecha */
+.wc-block-components-sidebar-layout {
+    display: grid;
+    grid-template-columns: 1fr 380px;
+    gap: 30px;
+}
+
+.wc-block-components-main {
+    order: 1;
+}
+
+.wc-block-components-sidebar {
+    order: 2;
+    padding: 0px !important;
+}
+
+/* ============================================
+   PRODUCTOS (IZQUIERDA)
+   ============================================ */
+
+.wc-block-components-main {
+    background: #fff;
+    border-radius: 20px;
+    padding: 30px;
+}
+
+.wc-block-cart-items {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+}
+
+.wc-block-cart-items__header th {
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #233D33;
+    text-align: left;
+    padding: 15px 10px;
+    border-bottom: 2px solid #F5F5F5;
+}
+
+.wc-block-cart-items__row {
+    background: #fff;
+    border: 1px solid #F5F5F5;
+    border-radius: 15px;
+}
+
+.wc-block-cart-items__row:hover {
+    border-color: #3D5A4F;
+}
+
+.wc-block-cart-items__row td {
+    padding: 20px 10px;
+}
+
+/* Imagen */
+.wc-block-cart-item__image {
+    width: 100px;
+}
+
+.wc-block-cart-item__image img {
+    border-radius: 10px;
+}
+
+/* Nombre producto */
+.wc-block-components-product-name {
+    font-family: "DM Serif Display", serif;
+    font-size: 20px !important;
+    color: #233D33;
+    text-decoration: none;
+}
+
+.wc-block-components-product-name:hover {
+    color: #3D5A4F;
+}
+
+/* Precio */
+.wc-block-components-product-price {
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #3D5A4F;
+}
+
+.wc-block-components-product-price__regular {
+    color: #999;
+    text-decoration: line-through;
+}
+
+/* Badge descuento */
+.wc-block-components-sale-badge {
+    background: #B4B847;
+    color: #233D33;
+    padding: 4px 10px;
+    border-radius: 10px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* Cantidad */
+.wc-block-components-quantity-selector {
+    display: flex;
+    border: 1px solid #E0E0E0;
+    border-radius: 10px;
+}
+
+.wc-block-components-quantity-selector__input {
+    width: 50px;
+    height: 40px;
+    text-align: center;
+    border: none;
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    color: #233D33;
+}
+
+.wc-block-components-quantity-selector__button {
+    width: 35px;
+    height: 40px;
+    border: none;
+    background: #F5F5F5;
+    color: #233D33;
+    cursor: pointer;
+}
+
+.wc-block-components-quantity-selector__button:hover {
+    background: #3D5A4F;
+    color: white;
+}
+
+/* Eliminar */
+.wc-block-cart-item__remove-link {
+    background: #F5F5F5;
+    color: #999;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 10px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.wc-block-cart-item__remove-link:hover {
+    background: #3D5A4F;
+    color: white;
+}
+
+/* Total */
+.wc-block-cart-item__total .wc-block-components-product-price__value {
+    font-family: "Montserrat", sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #233D33;
+}
+
+/* ============================================
+   RESUMEN (DERECHA)
+   ============================================ */
+
+.wc-block-components-sidebar {
+    border-radius: 20px;
+}
+
+.wp-block-woocommerce-cart-order-summary-block{
+    background-color: white;
+    padding: 30px;
+    border-radius: 20px;
+}
+
+.wc-block-cart__totals-title {
+    font-family: "DM Serif Display", serif;
+    font-size: 24px;
+    color: #233D33;
+    margin: 0 0 20px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #F5F5F5;
+}
+
+.wc-block-components-totals-item {
+    display: flex;
+    justify-content: space-between;
+}
+
+.wc-block-components-totals-item__label {
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    color: #666;
+}
+
+.wc-block-components-totals-item__value {
+    font-family: "Montserrat", sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: #233D33;
+}
+
+/* Total final */
+.wc-block-components-totals-footer-item {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #F5F5F5;
+}
+
+.wc-block-components-totals-footer-item .wc-block-components-totals-item__label {
+    font-size: 18px;
+    font-weight: 600;
+    color: #233D33;
+}
+
+.wc-block-components-totals-footer-item-tax-value {
+    font-size: 26px !important;
+    font-weight: 700 !important;
+    color: #3D5A4F !important;
+}
+
+/* Botón checkout */
+.wc-block-cart__submit-button {
+    width: 100%;
+    padding: 15px !important;
+    background: #3D5A4F !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 15px !important;
+    font-family: "Montserrat", sans-serif !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+.wc-block-cart__submit-button:hover {
+    background: #233D33 !important;
+}
+
+/* Cupones */
+.wc-block-components-totals-coupon {
+    background: #F8F9FA;
+    padding: 15px 15px !important;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+
+.wc-block-components-panel__button {
+    font-family: "Montserrat", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: #233D33;
+    cursor: pointer;
+}
+
+
+.faqs-boton,
+.btn-contactar,
+.boton-principal,
+.contacto-link .contacto {
+    box-shadow: 0px 2.5px 5px 0px #2F2E2D99;
+
+}
+
+/* ============================================
+   RESPONSIVE - Solo 1100px
+   ============================================ */
+
+@media (max-width: 1100px) {
+	
+	
+	.header-nav-wrapper {
+            top: 60%;
+		padding-top: 40px;
+	}
+	#header{
+		box-shadow: 0 2.5px 2.5px 0 rgba(0, 0, 0, 0.35);
+	}
+    .wc-block-components-sidebar-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .wc-block-components-sidebar {
+        position: static;
+    }
+
+    .wc-block-cart-items__header {
+        display: none;
+    }
+
+    .wc-block-cart-items__row {
+        display: grid;
+        grid-template-columns: 80px 1fr;
+        gap: 15px;
+    }
+
+    .wc-block-cart-item__image {
+        grid-row: 1 / 3;
+    }
+
+    .wc-block-cart-item__total {
+        grid-column: 2;
+        text-align: left !important;
+    }
+}
+
+/* Ocultar elementos innecesarios */
+.screen-reader-text {
+    display: none;
+}
+
+
+a:focus, button:focus, input:focus, textarea:focus, select:focus {
+    box-shadow: 0 0 0 0px #fff, 0 0 0 0px #ffffff !important;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

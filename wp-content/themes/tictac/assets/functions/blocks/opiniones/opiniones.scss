@@ -1,0 +1,630 @@
+/* ============================================
+   BLOQUE OPINIONES UNIFICADO
+   Trustindex + Manual con carrusel vanilla
+   ============================================ */
+
+.opiniones {
+    padding: 0;
+}
+
+.opiniones .containerancho {
+    box-shadow: 0px 0px 10px 0px #05050640;
+    border-radius: 40px;
+}
+
+/* ============================================
+   HEADER TRUSTINDEX
+   ============================================ */
+.opiniones--trustindex .opiniones-header {
+    background: var(--Lila-TICTAC, #817DBA);
+    padding: 20px 10px;
+    text-align: center;
+    border-radius: 40px 40px 0 0;
+}
+
+.opiniones-titulo {
+    color: var(--Blanco, #FFF);
+    font-family: Montserrat, sans-serif;
+    font-size: 36px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 115%;
+    letter-spacing: -1px;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* Ocultar Trustindex fuera del bloque */
+body>[id*="trustindex"],
+footer [id*="trustindex"],
+.site-footer [id*="trustindex"] {
+    display: none !important;
+}
+
+.opiniones [id*="trustindex"] {
+    display: block !important;
+}
+
+.opiniones--trustindex .opiniones-contenido {
+    background: #FFFFFF;
+    padding: 50px;
+    border-radius: 0 0 40px 40px;
+    position: relative;
+}
+
+/* ============================================
+   TRUSTINDEX WIDGET OVERRIDES
+   ============================================ */
+.opiniones .ti-reviews-container {
+    position: relative;
+}
+
+.ti-reviews-container-wrapper .ti-review-item {
+    padding: 10px !important;
+}
+
+.ti-widget.ti-goog .ti-review-item>.ti-inner {
+    box-shadow: 0px 0px 10px 0px #05050640 !important;
+}
+
+.opiniones .ti-footer .ti-profile-img img {
+    width: 60px !important;
+    height: 60px !important;
+    object-fit: contain !important;
+}
+
+/* Reordenar reviews Trustindex */
+.opiniones .ti-review-item .ti-inner {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+}
+
+.opiniones .ti-review-item .ti-stars {
+    order: 1 !important;
+}
+
+.opiniones .ti-review-item .ti-review-text-container,
+.opiniones .ti-review-item .ti-review-text {
+    order: 2 !important;
+    flex: 1 !important;
+}
+
+.opiniones .ti-review-item .ti-review-header {
+    order: 3 !important;
+    margin-top: auto !important;
+}
+
+/* ============================================
+   TRUSTINDEX CONTROLES (flechas + barra)
+   ============================================ */
+.opiniones .ti-widget-container>.ti-controls {
+    display: none !important;
+}
+
+.opiniones .ti-controls-inline {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+    padding: 0 10px;
+    margin-top: 20px;
+}
+
+.opiniones .ti-arrows-wrapper {
+    display: flex !important;
+    gap: 10px !important;
+    align-items: center !important;
+    flex-shrink: 0 !important;
+}
+
+.opiniones .ti-custom-arrow {
+    width: 40px !important;
+    height: 40px !important;
+    background-color: rgba(0, 0, 0, 0.08) !important;
+    border: none !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    transition: all 0.3s ease !important;
+    background-size: 50% !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+}
+
+.opiniones .ti-custom-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.15) !important;
+}
+
+.opiniones .ti-custom-arrow::before,
+.opiniones .ti-custom-arrow::after {
+    display: none !important;
+}
+
+.opiniones .ti-pagination-bar-wrapper {
+    display: flex !important;
+    align-items: center !important;
+    flex-grow: 1 !important;
+}
+
+.opiniones .ti-pagination-bar {
+    display: flex !important;
+    gap: 0 !important;
+    width: 100% !important;
+    height: 4px !important;
+    background-color: transparent !important;
+}
+
+.opiniones .ti-bar-segment {
+    flex: 1 !important;
+    height: 100% !important;
+    border-radius: 0 !important;
+    background-color: rgba(0, 0, 0, 0.1) !important;
+    border: none !important;
+    cursor: pointer !important;
+    padding: 0 !important;
+    transition: background-color 0.3s ease !important;
+}
+
+.opiniones .ti-bar-segment:hover {
+    background-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.opiniones .ti-bar-segment.active {
+    background-color: var(--Lila-TICTAC, #817DBA) !important;
+}
+
+.ti-widget.ti-goog .ti-controls-line {
+    display: block !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    background: transparent !important;
+    height: auto !important;
+    overflow: visible !important;
+}
+
+.opiniones .ti-controls-line .dot {
+    display: none !important;
+}
+
+/* ============================================
+   MODO MANUAL - HEADER
+   ============================================ */
+.opiniones--manual .resenas-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.opiniones--manual .resenas-titulo {
+    font-family: 'Barlow', sans-serif;
+    font-size: clamp(28px, 3vw, 42px);
+    font-weight: 700;
+    margin: 0 0 15px 0;
+    text-align: center;
+}
+
+.resenas-media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    &__estrellas {
+        display: flex;
+        gap: 2px;
+    }
+
+    &__numero {
+        font-family: 'Barlow', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+    }
+}
+
+/* ============================================
+   ESTRELLAS
+   ============================================ */
+.estrella {
+    font-size: 18px;
+    color: #ddd;
+    line-height: 1;
+}
+
+/* ============================================
+   MODO MANUAL - CARRUSEL VANILLA
+   ============================================ */
+.opiniones-manual-viewport {
+    overflow: hidden;
+    width: 100%;
+}
+
+.opiniones-manual-track {
+    display: flex;
+    will-change: transform;
+    transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.opiniones-manual-slide {
+    flex-shrink: 0;
+}
+
+/* Controles manuales */
+.opiniones-manual-controls {
+    margin-top: 20px;
+
+}
+
+.opiniones-manual-arrows {
+    flex-shrink: 0;
+}
+
+.opiniones-manual-arrow {
+    width: 40px;
+    height: 40px;
+    background-color: rgba(0, 0, 0, 0.08);
+    border: none;
+    border-radius: 50%;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    svg {
+        width: 12px;
+        height: 19px;
+    }
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.15);
+    }
+}
+
+.opiniones-manual-bar-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.opiniones-manual-bar {
+    display: flex;
+    gap: 0;
+    width: 100%;
+    height: 4px;
+    background-color: transparent;
+    position: relative;
+}
+
+.opiniones-manual-bar-segment {
+    flex: 1;
+    height: 100%;
+    border-radius: 0;
+    background-color: rgba(0, 0, 0, 0.1);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.25);
+    }
+}
+
+/* NUEVO: barra progress fill */
+.opiniones-manual-bar-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+/* ============================================
+   AVATAR GLOBAL (aplica a Google y Minimalista)
+   ============================================ */
+.resena-card__avatar {
+    width: 32px;
+    height: 32px;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-family: 'Barlow', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.resena-card__avatar--foto {
+    background-color: transparent !important;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        border-radius: 50%;
+    }
+}
+
+.resena-card__avatar--mini {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+}
+
+/* ============================================
+   TARJETAS BASE
+   ============================================ */
+.resena-card {
+    border-radius: 5px;
+    padding: 50px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: box-shadow 0.3s ease;
+
+    &:hover {
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+}
+
+/* ============================================
+   ESTILO GOOGLE - Orden: estrellas → texto → nombre
+   ============================================ */
+.resena-card--google {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    .resena-card__estrellas {
+        display: flex;
+        align-items: center;
+        gap: 2px;
+        margin-bottom: 12px;
+        order: 1;
+
+        .estrella {
+            font-size: 16px;
+        }
+    }
+
+    .resena-card__verificado {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 18px;
+        height: 18px;
+        background-color: #1a73e8;
+        color: #ffffff;
+        border-radius: 50%;
+        font-size: 11px;
+        margin-left: 6px;
+    }
+
+    .resena-card__texto {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 15px;
+        flex: 1;
+        display: -webkit-box;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        order: 2;
+
+
+        color: #D1D5DB;
+
+        /* Text TANGO */
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px;
+        /* 142.857% */
+        letter-spacing: 2px;
+    }
+
+    .resena-card__header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-top: auto;
+        padding-top: 12px;
+        order: 3;
+    }
+
+    .resena-card__info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+    }
+
+    .resena-card__nombre {
+        font-family: 'Montserrat', sans-serif;
+
+
+
+        color: var(--Azul-TANGO, #6391CC);
+
+        /* Menú TANGO */
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 16px;
+        /* 133.333% */
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+
+    .resena-card__fecha {
+        font-family: 'Barlow', sans-serif;
+        font-size: 13px;
+    }
+
+    .resena-card__google-logo {
+        flex-shrink: 0;
+
+        svg {
+            width: 24px;
+            height: 24px;
+        }
+    }
+
+    .resena-card__link {
+        font-family: 'Barlow', sans-serif;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        margin-top: 12px;
+        order: 4;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+/* ============================================
+   ESTILO MINIMALISTA
+   ============================================ */
+.resena-card--minimalista {
+    .resena-card__top {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .resena-card__titulo-resena {
+        font-family: 'Barlow', sans-serif;
+        font-size: 16px;
+        font-weight: 600;
+        flex: 1;
+    }
+
+    .resena-card__estrellas--mini {
+        display: flex;
+        gap: 1px;
+        flex-shrink: 0;
+
+        .estrella {
+            font-size: 20px;
+        }
+    }
+
+    .resena-card__autor {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: auto;
+        padding-top: 12px;
+    }
+
+    .resena-card__nombre {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 12px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: 16px;
+        /* 133.333% */
+        letter-spacing: 3px;
+        text-transform: uppercase;
+    }
+
+    .resena-card__tipo {
+        font-family: 'Barlow', sans-serif;
+        font-size: 14px;
+
+    }
+
+    .resena-card__texto {
+        font-family: 'Montserrat', sans-serif;
+        color: #D1D5DB;
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 20px;
+        /* 142.857% */
+        letter-spacing: 2px;
+    }
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 800px) {
+    .opiniones-titulo {
+        font-size: 20px;
+    }
+
+    .opiniones--trustindex .opiniones-contenido {
+        padding: 25px;
+    }
+
+    .opiniones .ti-custom-arrow {
+        width: 35px !important;
+        height: 35px !important;
+    }
+
+    .opiniones-manual-arrow {
+        width: 35px;
+        height: 35px;
+    }
+
+    .resena-card {
+        padding: 20px;
+    }
+
+    .opiniones {
+        margin-top: 20px !important;
+    }
+}
+
+@media (max-width: 600px) {
+    .opiniones .ti-controls-inline {
+        gap: 12px !important;
+    }
+
+    .ti-footer {
+        margin-top: 10px !important;
+    }
+
+    .opiniones .ti-custom-arrow {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
+    .opiniones-manual-arrow {
+        width: 32px;
+        height: 32px;
+
+        svg {
+            width: 10px;
+            height: 16px;
+        }
+    }
+
+    .resena-card {
+        padding: 18px;
+    }
+
+    .resena-card--google .resena-card__avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+    }
+
+    .resena-card--minimalista .resena-card__top {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .opiniones--manual .resenas-header {
+        margin-bottom: 25px;
+    }
+}

@@ -1,0 +1,525 @@
+// ================================================================
+//  Bloque Hero — SCSS
+//  Bootstrap 4 ya cargado en el tema.
+//
+//  ALTURAS de .bloquehero-slides:
+//  → Controladas desde el admin ACF (valor + unidad: px/vh/vw/%)
+//  → El PHP genera un <style> inline con !important por instancia
+//  → Los valores aquí son solo fallback de emergencia
+// ================================================================
+
+$hero-font-principal : "Public Sans",
+sans-serif;
+$hero-font-secundaria: "Poppins",
+sans-serif;
+$hero-color-primario : #ff7700;
+$hero-color-oscuro : #3b3b3b;
+$hero-color-texto : #fff;
+$hero-border-radius : 50px;
+
+// ── Bloque raíz ───────────────────────────────────────────────────
+.bloquehero {
+    position: relative;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+// ── Título principal ──────────────────────────────────────────────
+.bloquehero-titulo,
+.bloquehero-titulo h1,
+.bloquehero-header h1 {
+    color: $hero-color-oscuro;
+    font-family: $hero-font-principal;
+    font-size: 40px;
+    line-height: 115%;
+    letter-spacing: -1px;
+    margin: 0 auto;
+    text-transform: uppercase;
+
+    strong {
+        font-weight: bold !important;
+    }
+}
+
+// ── Párrafos con icono ────────────────────────────────────────────
+.bloquehero-parrafo-icono {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.bloquehero-parrafo-texto {
+    font-family: $hero-font-secundaria;
+    font-size: 16px;
+    color: $hero-color-oscuro;
+    line-height: 1.6;
+
+    p {
+        margin: 0;
+    }
+}
+
+// ── Carrusel ──────────────────────────────────────────────────────
+.bloquehero-carrusel {
+    border-radius: $hero-border-radius;
+
+    @media (max-width:750px) {
+        border-radius: 0px;
+
+    }
+}
+
+// Fallback de emergencia — el PHP lo sobreescribe con !important
+.bloquehero-slides {
+    height: 650px;
+}
+
+// ── Slide ─────────────────────────────────────────────────────────
+.bloquehero-slide {
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .6s ease-in-out, visibility .6s ease-in-out;
+    image-rendering: auto;
+    image-rendering: -webkit-optimize-contrast;
+
+    &.activo {
+        opacity: 1;
+        visibility: visible;
+        z-index: 1;
+    }
+}
+
+// ── Overlay ───────────────────────────────────────────────────────
+.bloquehero-slide-overlay {
+    top: 0;
+    left: 0;
+    background: linear-gradient(90deg, rgba(0, 0, 0, .6) 0%, rgba(0, 0, 0, .2) 100%);
+    z-index: 1;
+}
+
+// ── Contenedor slide ──────────────────────────────────────────────
+.bloquehero-contenedor {
+    padding: 60px 100px;
+}
+
+.bloquehero-contenido {
+    z-index: 2;
+    color: $hero-color-texto;
+}
+
+// ── Subtítulo ─────────────────────────────────────────────────────
+.bloquehero-subtitulo,
+.bloquehero-subtitulo h2,
+.bloquehero-subtitulo p {
+    font-family: $hero-font-principal;
+    color: $hero-color-texto;
+    text-shadow: 0 2px 6px rgba(33, 34, 33, .5);
+    font-size: 40px;
+    font-weight: 800;
+    line-height: 43px;
+    text-transform: uppercase;
+    letter-spacing: -.8px;
+    margin: 0;
+}
+
+// ── Descripción ───────────────────────────────────────────────────
+.bloquehero-descripcion,
+.bloquehero-descripcion p {
+    font-family: $hero-font-secundaria;
+    color: $hero-color-texto;
+    text-shadow: 0 2px 6px rgba(33, 34, 33, .5);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 24px;
+    margin-bottom: 0;
+}
+
+// ── Items repetidor ───────────────────────────────────────────────
+.bloquehero-item-imagen {
+    width: 40px;
+    height: 40px;
+    flex-shrink: 0;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+}
+
+.bloquehero-item-texto {
+    color: var(--Blanco, #FFF);
+    text-shadow: 0 0 6px rgba(36, 36, 34, 0.80);
+
+    /* Desktop Text/SubClaim 01  XPERIENCE (Desktop) */
+    font-family: 'Montserrat';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+    /* 133.333% */
+    letter-spacing: 1px;
+    text-transform: uppercase;
+
+
+    @media (max-width:750px) {
+        text-shadow: 0 0 6px rgba(36, 36, 34, 0.80);
+        font-family: Montserrat;
+        font-size: 13px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 17px;
+        /* 130.769% */
+        text-transform: uppercase;
+    }
+}
+
+// ── Botones ───────────────────────────────────────────────────────
+.bloquehero-botones {
+    gap: 14px;
+}
+
+.bloquehero-boton {
+    background: $hero-color-primario;
+    color: $hero-color-texto;
+    font-family: $hero-font-secundaria;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 8px 35px;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: background .3s ease, color .3s ease, border-color .3s ease, box-shadow .3s ease;
+    box-shadow: 0 3px 3px 0 rgba(33, 34, 33, .5);
+}
+
+.bloquehero-boton-texto,
+.bloquehero-boton-texto p {
+    margin: 0;
+    line-height: 1;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    text-transform: inherit;
+}
+
+.bloquehero-boton-icono {
+    width: 22px;
+    height: 22px;
+
+    img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: opacity .3s ease;
+    }
+}
+
+.bloquehero-boton-icono-normal {
+    opacity: 1;
+}
+
+.bloquehero-boton-icono-hover {
+    opacity: 0;
+}
+
+.bloquehero-boton:hover {
+    .bloquehero-boton-icono-normal {
+        opacity: 0;
+    }
+
+    .bloquehero-boton-icono-hover {
+        opacity: 1;
+    }
+}
+
+// ── Controles carrusel ────────────────────────────────────────────
+.bloquehero-controles {
+    bottom: 50px;
+    right: 50px;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.bloquehero-prev,
+.bloquehero-next {
+    width: 43px;
+    height: 43px;
+    background: rgba(145, 149, 152, .69);
+    border: none;
+    cursor: pointer;
+    transition: all .3s ease;
+    pointer-events: all;
+
+    img {
+        max-width: 22px;
+        max-height: 22px;
+        object-fit: contain;
+    }
+
+    svg {
+        color: #fff;
+    }
+}
+
+.bloquehero-prev {
+    border-radius: 10px 0 0 10px;
+}
+
+.bloquehero-next {
+    border-radius: 0 10px 10px 0;
+}
+
+// ── Iconos inferiores ─────────────────────────────────────────────
+.bloquehero-icono-item {
+    transition: transform .3s ease;
+
+    &:hover {
+        transform: translateY(-5px);
+    }
+}
+
+.bloquehero-icono-header {
+    background: $hero-color-primario;
+    border-radius: 15px;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    transition: box-shadow .3s ease;
+
+    &:hover {
+        box-shadow: 0 5px 15px rgba(0, 0, 0, .2);
+    }
+
+    img {
+        width: 50px;
+        height: 50px;
+        object-fit: contain;
+        flex-shrink: 0;
+    }
+
+    strong {
+        font-weight: bold !important;
+    }
+}
+
+.iconotitulo,
+.iconotitulo p {
+    color: $hero-color-texto;
+    font-family: $hero-font-secundaria;
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 24px;
+    margin: 0 !important;
+}
+
+.bloquehero-icono-content {
+    background: #fff;
+    border-radius: 0 0 15px 15px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .1);
+    top: -9px;
+    z-index: 1;
+    transition: all .4s ease;
+}
+
+.bloquehero-icono-toggle-wrapper {
+    padding: 8px 0 0;
+}
+
+.bloquehero-icono-toggle {
+    width: 32px;
+    height: 32px;
+    background: inherit;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: all .3s ease;
+
+    svg {
+        color: #000;
+        transition: transform .3s ease;
+    }
+}
+
+.bloquehero-icono-item.active {
+    .bloquehero-icono-toggle svg {
+        transform: rotate(180deg);
+    }
+}
+
+.bloquehero-icono-text {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .4s ease, padding .4s ease;
+
+    p {
+        font-family: $hero-font-secundaria;
+        font-size: 14px;
+        color: #333;
+        line-height: 1.6;
+        margin: 0;
+    }
+}
+
+.bloquehero-icono-item.active .bloquehero-icono-text {
+    max-height: 500px;
+    padding: 0 20px 20px;
+}
+
+// ── Botón especial columna derecha ────────────────────────────────
+.bloquehero-boton-especial {
+    gap: 16px;
+    padding: 18px 28px;
+    border-radius: 50px;
+    text-decoration: none;
+    cursor: Montserrat;
+    transition: background .3s ease, border-color .3s ease, box-shadow .3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, .25);
+    max-width: 380px;
+}
+
+.bloquehero-boton-especial-img img {
+    display: block;
+    max-height: 60px;
+    width: auto;
+    object-fit: contain;
+}
+
+// ── Animación entrada ─────────────────────────────────────────────
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.bloquehero-slide.activo .bloquehero-contenido {
+    animation: slideIn .8s ease-out;
+}
+
+// ── Responsive ───────────────────────────────────────────────────
+@media (max-width: 991.98px) {
+
+    // Fallback de emergencia — el PHP lo sobreescribe con !important
+    .bloquehero-slides {
+        height: 400px;
+    }
+
+    .bloquehero-titulo,
+    .bloquehero-titulo h1,
+    .bloquehero-header h1 {
+        font-size: 22px;
+    }
+
+    .bloquehero-contenedor {
+        padding: 0;
+        height: 100%;
+    }
+
+    .bloquehero-subtitulo,
+    .bloquehero-subtitulo h2,
+    .bloquehero-subtitulo p {
+        font-size: 18px;
+        line-height: 24px;
+    }
+
+    .bloquehero-descripcion,
+    .bloquehero-descripcion p {
+        font-size: 15px;
+        line-height: 22px;
+    }
+
+    .bloquehero-boton {
+        font-size: 12px;
+        padding: 8px 15px;
+    }
+
+    .bloquehero-controles {
+        bottom: 30px;
+        right: 20px;
+    }
+
+    .bloquehero-prev,
+    .bloquehero-next {
+        width: 35px;
+        height: 35px;
+
+        img {
+            max-width: 15px;
+            max-height: 15px;
+        }
+    }
+
+    .bloquehero-icono-header {
+        height: 90px;
+        padding: 10px;
+        gap: 5px;
+
+        img {
+            width: 40px;
+            height: 40px;
+        }
+    }
+
+    .iconotitulo,
+    .iconotitulo p {
+        font-size: 13px;
+        line-height: 18px;
+    }
+
+    .bloquehero-icono-item.active .bloquehero-icono-text {
+        padding: 0 10px 10px;
+    }
+
+    .bloquehero-parrafo-icono {
+        width: 24px;
+        height: 24px;
+    }
+
+    .bloquehero-parrafo-texto {
+        font-size: 14px;
+    }
+
+    .bloquehero-item-imagen {
+        width: 28px;
+        height: 28px;
+    }
+
+    .bloquehero-item-texto {
+        font-size: 13px;
+
+        p {
+            margin-bottom: 0px;
+        }
+    }
+
+    .bloquehero-boton-especial {
+        padding: 12px 18px;
+        gap: 10px;
+        max-width: 100%;
+    }
+
+    .bloquehero-boton-especial-img img {
+        max-height: 40px;
+    }
+}

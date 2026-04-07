@@ -1,0 +1,117 @@
+[
+    {
+        "key": "group_variables_producto",
+        "title": "Variables de Producto",
+        "fields": [
+            {
+                "key": "field_variables_producto",
+                "label": "Variables del Producto",
+                "name": "variables_producto",
+                "aria-label": "",
+                "type": "repeater",
+                "instructions": "Añade las variables que el cliente debe seleccionar (dimensiones, grosor, tamaño, etc.)",
+                "required": 0,
+                "conditional_logic": 0,
+                "wrapper": {
+                    "width": "",
+                    "class": "",
+                    "id": ""
+                },
+                "layout": "block",
+                "pagination": 0,
+                "min": 0,
+                "max": 0,
+                "collapsed": "",
+                "button_label": "Añadir Variable",
+                "rows_per_page": 20,
+                "sub_fields": [
+                    {
+                        "key": "field_nombre_variable",
+                        "label": "Nombre de la Variable",
+                        "name": "nombre_variable",
+                        "aria-label": "",
+                        "type": "text",
+                        "instructions": "Ejemplo: DIMENSIONES, GROSOR, TAMAÑO, COLOR",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "default_value": "",
+                        "maxlength": "",
+                        "placeholder": "DIMENSIONES",
+                        "prepend": "",
+                        "append": "",
+                        "parent_repeater": "field_variables_producto"
+                    },
+                    {
+                        "key": "field_opciones_variable",
+                        "label": "Opciones",
+                        "name": "opciones_variable",
+                        "aria-label": "",
+                        "type": "repeater",
+                        "instructions": "Añade las diferentes opciones para esta variable",
+                        "required": 1,
+                        "conditional_logic": 0,
+                        "wrapper": {
+                            "width": "",
+                            "class": "",
+                            "id": ""
+                        },
+                        "layout": "table",
+                        "pagination": 0,
+                        "min": 1,
+                        "max": 0,
+                        "collapsed": "",
+                        "button_label": "Añadir Opción",
+                        "rows_per_page": 20,
+                        "sub_fields": [
+                            {
+                                "key": "field_valor_opcion",
+                                "label": "Valor",
+                                "name": "valor_opcion",
+                                "aria-label": "",
+                                "type": "text",
+                                "instructions": "",
+                                "required": 1,
+                                "conditional_logic": 0,
+                                "wrapper": {
+                                    "width": "",
+                                    "class": "",
+                                    "id": ""
+                                },
+                                "default_value": "",
+                                "maxlength": "",
+                                "placeholder": "80x180",
+                                "prepend": "",
+                                "append": "",
+                                "parent_repeater": "field_opciones_variable"
+                            }
+                        ],
+                        "parent_repeater": "field_variables_producto"
+                    }
+                ]
+            }
+        ],
+        "location": [
+            [
+                {
+                    "param": "post_type",
+                    "operator": "==",
+                    "value": "product"
+                }
+            ]
+        ],
+        "menu_order": 0,
+        "position": "normal",
+        "style": "default",
+        "label_placement": "top",
+        "instruction_placement": "label",
+        "hide_on_screen": "",
+        "active": true,
+        "description": "",
+        "show_in_rest": 0
+    }
+]

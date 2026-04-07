@@ -1,0 +1,501 @@
+/* ===== FOOTER GENERAL ===== */
+#footer {
+    position: relative;
+    background: linear-gradient(0deg, rgba(39, 165, 222, 0.10) 0%, rgba(39, 165, 222, 0.10) 100%), #FFF;
+    margin-top: 30px;
+    padding: 50px 0 30px;
+    overflow: hidden;
+    /* CLAVE: evita desbordamiento horizontal */
+}
+
+#footer .container {
+    z-index: 2;
+    position: relative;
+}
+
+/* CLAVE: el contenedor principal necesita control de overflow */
+.footer-main-content {
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+#footer .bgfooter {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: 0;
+}
+
+/* ===== FILA 1: 3 COLUMNAS ===== */
+.footer-row-1 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    padding-bottom: 40px;
+    border-bottom: 2px solid #AAAAAA;
+}
+
+/* COLUMNA 1: Logo + Descripción + Envío + Redes */
+.footer-col-1 {
+    display: flex;
+    flex-direction: column;
+}
+
+.footer-logo {
+    margin-bottom: 20px;
+}
+
+.footer-logo .custom-logo {
+    width: 100%;
+    height: auto;
+}
+
+.footer-description {
+    font-family: "Poppins", sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    color: #000;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.footer-envio-gratis {
+    background: #E9A613;
+    color: #1E3562;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 20px;
+}
+
+.footer-social {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.footer-social a {
+    display: inline-block;
+    transition: opacity 0.3s;
+}
+
+.footer-social a:hover {
+    opacity: 0.7;
+}
+
+.footer-social img {
+    width: 30px;
+    height: 30px;
+}
+
+/* Fila de redes sociales dentro del logo */
+.footer-social-row {
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+}
+
+.footer-social-icons {
+    flex: 1;
+    min-width: 0;
+    gap: 8px;
+    flex-wrap: wrap;
+
+    @media (max-width:924px) {
+        flex: none;
+    }
+}
+
+/* COLUMNAS 2 y 3: Menús */
+.footer-col-2,
+.footer-col-3 {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    /* Permite que las columnas del grid se encojan */
+}
+
+.footer-menu-title {
+    color: var(--Azul-01-XPERIENCE, #213975);
+    text-decoration: underline;
+    text-underline-offset: 10px;
+    font-family: 'Montserrat';
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.footer-menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-menu li {
+    margin-bottom: 28px;
+    text-align: left;
+}
+
+.footer-menu a {
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    color: #ffffff;
+    text-decoration: none;
+    font-weight: 500;
+    transition: opacity 0.3s;
+    word-break: break-word;
+    /* Evita que enlaces largos desborden */
+}
+
+.footer-menu a:hover {
+    opacity: 0.7;
+}
+
+.no-menu {
+    font-size: 13px;
+    color: #666;
+    font-style: italic;
+}
+
+/* COLUMNA 4: Información de contacto con iconos */
+.footer-col-4 {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.footer-contact-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.footer-contact-item {
+    border-left: 2px solid #213975;
+    padding-left: 15px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+
+    @media (max-width:750px) {
+        border-left: none;
+        padding-left: 0;
+    }
+}
+
+.footer-contact-item img {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+    margin-top: 2px;
+}
+
+.footer-contact-text {
+    flex: 1;
+    min-width: 0;
+    /* Permite truncar/envolver texto largo */
+}
+
+.footer-contact-text a {
+    word-break: break-word;
+    /* Emails largos no desbordan */
+}
+
+.footer-direccion .footer-contact-text span,
+.footer-phone .footer-contact-text a,
+.footer-email .footer-contact-text a,
+.custom-foother-span {
+    font-family: "Montserrat", sans-serif;
+    text-decoration: none;
+    color: var(--Azul-01-XPERIENCE, #213975);
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 22px;
+}
+
+.footer-phone .footer-contact-text a:hover,
+.footer-email .footer-contact-text a:hover {
+    opacity: 0.7;
+}
+
+.footer-maps-btn {
+    background: #DF1717;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 10px;
+    text-align: center;
+    text-decoration: none;
+    font-family: "Poppins", sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    display: inline-block;
+    margin-bottom: 20px;
+    transition: background 0.3s;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.50);
+    margin: 0 auto;
+    width: 90%;
+}
+
+.footer-maps-btn:hover {
+    background: #E9A613;
+    color: #1E3562;
+}
+
+.footer-horario {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.footer-horario h4 {
+    font-family: "Public Sans";
+    font-size: 15px;
+    font-weight: 700;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+/* ===== WRAPPER BOTTOM (copyright + políticas) ===== */
+.footer-bottom-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+/* ===== FILA 2: POLÍTICAS ===== */
+.footer-row-2 {
+    padding: 30px 0;
+}
+
+.footer-politicas {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 30px;
+}
+
+.footer-politicas li {
+    display: inline-block;
+}
+
+.footer-politicas a {
+    color: var(--Negro-XPERIENCE, #242422);
+    font-family: 'Montserrat';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    text-decoration: none;
+    letter-spacing: 2px;
+}
+
+/* ===== FILA 3: COPYRIGHT ===== */
+.footer-row-3 {
+    padding: 20px 0 0;
+    text-align: center;
+}
+
+.footer-copyright {
+    color: var(--Azul-01-XPERIENCE, #213975);
+    font-family: 'Montserrat';
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: 2px;
+}
+
+.footer-copyright a {
+    color: #000;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.footer-copyright a:hover {
+    text-decoration: underline;
+}
+
+.footer-copyright a {
+    margin-left: 8px;
+}
+
+/* ===== RESPONSIVE - 1100px Y MENOR ===== */
+@media (max-width: 1100px) {
+    #footer {
+        padding: 40px 15px 100px;
+        /* CLAVE: padding lateral para que no toque los bordes */
+    }
+
+    /* FILA 1: Todo en columna y centrado */
+    .footer-row-1 {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        padding-bottom: 20px;
+        text-align: center;
+    }
+
+    /* Columna 1: Logo centrado */
+    .footer-col-1 {
+        align-items: center;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .footer-logo {
+        margin-bottom: 15px;
+    }
+
+    .footer-logo img {
+        max-width: 200px;
+        margin: 0 auto;
+    }
+
+    /* Columnas 2, 3, 4: Todo centrado */
+    .footer-col-2,
+    .footer-col-3,
+    .footer-col-4 {
+        align-items: center;
+        text-align: center;
+    }
+
+    .footer-menu-title {
+        font-size: 24px;
+        margin-bottom: 15px;
+    }
+
+    .footer-menu {
+        text-align: center;
+    }
+
+    .footer-menu li {
+        margin-bottom: 12px;
+        text-align: center;
+    }
+
+    .footer-menu a {
+        font-size: 16px;
+    }
+
+    /* Contacto centrado */
+    .footer-contact-info {
+        gap: 15px;
+        align-items: center;
+    }
+
+    .footer-contact-item {
+        justify-content: center;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .footer-contact-item img {
+        width: 22px;
+        height: 22px;
+        margin-top: 0;
+    }
+
+    .footer-contact-text {
+        text-align: center;
+    }
+
+    .footer-direccion .footer-contact-text span,
+    .footer-phone .footer-contact-text a,
+    .footer-email .footer-contact-text a {
+        font-size: 16px;
+    }
+
+    /* Fila social responsive */
+    .footer-social-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .footer-social-icons {
+        justify-content: center;
+    }
+
+    /* FILA BOTTOM: en columna */
+    .footer-bottom-wrapper {
+        flex-direction: column;
+        gap: 20px;
+        align-items: center;
+        text-align: center;
+        padding-top: 20px;
+    }
+
+    .footer-row-2 {
+        padding: 0;
+        order: 1;
+    }
+
+    .footer-row-3 {
+        padding: 0;
+        order: 2;
+        border-top: 1px solid white;
+    }
+
+    .footer-politicas {
+        flex-direction: row;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .footer-politicas a {
+        font-size: 16px;
+        letter-spacing: 1px;
+        /* Reducido en móvil para evitar desbordamiento */
+    }
+
+    .footer-copyright {
+        font-size: 14px;
+        /* Era 16px, reducido para que quepa mejor */
+        padding-top: 20px;
+        letter-spacing: 1px;
+        /* Reducido en móvil */
+    }
+
+    .footer-copyright img {
+        max-width: 80px;
+        vertical-align: middle;
+    }
+}
+
+/* ===== PANTALLAS MUY PEQUEÑAS ===== */
+@media (max-width: 480px) {
+    #footer {
+        padding: 30px 10px 80px;
+    }
+
+    .footer-copyright {
+        font-size: 12px;
+        letter-spacing: 0.5px;
+    }
+
+    .footer-politicas a {
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+
+    .footer-menu-title {
+        font-size: 20px;
+    }
+
+    .custom-foother-span {
+        font-size: 14px;
+    }
+}
