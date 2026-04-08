@@ -52,25 +52,7 @@ $nonce = wp_create_nonce( 'ttra_admin_nonce' );
                             <p class="description"><?php esc_html_e( 'Solo letras, números y guiones.', 'tictac-reservas-agua' ); ?></p>
                         </td>
                     </tr>
-                    <tr>
-                        <th style="padding:10px 10px 10px 0;"><label for="cat-icono"><?php esc_html_e( 'Icono', 'tictac-reservas-agua' ); ?></label></th>
-                        <td style="padding:10px 0;">
-                            <div style="display:flex; flex-direction:column; gap:8px;">
-                                <input type="text" id="cat-icono" name="icono" style="width:60px; font-size:20px; text-align:center;"
-                                       value="<?php echo esc_attr( $editando->icono ?? '' ); ?>"
-                                       placeholder="🏄" maxlength="4">
-                                <div style="display:flex; flex-wrap:wrap; gap:6px;">
-                                    <?php
-                                    $emojis = ["\xF0\x9F\x8F\x84","\xF0\x9F\x9A\xA4","\xE2\x9B\xB5","\xF0\x9F\xA4\xBF","\xF0\x9F\x8F\x8A","\xF0\x9F\x9A\xA3","\xF0\x9F\x8E\xA3","\xF0\x9F\x9B\xB6","\xE2\x9A\x93","\xF0\x9F\x90\xAC","\xF0\x9F\x90\xB3","\xF0\x9F\x8C\x8A"];
-                                    foreach ( $emojis as $emoji ) : ?>
-                                        <button type="button" class="ttra-icon-pick"
-                                                onclick="document.getElementById('cat-icono').value=this.textContent"
-                                                style="font-size:22px; width:40px; height:40px; border:1px solid #ddd; border-radius:6px; background:#f6f7f7; cursor:pointer; display:flex; align-items:center; justify-content:center; padding:0;"><?php echo $emoji; ?></button>
-                                    <?php endforeach; ?>
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+
                     <tr>
                         <th><label for="cat-desc"><?php esc_html_e( 'Descripción', 'tictac-reservas-agua' ); ?></label></th>
                         <td>

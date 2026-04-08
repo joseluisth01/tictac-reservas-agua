@@ -15,7 +15,7 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
     <h1 class="ttra-admin-title">
         <span class="dashicons dashicons-admin-generic"></span>
         <?php esc_html_e( 'Actividades', 'tictac-reservas-agua' ); ?>
-        <a href="<?php echo admin_url( 'admin.php?page=ttra-actividades' ); ?>" class="page-title-action">
+        <a href="<?php echo admin_url( 'admin.php?page=ttra-actividades&nueva=1' ); ?>" class="page-title-action">
             + <?php esc_html_e( 'Nueva', 'tictac-reservas-agua' ); ?>
         </a>
     </h1>

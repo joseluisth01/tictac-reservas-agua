@@ -7,7 +7,7 @@
 if ( ! defined( 'ABSPATH' ) ) exit;
 ?>
 
-<div id="ttra-reservas-app" class="ttra-app" data-categoria="<?php echo esc_attr( $atts['categoria'] ?? '' ); ?>">
+<div id="ttra-reservas-app" class="ttra-app containerancho" data-categoria="<?php echo esc_attr( $atts['categoria'] ?? '' ); ?>">
 
     <!-- ══════════════ STEPPER ══════════════ -->
     <div class="ttra-stepper">
@@ -38,8 +38,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
             <!-- PASO 1: Actividades -->
             <div class="ttra-step" id="ttra-step-1" data-step="1">
                 <h2 class="ttra-step__title"><?php esc_html_e( 'ELIGE LAS ACTIVIDADES DESEADAS', 'tictac-reservas-agua' ); ?></h2>
-                <div class="ttra-wave-divider"></div>
-                <p class="ttra-step__desc" id="ttra-paso1-desc"></p>
+                <img src="<?php echo esc_url( wp_upload_dir()['baseurl'] . '/2026/04/Vector-18.svg' ); ?>" alt="">
+                <p class="ttra-step__desc" id="ttra-paso1-desc">Selecciona una o más actividades, elige número de personas participantes y cantidad de sesiones. En el siguiente paso concreta el día y la hora que quieres.</p>
 
                 <!-- Filtros de categoría -->
                 <div class="ttra-categories" id="ttra-categories-filter"></div>

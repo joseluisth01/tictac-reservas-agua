@@ -14,26 +14,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Genos:ital,wght@0,100..900;1,100..900&display=swap');
   </style>
 
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-DY9N3EK1QJ"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-    gtag('config', 'G-DY9N3EK1QJ');
-  </script>
-
-  <!-- Google Tag Manager -->
-  <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-  new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-  j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-  'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-  })(window,document,'script','dataLayer','GTM-KV9BDDVL');</script>
-  <!-- End Google Tag Manager -->
 </head>
 
 <?php $post_slug = get_post_field('post_name', get_post()); ?>
@@ -43,10 +31,6 @@
   body_class();
 ?> id="<?php echo $post_slug; ?>">
 
-<!-- Google Tag Manager (noscript) -->
-<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-KV9BDDVL"
-height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
-<!-- End Google Tag Manager (noscript) -->
 
   <header id="header" class="containerancho">
     <div class="header-logo">
@@ -89,11 +73,11 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
       <a href="<?php echo esc_url(home_url('/contacto')); ?>" class="contacto-link d-none d-lg-flex">
         <div class="contacto">
-         <svg class="me-2"xmlns="http://www.w3.org/2000/svg" width="24" height="23" viewBox="0 0 24 23" fill="none">
+        <svg class="me-2" xmlns="http://www.w3.org/2000/svg" width="24" height="23" viewBox="0 0 24 23" fill="none">
   <path d="M4.8 13.8H14.4V11.5H4.8V13.8ZM4.8 10.35H19.2V8.05H4.8V10.35ZM4.8 6.9H19.2V4.6H4.8V6.9ZM0 23V2.3C0 1.6675 0.235 1.12604 0.705 0.675625C1.175 0.225208 1.74 0 2.4 0H21.6C22.26 0 22.825 0.225208 23.295 0.675625C23.765 1.12604 24 1.6675 24 2.3V16.1C24 16.7325 23.765 17.274 23.295 17.7244C22.825 18.1748 22.26 18.4 21.6 18.4H4.8L0 23ZM3.78 16.1H21.6V2.3H2.4V17.3937L3.78 16.1Z" fill="white"/>
 </svg>
           RESERVAR AHORA
-
+          <img src="<?php echo site_url('/wp-content/uploads/2026/01/Vector-55.svg'); ?>" alt="">
         </div>
       </a>
     </div>
@@ -197,7 +181,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         const headerRect = header.getBoundingClientRect();
         const itemRect = menuItem.getBoundingClientRect();
 
-        panel.style.top = headerRect.top + 'px';
+   panel.style.top = (headerRect.top + 40) + 'px';
         panel.style.left = headerRect.left + 'px';
         panel.style.right = (window.innerWidth - headerRect.right) + 'px';
         panel.style.borderRadius = '0 0 ' + getComputedStyle(header).borderRadius.split(' ')[0] + ' ' + getComputedStyle(header).borderRadius.split(' ')[0];
@@ -247,7 +231,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         window.addEventListener('scroll', function() {
           if (currentOpenItem && panel.classList.contains('active')) {
             const headerRect = header.getBoundingClientRect();
-            panel.style.top = headerRect.top + 'px';
+          panel.style.top = (headerRect.top + 40) + 'px';
             panel.style.left = headerRect.left + 'px';
             panel.style.right = (window.innerWidth - headerRect.right) + 'px';
           }

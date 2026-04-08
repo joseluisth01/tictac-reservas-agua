@@ -31,7 +31,6 @@ class TTRA_Activator {
             nombre VARCHAR(255) NOT NULL,
             slug VARCHAR(255) NOT NULL,
             descripcion TEXT,
-            icono VARCHAR(100),
             orden INT DEFAULT 0,
             activa TINYINT(1) DEFAULT 1,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
