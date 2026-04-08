@@ -6,7 +6,7 @@
  * Toda la lógica de pasos, calendario, validación y pago se gestiona aquí.
  */
 
-(function() {
+(function () {
     'use strict';
 
     const App = {
@@ -194,10 +194,10 @@
                         <input type="checkbox" ${checked} data-id="${act.id}">
                     </div>
                     <div class="ttra-activity-card__info">
-                        <strong>${act.nombre}</strong>
-                        <span class="ttra-activity-card__subtipo">${act.subtipo || ''}</span>
+                        <strong>${act.nombre}</strong><span class="ttra-activity-card__subtipo">${act.subtipo || ''}</span>
                     </div>
                     <div class="ttra-activity-card__duration">
+                        <img src="${ttra_config.uploads_url}/2026/04/system-regular-162-update-hover-update-1.svg" alt="">
                         <span class="ttra-icon-clock"></span> ${act.duracion_minutos} minutos
                     </div>
                     <div class="ttra-activity-card__config">
@@ -216,7 +216,7 @@
                         <span class="ttra-price" data-id="${act.id}">${this.calcPrice(act, personas, sesiones)} ${ttra_config.currency_symbol}</span>
                         ${act.precio_tipo === 'por_persona' ? '<small class="ttra-price-note">' + act.precio_base + '€/pax</small>' : ''}
                     </div>
-                    <div class="ttra-activity-card__icon">🏄</div>
+                    <div class="ttra-activity-card__icon"><img src="${ttra_config.uploads_url}/2026/04/system-regular-162-update-hover-update-1-1.svg" alt=""></div>
                 </div>`;
             });
 
@@ -231,10 +231,10 @@
             let html = '';
             const b = ttra_config.badges;
             const l = ttra_config.labels;
-            if (b.cancelacion) html += `<div class="ttra-badge ttra-badge--trust">✅ ${l.cancelacion_gratuita}</div>`;
-            if (b.fianza)      html += `<div class="ttra-badge ttra-badge--trust">✅ ${l.no_fianza}</div>`;
-            if (b.pago_seguro) html += `<div class="ttra-badge ttra-badge--trust">🔒 ${l.pago_seguro}</div>`;
-            if (b.equipo)      html += `<div class="ttra-badge ttra-badge--trust">🛡️ ${l.equipo_seguridad}</div>`;
+             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.cancelacion_gratuita}</div>`;
+             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.no_fianza}</div>`;
+             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.pago_seguro}</div>`;
+             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.equipo_seguridad}</div>`;
             container.innerHTML = html;
         },
 
@@ -315,12 +315,12 @@
             if (!cal) return;
 
             const dias = await this.loadCalendar(actividadId, year, month);
-            const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
 
             let html = `
             <div class="ttra-cal-header">
                 <button class="ttra-cal-nav" data-dir="-1" data-idx="${idx}" data-act="${actividadId}">‹</button>
-                <span class="ttra-cal-month">${monthNames[month-1]} ${year}</span>
+                <span class="ttra-cal-month">${monthNames[month - 1]} ${year}</span>
                 <button class="ttra-cal-nav" data-dir="1" data-idx="${idx}" data-act="${actividadId}">›</button>
             </div>
             <div class="ttra-cal-grid">
@@ -341,7 +341,7 @@
 
             const totalDays = new Date(year, month, 0).getDate();
             for (let d = 1; d <= totalDays; d++) {
-                const fecha = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const fecha = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                 const info = dias[fecha];
                 const available = info && info.disponible;
                 const selected = this.state.selectedActivities[idx]?.fecha === fecha;
@@ -583,7 +583,7 @@
             const d = form.querySelector('[name="nacimiento_dia"]').value;
             const m = form.querySelector('[name="nacimiento_mes"]').value;
             const y = form.querySelector('[name="nacimiento_anyo"]').value;
-            if (d && m && y) return `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            if (d && m && y) return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
             return '';
         },
     };

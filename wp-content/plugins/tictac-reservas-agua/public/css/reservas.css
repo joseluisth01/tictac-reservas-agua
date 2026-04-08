@@ -9,7 +9,7 @@
 :root {
     --ttra-primary: #213975;
     --ttra-secondary: #27A5DE;
-    --ttra-accent: #F47920;
+    --ttra-accent: #FF5E00;
     --ttra-bg: #E8F4FD;
     --ttra-white: #FFFFFF;
     --ttra-gray-100: #F7F9FC;
@@ -71,7 +71,7 @@
     font-style: italic;
     font-weight: 700;
     line-height: 80%;
-    color:#213975;
+    color: #213975;
 }
 
 .ttra-stepper__step {
@@ -183,17 +183,23 @@
 
 .ttra-step__title {
     font-family: "Genos", sans-serif;
-font-size: 42px;
-font-style: italic;
-font-weight: 700;
-line-height: 70%;
-color: #213975;
+    font-size: 42px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 70%;
+    color: #213975;
     margin-bottom: 20px;
 }
 
 .ttra-step__desc {
-    color: var(--ttra-gray-600);
+    font-family: "Montserrat", sans-serif;
     font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 20px;
+    /* 142.857% */
+    letter-spacing: 2px;
+    color: black;
     margin: 20px 0px;
 }
 
@@ -244,13 +250,18 @@ color: #213975;
 .ttra-btn--primary {
     background: var(--ttra-accent);
     color: var(--ttra-white);
-    border-color: var(--ttra-accent);
+    box-shadow: 0 2.5px 5px 0 rgba(36, 36, 34, 0.60);
+font-family: "Montserrat";
+font-size: 15px;
+font-style: normal;
+font-weight: 800;
+line-height: 20px; /* 133.333% */
+letter-spacing: 1px;
+color: white;
 }
 
 .ttra-btn--primary:hover:not(:disabled) {
-    background: #e06610;
     transform: translateY(-1px);
-    box-shadow: 0 4px 16px rgba(244, 121, 32, 0.35);
 }
 
 .ttra-btn--primary:disabled {
@@ -283,7 +294,7 @@ color: #213975;
     margin: 0 auto;
     width: 100%;
     -webkit-overflow-scrolling: touch;
-    margin-bottom: 15px;
+    margin-bottom: 30px;
 }
 
 .ttra-cat-btn {
@@ -327,14 +338,17 @@ color: #213975;
 
 .ttra-activity-card {
     display: grid;
-    grid-template-columns: 40px 1fr auto auto auto 50px;
+    grid-template-columns: 30px 35% auto auto auto 50px;
     align-items: center;
     gap: 16px;
-    padding: 20px 24px;
-    border: 2px solid var(--ttra-gray-200);
-    border-radius: var(--ttra-radius);
-    background: var(--ttra-white);
+    padding: 30px 24px;
+    border: 2px solid #27A5DE;
+    border-radius: 40px;
+    background: white;
     transition: all var(--ttra-transition);
+
+    filter: drop-shadow(0 0 5px rgba(36, 36, 34, 0.25));
+
 }
 
 .ttra-activity-card:hover {
@@ -342,9 +356,11 @@ color: #213975;
     box-shadow: var(--ttra-shadow);
 }
 
-.ttra-activity-card--selected {
-    border-color: var(--ttra-secondary);
-    background: rgba(0, 160, 227, 0.04);
+.ttra-activity-card__check {
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    justify-content: center;
 }
 
 .ttra-activity-card__check input[type="checkbox"] {
@@ -355,31 +371,51 @@ color: #213975;
 }
 
 .ttra-activity-card__info strong {
-    display: block;
-    font-size: 15px;
-    color: var(--ttra-primary);
+    font-family: "Genos";
+    font-size: 30px;
+    font-style: italic;
     font-weight: 700;
+    line-height: 80%;
+    color: var(--ttra-primary);
 }
 
 .ttra-activity-card__subtipo {
-    font-size: 12px;
-    color: var(--ttra-gray-600);
+    font-family: "Montserrat";
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 22px;
+    color: #213975;
+    margin-left: 5px;
 }
 
 .ttra-activity-card__duration {
-    font-size: 13px;
-    color: var(--ttra-gray-600);
-    white-space: nowrap;
+    color: #213975;
+    font-family: "Montserrat";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
 }
 
 .ttra-activity-card__config {
     display: flex;
     gap: 12px;
+    font-family: "Montserrat";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
 }
 
 .ttra-activity-card__config label {
-    font-size: 12px;
-    color: var(--ttra-gray-600);
+    font-family: "Montserrat";
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 24px;
+    color: #213975;
+    white-space: nowrap;
     display: flex;
     align-items: center;
     gap: 6px;
@@ -387,13 +423,19 @@ color: #213975;
 
 .ttra-activity-card__price {
     text-align: right;
+    text-align: right;
+    display: flex;
+    align-content: center;
+    justify-content: flex-end;
 }
 
 .ttra-price {
-    font-size: 26px;
+    font-family: "Montserrat";
+    font-size: 38px;
+    font-style: normal;
     font-weight: 700;
-    color: var(--ttra-primary);
-    font-family: var(--ttra-font-display);
+    line-height: 70%;
+    color: #213975;
 }
 
 .ttra-price-note {
@@ -705,18 +747,20 @@ color: #213975;
     position: sticky;
     top: 32px;
     border: 2px solid var(--ttra-gray-200);
-    border-radius: var(--ttra-radius);
-    background: var(--ttra-white);
+    border-radius: 40px;
+    background: white;
     padding: 28px 24px;
-    box-shadow: var(--ttra-shadow);
+    box-shadow: 0 0 5px 0 rgba(36, 36, 34, 0.25);
 }
 
 .ttra-summary__title {
-    font-family: var(--ttra-font-display);
-    font-size: 20px;
+    font-family: "Genos";
+    font-size: 35px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 80%;
     color: var(--ttra-primary);
-    margin: 0 0 8px;
-    letter-spacing: 0.03em;
+    letter-spacing: 0px;
 }
 
 .ttra-summary__item {
@@ -728,17 +772,19 @@ color: #213975;
     display: flex;
     justify-content: space-between;
     font-weight: 700;
-    font-size: 14px;
-    color: var(--ttra-primary);
+    font-size: 16px;
+    color: black;
     margin-bottom: 8px;
+    font-family: "Montserrat";
 }
 
 .ttra-summary__item-detail {
     display: flex;
     justify-content: space-between;
-    font-size: 13px;
-    color: var(--ttra-gray-600);
+    font-size: 14px;
+    color: black;
     padding: 2px 0;
+    font-weight: 500;
 }
 
 .ttra-summary__total {
@@ -749,17 +795,21 @@ color: #213975;
 }
 
 .ttra-summary__total-label {
-    font-family: var(--ttra-font-display);
-    font-size: 22px;
-    color: var(--ttra-secondary);
-    letter-spacing: 0.03em;
+    font-family: "Genos";
+font-size: 35px;
+font-style: italic;
+font-weight: 700;
+line-height: 80%; 
+color: #27A5DE;
 }
 
 .ttra-summary__total-price {
-    font-family: var(--ttra-font-display);
-    font-size: 22px;
-    color: var(--ttra-secondary);
-    font-weight: 700;
+    font-family: Genos;
+font-size: 35px;
+font-style: italic;
+font-weight: 700;
+line-height: 80%;
+    color: #213975;
 }
 
 /* Trust badges */
@@ -773,13 +823,17 @@ color: #213975;
 .ttra-badge--trust {
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    padding: 10px 14px;
-    background: var(--ttra-gray-100);
-    border-radius: var(--ttra-radius-sm);
-    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: linear-gradient(0deg, rgba(39, 165, 222, 0.20) 0%, rgba(39, 165, 222, 0.20) 100%), #FFF;
+    font-family: "Montserrat";
+    font-size: 14px;
+    font-style: normal;
     font-weight: 600;
-    color: var(--ttra-gray-800);
+    line-height: 22px;
+    color: #213975;
 }
 
 /* Sidebar CTA */

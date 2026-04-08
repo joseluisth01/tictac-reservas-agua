@@ -178,7 +178,8 @@ if ( ! defined( 'ABSPATH' ) ) exit;
         <aside class="ttra-layout__sidebar">
             <div class="ttra-summary" id="ttra-summary">
                 <h3 class="ttra-summary__title"><?php esc_html_e( 'RESUMEN DE LA RESERVA', 'tictac-reservas-agua' ); ?></h3>
-                <div class="ttra-wave-divider ttra-wave-divider--sm"></div>
+                                <img src="<?php echo esc_url( wp_upload_dir()['baseurl'] . '/2026/04/Vector-18.svg' ); ?>" alt="">
+
 
                 <div class="ttra-summary__items" id="ttra-summary-items">
                     <!-- Se rellena dinámicamente por JS -->
