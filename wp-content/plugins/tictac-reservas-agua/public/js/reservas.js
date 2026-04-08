@@ -231,10 +231,10 @@
             let html = '';
             const b = ttra_config.badges;
             const l = ttra_config.labels;
-             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.cancelacion_gratuita}</div>`;
-             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.no_fianza}</div>`;
-             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.pago_seguro}</div>`;
-             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.equipo_seguridad}</div>`;
+            html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.cancelacion_gratuita}</div>`;
+            html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.no_fianza}</div>`;
+            html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.pago_seguro}</div>`;
+            html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.equipo_seguridad}</div>`;
             container.innerHTML = html;
         },
 
@@ -509,25 +509,48 @@
         },
 
         updateNextButton() {
-            const btn = document.querySelector('#ttra-step-1 .ttra-btn--next');
-            if (btn) btn.disabled = this.state.selectedActivities.length === 0;
-        },
+    const btn = document.querySelector('#ttra-step-1 .ttra-btn--next');
+    if (btn) btn.disabled = this.state.selectedActivities.length === 0;
+
+    // Sincronizar sidebar
+    this.updateSidebarCTA();
+},
 
         updateSidebarCTA() {
             const btn = document.getElementById('ttra-sidebar-cta');
             if (!btn) return;
+
             const next = this.state.currentStep + 1;
             if (next <= 4) {
                 btn.textContent = `${ttra_config.i18n.continuar} (PASO ${next}) →`;
             } else {
                 btn.textContent = `${ttra_config.i18n.finalizar} →`;
             }
+
+            // Paso 1: deshabilitar hasta que haya al menos una actividad seleccionada
+            if (this.state.currentStep === 1) {
+                btn.disabled = this.state.selectedActivities.length === 0;
+
+                // Paso 2: deshabilitar hasta que todas tengan fecha y hora
+            } else if (this.state.currentStep === 2) {
+                const allDone = this.state.selectedActivities.every(a => a.fecha && a.hora);
+                btn.disabled = !allDone;
+
+            } else {
+                btn.disabled = false;
+            }
         },
 
         checkStep2Complete() {
             const allDone = this.state.selectedActivities.every(a => a.fecha && a.hora);
-            const btn = document.querySelector('#ttra-step-2 .ttra-btn--next');
-            if (btn) btn.disabled = !allDone;
+
+            // Botón inferior del paso 2
+            const btnNext = document.querySelector('#ttra-step-2 .ttra-btn--next');
+            if (btnNext) btnNext.disabled = !allDone;
+
+            // Botón del sidebar
+            const btnSidebar = document.getElementById('ttra-sidebar-cta');
+            if (btnSidebar && this.state.currentStep === 2) btnSidebar.disabled = !allDone;
         },
 
         // ── Submit ──

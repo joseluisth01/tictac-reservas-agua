@@ -50,74 +50,75 @@
    ═══════════════════════════════════════ */
 .ttra-stepper {
     display: flex;
-    justify-content: space-between;
     gap: 8px;
     margin-bottom: 32px;
     padding: 16px 0;
 }
 
-.ttra-stepper__step--active .ttra-stepper__label {
-    font-family: "Genos", sans-serif;
-    font-size: 30px;
-    font-style: italic;
-    font-weight: 700;
-    line-height: 80%;
-    color: white;
+.ttra-stepper__step {
+    flex: 1;
+    /* ocupa ancho proporcional igual */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    padding: 14px 12px;
+    border-radius: 50px;
+    background: var(--ttra-white);
+    cursor: default;
+    box-shadow: 0 10px 15px -3px rgba(36, 36, 34, .25), 0 4px 6px -4px rgba(36, 36, 34, .25);
+    transition: background var(--ttra-transition), color var(--ttra-transition);
+    text-align: center;
 }
 
+/* ── Iconos: visibilidad según estado ── */
+.ttra-stepper__icon {
+    width: 40px;
+    height: 40px;
+    display: none;
+    /* ocultar todos por defecto */
+    object-fit: contain;
+}
+
+/* Pendiente (ni activo ni completado) → icono pendiente */
+.ttra-stepper__step:not(.ttra-stepper__step--active):not(.ttra-stepper__step--completed) .ttra-stepper__icon--pending {
+    display: block;
+}
+
+/* En curso → icono activo */
+.ttra-stepper__step--active .ttra-stepper__icon--active {
+    display: block;
+}
+
+/* Realizado → icono completado */
+.ttra-stepper__step--completed .ttra-stepper__icon--completed {
+    display: block;
+}
+
+/* ── Labels ── */
 .ttra-stepper__label {
-    font-family: "Genos", sans-serif;
-    font-size: 30px;
+    font-family: "Genos";
+    font-size: 25px;
     font-style: italic;
     font-weight: 700;
     line-height: 80%;
     color: #213975;
 }
 
-.ttra-stepper__step {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 12px 24px;
-    border-radius: 50px;
-    background: var(--ttra-white);
-    font-family: var(--ttra-font-display);
-    font-size: 14px;
-    letter-spacing: 0.05em;
-    color: var(--ttra-gray-400);
-    transition: all var(--ttra-transition);
-    cursor: default;
-    box-shadow: 0 10px 15px -3px rgba(36, 36, 34, 0.25), 0 4px 6px -4px rgba(36, 36, 34, 0.25);
-    white-space: nowrap;
+.ttra-stepper__step--active .ttra-stepper__label {
+    color: white;
 }
 
 .ttra-stepper__step--active {
-    background: var(--ttra-secondary);
-    border-color: var(--ttra-secondary);
-    color: var(--ttra-white);
+    background: #27A5DE;
 }
 
 .ttra-stepper__step--completed {
-    background: var(--ttra-primary);
-    border-color: var(--ttra-primary);
-    color: var(--ttra-white);
+    background: #213975;
 }
 
-.ttra-stepper__number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.2);
-    font-weight: 700;
-    font-size: 13px;
-}
-
-.ttra-stepper__step--active .ttra-stepper__number,
-.ttra-stepper__step--completed .ttra-stepper__number {
-    background: rgba(255, 255, 255, 0.3);
+.ttra-stepper__step--completed .ttra-stepper__label {
+    color: #27A5DE;
 }
 
 @media (max-width: 768px) {
@@ -127,14 +128,19 @@
     }
 
     .ttra-stepper__step {
-        padding: 8px 14px;
-        font-size: 11px;
+        flex: 1 1 calc(50% - 6px);
+        /* 2 columnas en móvil */
+        padding: 10px 8px;
+        border-radius: 20px;
     }
 
-    .ttra-stepper__number {
-        width: 22px;
-        height: 22px;
-        font-size: 11px;
+    .ttra-stepper__icon {
+        width: 32px;
+        height: 32px;
+    }
+
+    .ttra-stepper__label {
+        font-size: 13px;
     }
 }
 
@@ -251,13 +257,14 @@
     background: var(--ttra-accent);
     color: var(--ttra-white);
     box-shadow: 0 2.5px 5px 0 rgba(36, 36, 34, 0.60);
-font-family: "Montserrat";
-font-size: 15px;
-font-style: normal;
-font-weight: 800;
-line-height: 20px; /* 133.333% */
-letter-spacing: 1px;
-color: white;
+    font-family: "Montserrat";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 20px;
+    /* 133.333% */
+    letter-spacing: 1px;
+    color: white;
 }
 
 .ttra-btn--primary:hover:not(:disabled) {
@@ -270,9 +277,17 @@ color: white;
 }
 
 .ttra-btn--outline {
-    background: var(--ttra-white);
-    color: var(--ttra-primary);
-    border-color: var(--ttra-primary);
+    border-radius: 50px;
+    border: 2px solid var(--Azul-01-XPERIENCE, #213975);
+    background: rgba(255, 255, 255, 0.50);
+    backdrop-filter: blur(6px);
+    color: #213975;
+    font-family: "Montserrat";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 20px;
+    letter-spacing: 1px;
 }
 
 .ttra-btn--outline:hover {
@@ -796,19 +811,19 @@ color: white;
 
 .ttra-summary__total-label {
     font-family: "Genos";
-font-size: 35px;
-font-style: italic;
-font-weight: 700;
-line-height: 80%; 
-color: #27A5DE;
+    font-size: 35px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 80%;
+    color: #27A5DE;
 }
 
 .ttra-summary__total-price {
     font-family: Genos;
-font-size: 35px;
-font-style: italic;
-font-weight: 700;
-line-height: 80%;
+    font-size: 35px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 80%;
     color: #213975;
 }
 
@@ -876,4 +891,73 @@ line-height: 80%;
     text-align: center;
     padding: 40px;
     color: var(--ttra-gray-400);
+}
+
+
+.garantias {
+    display: flex;
+    gap: 16px;
+    margin: 80px 0px;
+    justify-content: center;
+}
+
+.garantias__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    background: #27A5DE;
+    border-radius: 40px;
+    padding: 28px 20px;
+    text-align: center;
+    box-shadow: 0 10px 15px -3px rgba(36, 36, 34, 0.25), 0 4px 6px -4px rgba(36, 36, 34, 0.25);
+
+}
+
+.garantias__icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+}
+
+.garantias__icon img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.garantias__label {
+    color: var(--Azul-01-XPERIENCE, #213975);
+    text-align: center;
+    /* Desktop Text/Cat. 04 XPERIENCE (Desktop) */
+    font-family: "Genos";
+    font-size: 30px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 80%;
+    /* 24px */
+}
+
+@media (max-width: 768px) {
+    .garantias {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .garantias__item {
+        flex: 1 1 calc(50% - 12px);
+    }
+}
+
+@media (max-width: 480px) {
+    .garantias__item {
+        flex: 1 1 100%;
+    }
 }
