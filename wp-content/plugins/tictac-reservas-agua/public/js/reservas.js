@@ -332,11 +332,12 @@
             if (!container) return;
 
             const methods = ttra_config.metodos_pago;
+            const u = ttra_config.uploads_url + '/2026/04/';
             const labels = {
-                tarjeta: { name: 'Tarjeta de Crédito/Débito', sub: 'Visa, Mastercard', icon: '💳' },
-                bizum: { name: 'Bizum', sub: '', icon: '📱' },
-                google_pay: { name: 'Google Pay', sub: '', icon: '🅖' },
-                apple_pay: { name: 'Apple Pay', sub: '', icon: '🍎' },
+                tarjeta:    { name: 'Tarjeta de Crédito/Débito', sub: 'Visa, Mastercard', icon: `<img src="${u}Icons-Cards.svg"   alt="Tarjeta"    style="height:28px;object-fit:contain">` },
+                bizum:      { name: 'Bizum',                      sub: '',                 icon: `<img src="${u}Icons-Cards-1.svg" alt="Bizum"      style="height:28px;object-fit:contain">` },
+                google_pay: { name: 'Google Pay',                 sub: '',                 icon: `<img src="${u}Icons-Cards-2.svg" alt="Google Pay" style="height:28px;object-fit:contain">` },
+                apple_pay:  { name: 'Apple Pay',                  sub: '',                 icon: `<img src="${u}Icons-Cards-3.svg" alt="Apple Pay"  style="height:28px;object-fit:contain">` },
             };
 
             let html = '';

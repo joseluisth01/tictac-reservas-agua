@@ -468,7 +468,42 @@
 .ttra-stepper{
     position: sticky;
     top: 105px;
-    z-index: 9999999999999999999999999999999;
+    z-index: 9999;
+}
+
+.ttra-payment-option input[type="radio"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    border: 1px solid #706F6F;
+    border-radius: 6px;        /* cuadrado con esquinas redondeadas */
+    background: #fff;
+    cursor: pointer;
+    position: relative;
+    transition: background .2s, border-color .2s;
+    flex-shrink: 0;
+}
+ 
+/* Check cuando está seleccionado */
+.ttra-payment-option input[type="radio"]:checked {
+    background: #27A5DE;
+    border-color: #27A5DE;
+}
+ 
+/* Tick interior */
+.ttra-payment-option input[type="radio"]:checked::after {
+    content: '';
+    position: absolute;
+    top: 4px;
+    left: 7px;
+    width: 5px;
+    height: 9px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(45deg);
 }
 
 .ttra-price {
@@ -752,6 +787,7 @@ line-height: 22px; /* 137.5% */
     background: white;
     transition: all var(--ttra-transition);
     filter: drop-shadow(0 0 5px rgba(36, 36, 34, 0.25));
+    gap: 15px;
 }
 
 .ttra-payment-option:hover {
@@ -760,18 +796,12 @@ line-height: 22px; /* 137.5% */
 
 .ttra-payment-option--selected {
     border-color: var(--ttra-secondary);
-    background: rgba(0, 160, 227, 0.04);
 }
 
-.ttra-payment-option input[type="radio"] {
-    width: 20px;
-    height: 20px;
-    accent-color: var(--ttra-secondary);
-}
+
 
 .ttra-payment-option__info {
     flex: 1;
-    display: flex;
     align-items: center;
 }
 
@@ -797,9 +827,7 @@ font-weight: 500;
 line-height: 22px; /* 137.5% */
 }
 
-.ttra-payment-option__icon {
-    font-size: 24px;
-}
+
 
 /* ═══════════════════════════════════════
    SIDEBAR SUMMARY
