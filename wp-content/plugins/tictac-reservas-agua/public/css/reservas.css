@@ -144,6 +144,11 @@
     }
 }
 
+.ttra-layout__sidebar {
+    position: sticky;
+    top: 210px;
+}
+
 /* ═══════════════════════════════════════
    LAYOUT (Main + Sidebar)
    ═══════════════════════════════════════ */
@@ -352,10 +357,10 @@
 }
 
 .ttra-activity-card {
-    display: grid;
-    grid-template-columns: 30px 35% auto auto auto 50px;
+    display: flex;
+    
+    justify-content: space-between;
     align-items: center;
-    gap: 16px;
     padding: 30px 24px;
     border: 2px solid #27A5DE;
     border-radius: 40px;
@@ -364,6 +369,20 @@
 
     filter: drop-shadow(0 0 5px rgba(36, 36, 34, 0.25));
 
+}
+
+.ttra-activity-card_left{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: flex-start;
+}
+
+.ttra-activity-card_right{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    justify-content: flex-end;
 }
 
 .ttra-activity-card:hover {
@@ -411,6 +430,8 @@
     font-style: normal;
     font-weight: 500;
     line-height: 24px;
+    display: flex;
+    gap: 10px;
 }
 
 .ttra-activity-card__config {
@@ -444,6 +465,12 @@
     justify-content: flex-end;
 }
 
+.ttra-stepper{
+    position: sticky;
+    top: 105px;
+    z-index: 9999999999999999999999999999999;
+}
+
 .ttra-price {
     font-family: "Montserrat";
     font-size: 38px;
@@ -451,6 +478,7 @@
     font-weight: 700;
     line-height: 70%;
     color: #213975;
+    width: 160px;
 }
 
 .ttra-price-note {
@@ -638,10 +666,12 @@
    FORM (Step 3)
    ═══════════════════════════════════════ */
 .ttra-form {
-    border: 2px solid var(--ttra-gray-200);
-    border-radius: var(--ttra-radius);
+    border: 2px solid #27A5DE;
+    border-radius: 40px;
     padding: 32px;
-    background: var(--ttra-white);
+    background: white;
+    filter: drop-shadow(0 0 5px rgba(36, 36, 34, 0.25));
+
 }
 
 .ttra-form__row {
@@ -656,19 +686,22 @@
 }
 
 .ttra-form__field label {
-    display: block;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ttra-gray-600);
-    margin-bottom: 6px;
+    color: var(--Azul-01-XPERIENCE, #213975);
+
+/* Desktop Text/Text 02 XPERIENCE (Desktop) */
+font-family: "Montserrat";
+font-size: 16px;
+font-style: normal;
+font-weight: 600;
+line-height: 22px; /* 137.5% */
 }
 
 .ttra-form__field input,
 .ttra-form__field select {
     width: 100%;
     padding: 12px 16px;
-    border: 2px solid var(--ttra-gray-200);
-    border-radius: var(--ttra-radius-sm);
+    border: 1px solid #706F6F;
+    border-radius: 10px;
     font-size: 14px;
     color: var(--ttra-gray-800);
     transition: border-color var(--ttra-transition);
@@ -711,14 +744,14 @@
 
 .ttra-payment-option {
     display: flex;
+    justify-content: space-between;
     align-items: center;
-    gap: 16px;
-    padding: 20px 24px;
-    border: 2px solid var(--ttra-gray-200);
-    border-radius: var(--ttra-radius);
-    background: var(--ttra-white);
-    cursor: pointer;
+    padding: 30px 24px;
+    border: 2px solid #27A5DE;
+    border-radius: 40px;
+    background: white;
     transition: all var(--ttra-transition);
+    filter: drop-shadow(0 0 5px rgba(36, 36, 34, 0.25));
 }
 
 .ttra-payment-option:hover {
@@ -738,17 +771,30 @@
 
 .ttra-payment-option__info {
     flex: 1;
+    display: flex;
+    align-items: center;
 }
 
 .ttra-payment-option__info strong {
-    display: block;
-    color: var(--ttra-primary);
-    font-size: 15px;
+    color: var(--Azul-01-XPERIENCE, #213975);
+
+/* Desktop Text/Cat. 04 XPERIENCE (Desktop) */
+font-family: "Genos";
+font-size: 30px;
+font-style: italic;
+font-weight: 700;
+line-height: 80%; /* 24px */
 }
 
 .ttra-payment-option__info span {
-    font-size: 12px;
-    color: var(--ttra-gray-600);
+    color: var(--Azul-01-XPERIENCE, #213975);
+
+/* Mobile Text/SubClaim 02  XPERIENCE (Mobile) */
+font-family: "Montserrat";
+font-size: 16px;
+font-style: normal;
+font-weight: 500;
+line-height: 22px; /* 137.5% */
 }
 
 .ttra-payment-option__icon {
@@ -959,5 +1005,87 @@
 @media (max-width: 480px) {
     .garantias__item {
         flex: 1 1 100%;
+    }
+}
+
+
+/* ── Separador "PREMIUM" — barra azul con texto blanco centrado ── */
+.ttra-premium-divider {
+    background: #27A5DE;
+    border-radius: 20px;
+    text-align: center;
+    padding: 8px 20px;
+    margin: 24px 0 12px;
+}
+.ttra-premium-divider::before,
+.ttra-premium-divider::after {
+    display: none; /* sin líneas decorativas laterales */
+}
+.ttra-premium-divider__label {
+    font-family: "Montserrat", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+ 
+/* ── Tarjeta PREMIUM — fondo azul claro, borde azul ── */
+.ttra-activity-card--premium {
+    border-color: #27A5DE;
+    background: #E8F4FD;
+    box-shadow: 0 0 5px 0 rgba(36, 36, 34, 0.25);
+}
+.ttra-activity-card--premium:hover {
+    border-color: #213975;
+    box-shadow: 0 4px 16px rgba(39, 165, 222, 0.25);
+}
+ 
+/* Sin línea de acento lateral */
+.ttra-activity-card--premium::before {
+    display: none;
+}
+ 
+/* Precio → mismo azul oscuro que el resto */
+.ttra-activity-card--premium .ttra-price {
+    color: #213975;
+}
+ 
+/* Checkbox → azul */
+.ttra-activity-card--premium input[type="checkbox"] {
+    accent-color: #27A5DE;
+}
+ 
+/* Badge PREMIUM dentro de la tarjeta → oculto */
+.ttra-premium-badge {
+    display: none;
+}
+ 
+/* ── €/pax icon ── */
+.ttra-activity-card__pax {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: 10px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: #213975;
+    vertical-align: middle;
+
+}
+.ttra-pax-icon {
+    width: 25px;
+}
+ 
+@media (max-width: 768px) {
+    .ttra-activity-card__duration {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+    }
+    .ttra-activity-card__pax {
+        margin-left: 0;
     }
 }

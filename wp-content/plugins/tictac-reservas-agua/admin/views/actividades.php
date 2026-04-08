@@ -2,6 +2,10 @@
 /**
  * Vista admin: Actividades.
  * Variables: $actividades, $categorias, $editando
+ *
+ * CHANGELOG v1.1.0
+ *   + Campo `premium`    → checkbox en sección Opciones
+ *   + Campo `precio_pax` → input numérico en sección Precio y duración
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -40,9 +44,10 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
 
             <div class="ttra-form-grid">
 
-                <!-- Columna principal -->
+                <!-- ══ COLUMNA PRINCIPAL ══ -->
                 <div class="ttra-form-col">
 
+                    <!-- Información básica -->
                     <div class="ttra-form-section">
                         <h3 class="ttra-form-section__title">📋 <?php esc_html_e( 'Información básica', 'tictac-reservas-agua' ); ?></h3>
 
@@ -55,7 +60,7 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                                         <?php foreach ( $categorias as $cat ) : ?>
                                             <option value="<?php echo $cat->id; ?>"
                                                 <?php selected( $editando->categoria_id ?? 0, $cat->id ); ?>>
-                                                <?php echo esc_html( $cat->icono . ' ' . $cat->nombre ); ?>
+                                                <?php echo esc_html( ( $cat->icono ?? '' ) . ' ' . $cat->nombre ); ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </select>
@@ -92,6 +97,7 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                         </table>
                     </div>
 
+                    <!-- Precio y duración -->
                     <div class="ttra-form-section">
                         <h3 class="ttra-form-section__title">💶 <?php esc_html_e( 'Precio y duración', 'tictac-reservas-agua' ); ?></h3>
 
@@ -110,7 +116,7 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                                     <label class="ttra-radio-option">
                                         <input type="radio" name="precio_tipo" value="fijo"
                                             <?php checked( $editando->precio_tipo ?? 'fijo', 'fijo' ); ?>>
-                                        <span><?php esc_html_e( 'Precio fijo (por reserva)', 'tictac-reservas-agua' ); ?></span>
+                                        <span><?php esc_html_e( 'Precio fijo (por reserva / sesión)', 'tictac-reservas-agua' ); ?></span>
                                     </label>
                                     <label class="ttra-radio-option">
                                         <input type="radio" name="precio_tipo" value="por_persona"
@@ -127,9 +133,36 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                                     <span class="description">€</span>
                                 </td>
                             </tr>
+
+                            <!-- ─── NUEVO: Precio por persona (€/pax) ─── -->
+                            <tr>
+                                <th>
+                                    <label for="act-precio-pax">
+                                        <?php esc_html_e( 'Precio adicional por persona (€/pax)', 'tictac-reservas-agua' ); ?>
+                                    </label>
+                                </th>
+                                <td>
+                                    <input type="number" id="act-precio-pax" name="precio_pax" class="small-text"
+                                           value="<?php echo isset( $editando->precio_pax ) && $editando->precio_pax !== null ? floatval( $editando->precio_pax ) : ''; ?>"
+                                           min="0" step="0.01"
+                                           placeholder="<?php esc_attr_e( 'ej: 25', 'tictac-reservas-agua' ); ?>">
+                                    <span class="description">€/pax</span>
+                                    <p class="description" style="margin-top:4px">
+                                        <?php esc_html_e( 'Se suma al precio base. Aparece junto a la duración en la ficha de actividad (ej: "25 €/pax"). Déjalo en blanco si no aplica.', 'tictac-reservas-agua' ); ?>
+                                    </p>
+                                    <!-- Preview del icono que verá el cliente -->
+                                    <?php $uploads_url = wp_upload_dir()['baseurl']; ?>
+                                    <div style="margin-top:8px;display:flex;align-items:center;gap:8px;color:#00A0E3;font-size:12px">
+                                        <img src="<?php echo esc_url( $uploads_url . '/2026/04/f59a5831c4e43fbcb8399379ef09067f4693fdb8.gif' ); ?>"
+                                             alt="icono pax" style="width:22px;height:22px;object-fit:contain">
+                                        <span><?php esc_html_e( 'Icono que verá el cliente junto al precio/pax', 'tictac-reservas-agua' ); ?></span>
+                                    </div>
+                                </td>
+                            </tr>
                         </table>
                     </div>
 
+                    <!-- Personas y sesiones -->
                     <div class="ttra-form-section">
                         <h3 class="ttra-form-section__title">👥 <?php esc_html_e( 'Personas y sesiones', 'tictac-reservas-agua' ); ?></h3>
 
@@ -158,11 +191,12 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                         </table>
                     </div>
 
-                </div>
+                </div><!-- .ttra-form-col (principal) -->
 
-                <!-- Columna lateral -->
+                <!-- ══ COLUMNA LATERAL ══ -->
                 <div class="ttra-form-col ttra-form-col--aside">
 
+                    <!-- Imagen -->
                     <div class="ttra-form-section">
                         <h3 class="ttra-form-section__title">🖼️ <?php esc_html_e( 'Imagen', 'tictac-reservas-agua' ); ?></h3>
 
@@ -192,28 +226,46 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                         </div>
                     </div>
 
+                    <!-- Opciones -->
                     <div class="ttra-form-section">
                         <h3 class="ttra-form-section__title">⚙️ <?php esc_html_e( 'Opciones', 'tictac-reservas-agua' ); ?></h3>
 
                         <div class="ttra-checklist">
+
                             <label class="ttra-toggle">
                                 <input type="checkbox" name="activa" value="1"
                                     <?php checked( $editando->activa ?? 1, 1 ); ?>>
                                 <span class="ttra-toggle__slider"></span>
                                 <span class="ttra-toggle__label"><?php esc_html_e( 'Actividad activa', 'tictac-reservas-agua' ); ?></span>
                             </label>
+
+                            <!-- ─── NUEVO: Premium ─── -->
+                            <label class="ttra-toggle" style="margin-top:4px;padding:10px;border:2px solid #F47920;border-radius:8px;background:#fff8f3">
+                                <input type="checkbox" name="premium" value="1" id="cb-premium"
+                                    <?php checked( $editando->premium ?? 0, 1 ); ?>>
+                                <span class="ttra-toggle__slider" style="background:<?php echo ( $editando->premium ?? 0 ) ? '#F47920' : '#ccc'; ?>"></span>
+                                <span class="ttra-toggle__label" style="font-weight:700;color:#F47920">
+                                    ⭐ <?php esc_html_e( 'Actividad PREMIUM', 'tictac-reservas-agua' ); ?>
+                                </span>
+                            </label>
+                            <p class="description" style="margin:4px 0 12px 52px;font-size:11px">
+                                <?php esc_html_e( 'Las actividades premium se muestran al final de la lista con un estilo visual diferenciado.', 'tictac-reservas-agua' ); ?>
+                            </p>
+
                             <label class="ttra-toggle">
                                 <input type="checkbox" name="cancelacion_gratuita" value="1"
                                     <?php checked( $editando->cancelacion_gratuita ?? 1, 1 ); ?>>
                                 <span class="ttra-toggle__slider"></span>
                                 <span class="ttra-toggle__label"><?php esc_html_e( 'Cancelación gratuita', 'tictac-reservas-agua' ); ?></span>
                             </label>
+
                             <label class="ttra-toggle">
                                 <input type="checkbox" name="requiere_equipo" value="1"
                                     <?php checked( $editando->requiere_equipo ?? 0, 1 ); ?>>
                                 <span class="ttra-toggle__slider"></span>
                                 <span class="ttra-toggle__label"><?php esc_html_e( 'Requiere equipo de seguridad', 'tictac-reservas-agua' ); ?></span>
                             </label>
+
                             <label class="ttra-toggle" id="toggle-fianza">
                                 <input type="checkbox" name="requiere_fianza" value="1" id="cb-fianza"
                                     <?php checked( $editando->requiere_fianza ?? 0, 1 ); ?>>
@@ -233,16 +285,23 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                                 <td>
                                     <input type="number" id="act-orden" name="orden" class="small-text"
                                            value="<?php echo intval( $editando->orden ?? 0 ); ?>" min="0">
+                                    <p class="description"><?php esc_html_e( 'Dentro de su categoría. Las actividades de la misma categoría se ordenan también por duración de menor a mayor.', 'tictac-reservas-agua' ); ?></p>
                                 </td>
                             </tr>
                         </table>
                     </div>
 
-                </div>
+                </div><!-- .ttra-form-col--aside -->
+
             </div><!-- .ttra-form-grid -->
 
             <div class="ttra-form-actions">
-                <?php submit_button( $editando ? __( 'Actualizar Actividad', 'tictac-reservas-agua' ) : __( 'Crear Actividad', 'tictac-reservas-agua' ), 'primary', 'submit', false ); ?>
+                <?php submit_button(
+                    $editando
+                        ? __( 'Actualizar Actividad', 'tictac-reservas-agua' )
+                        : __( 'Crear Actividad', 'tictac-reservas-agua' ),
+                    'primary', 'submit', false
+                ); ?>
                 <a href="<?php echo admin_url( 'admin.php?page=ttra-actividades' ); ?>" class="button">
                     <?php esc_html_e( 'Cancelar', 'tictac-reservas-agua' ); ?>
                 </a>
@@ -266,7 +325,7 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
             ?>
                 <a href="<?php echo admin_url( 'admin.php?page=ttra-actividades&cat=' . $cat->id ); ?>"
                    class="ttra-pill <?php echo $cat_filter == $cat->id ? 'ttra-pill--active' : ''; ?>">
-                    <?php echo esc_html( $cat->icono . ' ' . $cat->nombre ); ?>
+                    <?php echo esc_html( ( $cat->icono ?? '' ) . ' ' . $cat->nombre ); ?>
                     <span class="ttra-pill-count"><?php echo $cnt; ?></span>
                 </a>
             <?php endforeach; ?>
@@ -291,9 +350,11 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                         <th><?php esc_html_e( 'Nombre', 'tictac-reservas-agua' ); ?></th>
                         <th><?php esc_html_e( 'Categoría', 'tictac-reservas-agua' ); ?></th>
                         <th><?php esc_html_e( 'Duración', 'tictac-reservas-agua' ); ?></th>
-                        <th><?php esc_html_e( 'Precio', 'tictac-reservas-agua' ); ?></th>
+                        <th><?php esc_html_e( 'Precio base', 'tictac-reservas-agua' ); ?></th>
+                        <th><?php esc_html_e( '€/pax', 'tictac-reservas-agua' ); ?></th>
                         <th><?php esc_html_e( 'Personas', 'tictac-reservas-agua' ); ?></th>
                         <th style="width:80px"><?php esc_html_e( 'Estado', 'tictac-reservas-agua' ); ?></th>
+                        <th style="width:80px"><?php esc_html_e( 'Premium', 'tictac-reservas-agua' ); ?></th>
                         <th style="width:140px"><?php esc_html_e( 'Acciones', 'tictac-reservas-agua' ); ?></th>
                     </tr>
                 </thead>
@@ -301,8 +362,9 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                     <?php foreach ( $lista as $act ) :
                         $img_url = $act->imagen_id ? wp_get_attachment_image_url( $act->imagen_id, 'thumbnail' ) : '';
                         $cat_obj = current( array_filter( $categorias, fn($c) => $c->id == $act->categoria_id ) );
+                        $is_premium = !empty( $act->premium );
                     ?>
-                    <tr>
+                    <tr style="<?php echo $is_premium ? 'background:linear-gradient(90deg,#fff8f0 0%,#fff 100%);border-left:3px solid #F47920' : ''; ?>">
                         <td class="ttra-cell-icon">
                             <?php if ( $img_url ) : ?>
                                 <img src="<?php echo esc_url( $img_url ); ?>" style="width:44px;height:44px;object-fit:cover;border-radius:6px;">
@@ -316,7 +378,7 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                                 <br><span class="ttra-text-muted"><?php echo esc_html( $act->subtipo ); ?></span>
                             <?php endif; ?>
                         </td>
-                        <td><?php echo $cat_obj ? esc_html( $cat_obj->icono . ' ' . $cat_obj->nombre ) : '—'; ?></td>
+                        <td><?php echo $cat_obj ? esc_html( ( $cat_obj->icono ?? '' ) . ' ' . $cat_obj->nombre ) : '—'; ?></td>
                         <td><?php echo intval( $act->duracion_minutos ); ?> min</td>
                         <td>
                             <strong><?php echo TTRA_Helpers::formato_precio( $act->precio_base ); ?></strong>
@@ -325,11 +387,25 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
                                 <br><small class="ttra-text-muted">+ <?php echo TTRA_Helpers::formato_precio( $act->importe_fianza ); ?> <?php esc_html_e( 'fianza', 'tictac-reservas-agua' ); ?></small>
                             <?php endif; ?>
                         </td>
+                        <td>
+                            <?php if ( !empty( $act->precio_pax ) && floatval( $act->precio_pax ) > 0 ) : ?>
+                                <strong style="color:#00A0E3"><?php echo TTRA_Helpers::formato_precio( $act->precio_pax ); ?>/pax</strong>
+                            <?php else : ?>
+                                <span class="ttra-text-muted">—</span>
+                            <?php endif; ?>
+                        </td>
                         <td><?php echo intval( $act->min_personas ); ?>–<?php echo intval( $act->max_personas ); ?></td>
                         <td>
                             <span class="ttra-badge ttra-badge--<?php echo $act->activa ? 'success' : 'muted'; ?>">
                                 <?php echo $act->activa ? esc_html__( 'Activa', 'tictac-reservas-agua' ) : esc_html__( 'Inactiva', 'tictac-reservas-agua' ); ?>
                             </span>
+                        </td>
+                        <td class="ttra-cell-center">
+                            <?php if ( $is_premium ) : ?>
+                                <span class="ttra-badge" style="background:#F47920">⭐ Premium</span>
+                            <?php else : ?>
+                                <span class="ttra-text-muted">—</span>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <div class="ttra-row-actions">
@@ -374,11 +450,20 @@ $cat_filter = intval( $_GET['cat'] ?? 0 );
     }
 
     // Fianza toggle
-    const cbFianza = document.getElementById('cb-fianza');
+    const cbFianza  = document.getElementById('cb-fianza');
     const divFianza = document.getElementById('fianza-importe');
     if (cbFianza && divFianza) {
         cbFianza.addEventListener('change', () => {
             divFianza.style.display = cbFianza.checked ? '' : 'none';
+        });
+    }
+
+    // Premium toggle → cambiar color del slider dinámicamente
+    const cbPremium = document.getElementById('cb-premium');
+    if (cbPremium) {
+        cbPremium.addEventListener('change', function() {
+            const slider = this.nextElementSibling;
+            if (slider) slider.style.background = this.checked ? '#F47920' : '#ccc';
         });
     }
 

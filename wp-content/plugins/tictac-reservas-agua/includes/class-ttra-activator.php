@@ -2,6 +2,11 @@
 /**
  * Fired during plugin activation.
  * Creates custom database tables and default options.
+ *
+ * CHANGELOG v1.1.0
+ *   + Columna `precio_pax`  en wp_ttra_actividades  (precio adicional por persona, ej: 25 €/pax)
+ *   + Columna `premium`     en wp_ttra_actividades  (0 = normal, 1 = premium)
+ *   dbDelta es idempotente: sólo añade columnas nuevas en instalaciones existentes.
  */
 
 if ( ! defined( 'ABSPATH' ) ) exit;
@@ -16,7 +21,7 @@ class TTRA_Activator {
     }
 
     /**
-     * Crea todas las tablas custom del plugin.
+     * Crea / actualiza todas las tablas custom del plugin.
      */
     private static function create_tables() {
         global $wpdb;
@@ -25,12 +30,13 @@ class TTRA_Activator {
 
         require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
-        // ── Categorías de actividades ──
+        // ── Categorías de actividades ──────────────────────────────────────
         $sql_categorias = "CREATE TABLE {$prefix}categorias (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             nombre VARCHAR(255) NOT NULL,
             slug VARCHAR(255) NOT NULL,
             descripcion TEXT,
+            icono VARCHAR(100),
             orden INT DEFAULT 0,
             activa TINYINT(1) DEFAULT 1,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -40,7 +46,10 @@ class TTRA_Activator {
         ) $charset;";
         dbDelta( $sql_categorias );
 
-        // ── Actividades / Servicios ──
+        // ── Actividades / Servicios ────────────────────────────────────────
+        // NUEVAS COLUMNAS (v1.1.0):
+        //   precio_pax  → precio adicional por persona (ej: 25€/pax para inflables)
+        //   premium     → 1 = actividad Premium (se muestra al final con estilo diferente)
         $sql_actividades = "CREATE TABLE {$prefix}actividades (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             categoria_id BIGINT UNSIGNED NOT NULL,
@@ -51,11 +60,13 @@ class TTRA_Activator {
             duracion_minutos INT NOT NULL DEFAULT 30,
             precio_base DECIMAL(10,2) NOT NULL DEFAULT 0.00,
             precio_tipo ENUM('fijo','por_persona') DEFAULT 'fijo',
+            precio_pax DECIMAL(10,2) DEFAULT NULL,
             min_personas INT DEFAULT 1,
             max_personas INT DEFAULT 10,
             max_sesiones INT DEFAULT 5,
             imagen_id BIGINT UNSIGNED DEFAULT 0,
             icono VARCHAR(100),
+            premium TINYINT(1) DEFAULT 0,
             requiere_equipo TINYINT(1) DEFAULT 0,
             cancelacion_gratuita TINYINT(1) DEFAULT 1,
             requiere_fianza TINYINT(1) DEFAULT 0,
@@ -70,7 +81,7 @@ class TTRA_Activator {
         ) $charset;";
         dbDelta( $sql_actividades );
 
-        // ── Horarios disponibles por actividad ──
+        // ── Horarios disponibles por actividad ────────────────────────────
         $sql_horarios = "CREATE TABLE {$prefix}horarios (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             actividad_id BIGINT UNSIGNED NOT NULL,
@@ -85,7 +96,7 @@ class TTRA_Activator {
         ) $charset;";
         dbDelta( $sql_horarios );
 
-        // ── Fechas bloqueadas / excepciones ──
+        // ── Fechas bloqueadas / excepciones ───────────────────────────────
         $sql_bloqueos = "CREATE TABLE {$prefix}bloqueos (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             actividad_id BIGINT UNSIGNED DEFAULT NULL COMMENT 'NULL = bloqueo global',
@@ -98,7 +109,7 @@ class TTRA_Activator {
         ) $charset;";
         dbDelta( $sql_bloqueos );
 
-        // ── Reservas ──
+        // ── Reservas ──────────────────────────────────────────────────────
         $sql_reservas = "CREATE TABLE {$prefix}reservas (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             codigo_reserva VARCHAR(20) NOT NULL,
@@ -131,7 +142,7 @@ class TTRA_Activator {
         ) $charset;";
         dbDelta( $sql_reservas );
 
-        // ── Líneas de reserva (actividades dentro de una reserva) ──
+        // ── Líneas de reserva (actividades dentro de una reserva) ─────────
         $sql_lineas = "CREATE TABLE {$prefix}reserva_lineas (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             reserva_id BIGINT UNSIGNED NOT NULL,
@@ -150,7 +161,7 @@ class TTRA_Activator {
         ) $charset;";
         dbDelta( $sql_lineas );
 
-        // ── Pagos / Transacciones ──
+        // ── Pagos / Transacciones ─────────────────────────────────────────
         $sql_pagos = "CREATE TABLE {$prefix}pagos (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             reserva_id BIGINT UNSIGNED NOT NULL,
@@ -169,7 +180,7 @@ class TTRA_Activator {
         ) $charset;";
         dbDelta( $sql_pagos );
 
-        // ── Log de emails enviados ──
+        // ── Log de emails enviados ────────────────────────────────────────
         $sql_email_log = "CREATE TABLE {$prefix}email_log (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             reserva_id BIGINT UNSIGNED DEFAULT NULL,
@@ -183,7 +194,7 @@ class TTRA_Activator {
         ) $charset;";
         dbDelta( $sql_email_log );
 
-        // ── Cupones de descuento ──
+        // ── Cupones de descuento ──────────────────────────────────────────
         $sql_cupones = "CREATE TABLE {$prefix}cupones (
             id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
             codigo VARCHAR(50) NOT NULL,
@@ -214,9 +225,9 @@ class TTRA_Activator {
                 'email_admin'          => get_option( 'admin_email' ),
                 'telefono_negocio'     => '',
                 'direccion_negocio'    => '',
-                'logo_id'             => 0,
-                'moneda'              => 'EUR',
-                'idioma_default'      => 'es',
+                'logo_id'              => 0,
+                'moneda'               => 'EUR',
+                'idioma_default'       => 'es',
 
                 // Reservas
                 'dias_antelacion_min'  => 1,
@@ -226,11 +237,11 @@ class TTRA_Activator {
                 'confirmacion_auto'    => 1,
 
                 // Redsys
-                'redsys_entorno'       => 'test', // test | produccion
-                'redsys_fuc'           => '',
-                'redsys_terminal'      => '001',
-                'redsys_clave_secreta' => '',
-                'redsys_nombre_comercio' => '',
+                'redsys_entorno'          => 'test',
+                'redsys_fuc'              => '',
+                'redsys_terminal'         => '001',
+                'redsys_clave_secreta'    => '',
+                'redsys_nombre_comercio'  => '',
 
                 // Emails
                 'email_from_name'      => '',

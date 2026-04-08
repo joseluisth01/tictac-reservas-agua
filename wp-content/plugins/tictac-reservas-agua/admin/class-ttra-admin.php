@@ -359,11 +359,22 @@ class TTRA_Admin {
             'duracion_minutos'      => intval( $_POST['duracion_minutos'] ),
             'precio_base'           => floatval( $_POST['precio_base'] ),
             'precio_tipo'           => sanitize_text_field( $_POST['precio_tipo'] ?? 'fijo' ),
+ 
+            // ── NUEVO: precio adicional por persona ──────────────────────
+            // Guardamos NULL si el campo llega vacío para no afectar al cálculo
+            'precio_pax'            => ( isset( $_POST['precio_pax'] ) && $_POST['precio_pax'] !== '' )
+                                        ? floatval( $_POST['precio_pax'] )
+                                        : null,
+ 
             'min_personas'          => intval( $_POST['min_personas'] ?? 1 ),
             'max_personas'          => intval( $_POST['max_personas'] ?? 10 ),
             'max_sesiones'          => intval( $_POST['max_sesiones'] ?? 5 ),
             'imagen_id'             => intval( $_POST['imagen_id'] ?? 0 ),
             'icono'                 => sanitize_text_field( $_POST['icono'] ?? '' ),
+ 
+            // ── NUEVO: premium ───────────────────────────────────────────
+            'premium'               => isset( $_POST['premium'] ) ? 1 : 0,
+ 
             'requiere_equipo'       => isset( $_POST['requiere_equipo'] ) ? 1 : 0,
             'cancelacion_gratuita'  => isset( $_POST['cancelacion_gratuita'] ) ? 1 : 0,
             'requiere_fianza'       => isset( $_POST['requiere_fianza'] ) ? 1 : 0,
@@ -371,13 +382,13 @@ class TTRA_Admin {
             'orden'                 => intval( $_POST['orden'] ?? 0 ),
             'activa'                => isset( $_POST['activa'] ) ? 1 : 0,
         );
-
+ 
         if ( $id ) {
             TTRA_Actividad::update( $id, $data );
         } else {
             TTRA_Actividad::create( $data );
         }
-
+ 
         wp_redirect( admin_url( 'admin.php?page=ttra-actividades&msg=saved' ) );
         exit;
     }
@@ -392,24 +403,35 @@ class TTRA_Admin {
 
     private function save_horario() {
         $actividad_id = intval( $_POST['actividad_id'] );
-
-        // Borrar horarios existentes y recrear
+ 
+        // Borrar todos los horarios existentes de esta actividad
         TTRA_Horario::delete_by_actividad( $actividad_id );
-
+ 
         $horarios = $_POST['horarios'] ?? array();
+ 
         foreach ( $horarios as $h ) {
+            // Validación básica
             if ( empty( $h['hora_inicio'] ) || empty( $h['hora_fin'] ) ) continue;
-            TTRA_Horario::create( array(
-                'actividad_id'      => $actividad_id,
-                'dia_semana'        => intval( $h['dia_semana'] ),
-                'hora_inicio'       => sanitize_text_field( $h['hora_inicio'] ),
-                'hora_fin'          => sanitize_text_field( $h['hora_fin'] ),
-                'intervalo_minutos' => intval( $h['intervalo_minutos'] ?? 30 ),
-                'plazas_por_slot'   => intval( $h['plazas_por_slot'] ?? 10 ),
-                'activo'            => isset( $h['activo'] ) ? 1 : 0,
-            ) );
+ 
+            // Días seleccionados para esta franja (array de valores 0-6)
+            $dias = isset( $h['dias'] ) ? (array) $h['dias'] : array();
+ 
+            if ( empty( $dias ) ) continue; // franja sin días → ignorar
+ 
+            // Crear UN REGISTRO POR DÍA
+            foreach ( $dias as $dia ) {
+                TTRA_Horario::create( array(
+                    'actividad_id'      => $actividad_id,
+                    'dia_semana'        => intval( $dia ),
+                    'hora_inicio'       => sanitize_text_field( $h['hora_inicio'] ),
+                    'hora_fin'          => sanitize_text_field( $h['hora_fin'] ),
+                    'intervalo_minutos' => intval( $h['intervalo_minutos'] ?? 30 ),
+                    'plazas_por_slot'   => intval( $h['plazas_por_slot'] ?? 10 ),
+                    'activo'            => isset( $h['activo'] ) ? 1 : 0,
+                ) );
+            }
         }
-
+ 
         wp_redirect( admin_url( 'admin.php?page=ttra-horarios&actividad_id=' . $actividad_id . '&msg=saved' ) );
         exit;
     }

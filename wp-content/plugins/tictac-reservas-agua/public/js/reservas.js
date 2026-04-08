@@ -1,27 +1,33 @@
 /**
  * TicTac Reservas Agua - Frontend Booking App
  * SPA de 4 pasos para el proceso de reserva.
- * 
- * Se inicializa automáticamente al cargar la página con el shortcode.
- * Toda la lógica de pasos, calendario, validación y pago se gestiona aquí.
+ *
+ * v1.1.1 — FIX: La API REST devuelve premium como string "0"/"1".
+ *           Se normaliza con parseInt() en esPremium() antes de evaluar.
  */
 
 (function () {
     'use strict';
 
+    const PAX_ICON_URL = ttra_config.uploads_url + '/2026/04/f59a5831c4e43fbcb8399379ef09067f4693fdb8.gif';
+
+    /** Normaliza el campo premium → true/false sin importar si llega "0", "1", 0, 1 o null */
+    function esPremium(act) {
+        return parseInt(act.premium || 0) === 1;
+    }
+
     const App = {
-        // Estado global
         state: {
             currentStep: 1,
             categorias: [],
             actividades: [],
-            selectedActivities: [], // { actividad_id, personas, sesiones, fecha, hora, precio }
+            selectedActivities: [],
             clientData: {},
             paymentMethod: '',
             total: 0,
+            activeCatFilter: 'all',
         },
 
-        // Inicialización
         init() {
             this.loadCategorias();
             this.loadActividades();
@@ -30,7 +36,7 @@
             this.updateSummary();
         },
 
-        // ── API calls ──
+        // ── API ────────────────────────────────────────────────────────────
         async api(endpoint, options = {}) {
             const url = ttra_config.rest_url + endpoint;
             const defaults = {
@@ -49,9 +55,10 @@
         },
 
         async loadActividades(categoriaId = null) {
-            const endpoint = categoriaId ? `actividades?categoria=${categoriaId}` : 'actividades';
-            this.state.actividades = await this.api(endpoint);
-            this.renderActivities();
+            this.state.activeCatFilter = categoriaId || 'all';
+            const all = await this.api('actividades');
+            this.state.actividades = all;
+            this.renderActivities(categoriaId);
         },
 
         async loadCalendar(actividadId, year, month) {
@@ -62,37 +69,62 @@
             return this.api(`slots/${actividadId}/${fecha}`);
         },
 
-        // ── Eventos ──
+        // ── Ordenación ─────────────────────────────────────────────────────
+        sortAndFilter(actividades, categoriaId) {
+            let lista = categoriaId
+                ? actividades.filter(a => String(a.categoria_id) === String(categoriaId))
+                : actividades;
+
+            // Orden fijo de categorías en vista "Todo":
+            //   1º Motos de agua (cat 5)
+            //   2º Actividades acuáticas (cat 6)
+            //   3º Alquiler de barcos (cat 7)
+            // Se construye dinámicamente desde this.state.categorias
+            // para no hardcodear IDs: se ordena por el índice que
+            // tienen en el array que devuelve la API (ya viene ordenado por c.orden ASC).
+            const catOrder = {};
+            this.state.categorias.forEach((cat, idx) => {
+                catOrder[String(cat.id)] = idx;
+            });
+
+            return lista.slice().sort((a, b) => {
+                // 1. Premium al final (siempre)
+                const pa = esPremium(a) ? 1 : 0;
+                const pb = esPremium(b) ? 1 : 0;
+                if (pa !== pb) return pa - pb;
+
+                // 2. Categoría: según el orden que devuelve la API
+                const oa = catOrder[String(a.categoria_id)] ?? 99;
+                const ob = catOrder[String(b.categoria_id)] ?? 99;
+                if (oa !== ob) return oa - ob;
+
+                // 3. Duración ASC dentro de la misma categoría
+                return parseInt(a.duracion_minutos) - parseInt(b.duracion_minutos);
+            });
+        },
+
+        // ── Eventos ────────────────────────────────────────────────────────
         bindEvents() {
-            // Navegación entre pasos
             document.querySelectorAll('.ttra-btn--next').forEach(btn => {
                 btn.addEventListener('click', () => this.goToStep(parseInt(btn.dataset.next)));
             });
             document.querySelectorAll('.ttra-btn--prev').forEach(btn => {
                 btn.addEventListener('click', () => this.goToStep(parseInt(btn.dataset.prev)));
             });
-
-            // Finalizar reserva
             document.getElementById('ttra-btn-finalizar')?.addEventListener('click', () => this.submitReservation());
-
-            // Sidebar CTA
             document.getElementById('ttra-sidebar-cta')?.addEventListener('click', () => {
                 this.goToStep(this.state.currentStep + 1);
             });
         },
 
-        // ── Navegación de pasos ──
+        // ── Navegación ─────────────────────────────────────────────────────
         goToStep(step) {
             if (step < 1 || step > 4) return;
             if (step > this.state.currentStep && !this.validateStep(this.state.currentStep)) return;
 
-            // Ocultar paso actual
             document.getElementById(`ttra-step-${this.state.currentStep}`)?.classList.add('ttra-step--hidden');
-
-            // Mostrar nuevo paso
             document.getElementById(`ttra-step-${step}`)?.classList.remove('ttra-step--hidden');
 
-            // Actualizar stepper
             document.querySelectorAll('.ttra-stepper__step').forEach(el => {
                 const s = parseInt(el.dataset.step);
                 el.classList.toggle('ttra-stepper__step--active', s === step);
@@ -101,18 +133,16 @@
 
             this.state.currentStep = step;
 
-            // Acciones específicas por paso
             if (step === 2) this.initCalendars();
             if (step === 4) this.renderPaymentMethods();
 
             this.updateSummary();
             this.updateSidebarCTA();
 
-            // Scroll arriba
             document.getElementById('ttra-reservas-app')?.scrollIntoView({ behavior: 'smooth' });
         },
 
-        // ── Validación por paso ──
+        // ── Validación ─────────────────────────────────────────────────────
         validateStep(step) {
             switch (step) {
                 case 1:
@@ -151,7 +181,7 @@
             return valid;
         },
 
-        // ── Renders ──
+        // ── Renders ────────────────────────────────────────────────────────
         renderCategoryFilters() {
             const container = document.getElementById('ttra-categories-filter');
             if (!container) return;
@@ -167,12 +197,18 @@
                     container.querySelectorAll('.ttra-cat-btn').forEach(b => b.classList.remove('ttra-cat-btn--active'));
                     btn.classList.add('ttra-cat-btn--active');
                     const catId = btn.dataset.cat === 'all' ? null : btn.dataset.cat;
-                    this.loadActividades(catId);
+                    this.renderActivities(catId);
+                    this.state.activeCatFilter = catId || 'all';
                 });
             });
         },
 
-        renderActivities() {
+        /**
+         * Renderiza tarjetas separadas en dos grupos:
+         *   1) Normales (premium=0) — ordenadas por categoría + duración
+         *   2) Premium  (premium=1) — ídem, con separador visual azul
+         */
+        renderActivities(categoriaId = null) {
             const container = document.getElementById('ttra-activities-list');
             if (!container) return;
 
@@ -181,57 +217,110 @@
                 return;
             }
 
-            let html = '';
-            this.state.actividades.forEach(act => {
-                const selected = this.state.selectedActivities.find(s => s.actividad_id == act.id);
-                const personas = selected ? selected.personas : 1;
-                const sesiones = selected ? selected.sesiones : 1;
-                const checked = selected ? 'checked' : '';
+            const sorted = this.sortAndFilter(this.state.actividades, categoriaId);
+            const normales = sorted.filter(a => !esPremium(a));
+            const premium = sorted.filter(a => esPremium(a));
 
+            let html = '';
+
+            normales.forEach(act => { html += this.renderCard(act); });
+
+            if (premium.length > 0) {
                 html += `
-                <div class="ttra-activity-card ${selected ? 'ttra-activity-card--selected' : ''}" data-id="${act.id}">
-                    <div class="ttra-activity-card__check">
-                        <input type="checkbox" ${checked} data-id="${act.id}">
-                    </div>
-                    <div class="ttra-activity-card__info">
-                        <strong>${act.nombre}</strong><span class="ttra-activity-card__subtipo">${act.subtipo || ''}</span>
-                    </div>
-                    <div class="ttra-activity-card__duration">
-                        <img src="${ttra_config.uploads_url}/2026/04/system-regular-162-update-hover-update-1.svg" alt="">
-                        <span class="ttra-icon-clock"></span> ${act.duracion_minutos} minutos
-                    </div>
-                    <div class="ttra-activity-card__config">
-                        <label>${ttra_config.i18n.personas}
-                            <select class="ttra-select ttra-select--sm" data-field="personas" data-id="${act.id}">
-                                ${this.generateOptions(act.min_personas, act.max_personas, personas)}
-                            </select>
-                        </label>
-                        <label>${ttra_config.i18n.sesiones}
-                            <select class="ttra-select ttra-select--sm" data-field="sesiones" data-id="${act.id}">
-                                ${this.generateOptions(1, act.max_sesiones, sesiones)}
-                            </select>
-                        </label>
-                    </div>
-                    <div class="ttra-activity-card__price">
-                        <span class="ttra-price" data-id="${act.id}">${this.calcPrice(act, personas, sesiones)} ${ttra_config.currency_symbol}</span>
-                        ${act.precio_tipo === 'por_persona' ? '<small class="ttra-price-note">' + act.precio_base + '€/pax</small>' : ''}
-                    </div>
-                    <div class="ttra-activity-card__icon"><img src="${ttra_config.uploads_url}/2026/04/system-regular-162-update-hover-update-1-1.svg" alt=""></div>
+                <div class="ttra-premium-divider">
+                    <span class="ttra-premium-divider__label">PREMIUM</span>
                 </div>`;
-            });
+                premium.forEach(act => { html += this.renderCard(act); });
+            }
 
             container.innerHTML = html;
             this.bindActivityEvents();
         },
 
+        /**
+         * Genera el HTML de una tarjeta.
+         * Detecta premium internamente con esPremium(act).
+         */
+        renderCard(act) {
+            const premium = esPremium(act);
+            const selected = this.state.selectedActivities.find(s => s.actividad_id == act.id);
+            const personas = selected ? selected.personas : (parseInt(act.min_personas) || 1);
+            const sesiones = selected ? selected.sesiones : 1;
+            const checked = selected ? 'checked' : '';
+
+            // Duración formateada
+            const durMin = parseInt(act.duracion_minutos);
+            let durLabel;
+            if (durMin >= 60) {
+                const h = Math.floor(durMin / 60);
+                const m = durMin % 60;
+                durLabel = m === 0 ? `${h} h.` : `${h} h. ${m} min`;
+            } else {
+                durLabel = `${durMin} minutos`;
+            }
+
+            // Icono €/pax: aparece cuando precio_tipo es por_persona
+            // FIX v1.1.2: toFixed(0) para mostrar "25€/pax" sin decimales
+            const hasPax = act.precio_tipo === 'por_persona';
+            const paxHtml = hasPax
+                ? `<span class="ttra-activity-card__pax">
+                       <img src="${PAX_ICON_URL}" alt="" class="ttra-pax-icon">
+                       <span>${parseFloat(act.precio_base).toFixed(0)}€/pax</span>
+                   </span>`
+                : '';
+
+            // Precio total inicial
+            const precioDisplay = this.calcPrice(act, personas, sesiones);
+
+            // Clases CSS
+            const cardClass = premium
+                ? 'ttra-activity-card ttra-activity-card--premium'
+                : 'ttra-activity-card';
+
+            return `
+            <div class="${cardClass}" data-id="${act.id}">
+                <div class="ttra-activity-card_left">
+                    <div class="ttra-activity-card__check">
+                    <input type="checkbox" ${checked} data-id="${act.id}">
+                </div>
+                <div class="ttra-activity-card__info">
+                    <strong>${act.nombre}</strong><span class="ttra-activity-card__subtipo">${act.subtipo || ''}</span>
+                    ${premium ? '<span class="ttra-premium-badge">PREMIUM</span>' : ''}
+                </div>
+                </div>
+                <div class="ttra-activity-card_right">
+                    <div class="ttra-activity-card__duration">
+                    <img style="width:25px" src="${ttra_config.uploads_url}/2026/04/482a1009433466516284834f81ab0dee0c0aa4ff.gif" alt="">
+                    ${durLabel}
+                    ${paxHtml}
+                </div>
+                <div class="ttra-activity-card__config">
+                    <label>${ttra_config.i18n.personas}
+                        <select class="ttra-select ttra-select--sm" data-field="personas" data-id="${act.id}">
+                            ${this.generateOptions(parseInt(act.min_personas) || 1, parseInt(act.max_personas) || 10, personas)}
+                        </select>
+                    </label>
+                    <label>${ttra_config.i18n.sesiones}
+                        <select class="ttra-select ttra-select--sm" data-field="sesiones" data-id="${act.id}">
+                            ${this.generateOptions(1, parseInt(act.max_sesiones) || 5, sesiones)}
+                        </select>
+                    </label>
+                </div>
+                <div class="ttra-activity-card__price">
+                    <span class="ttra-price" data-id="${act.id}">${precioDisplay} ${ttra_config.currency_symbol}</span>
+                </div>
+                <div class="ttra-activity-card__icon">
+                    <img style="width: 45px;" src="${ttra_config.uploads_url}/2026/04/2bd28d06b9f597517eaac0dafb1be33829c3798c.gif" alt="">
+                </div>
+                </div>
+            </div>`;
+        },
+
         renderTrustBadges() {
             const container = document.getElementById('ttra-trust-badges');
             if (!container) return;
-
-            let html = '';
-            const b = ttra_config.badges;
             const l = ttra_config.labels;
-            html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.cancelacion_gratuita}</div>`;
+            let html = `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.cancelacion_gratuita}</div>`;
             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.no_fianza}</div>`;
             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.pago_seguro}</div>`;
             html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.equipo_seguridad}</div>`;
@@ -275,7 +364,7 @@
             });
         },
 
-        // ── Calendarios ──
+        // ── Calendarios ────────────────────────────────────────────────────
         initCalendars() {
             const container = document.getElementById('ttra-calendars-grid');
             if (!container) return;
@@ -294,7 +383,7 @@
                     <div class="ttra-slots-section">
                         <label class="ttra-slots-label">${ttra_config.i18n.horarios_disponibles}</label>
                         <select class="ttra-select ttra-select--slots" id="ttra-slots-${idx}">
-                            <option value="">00:00</option>
+                            <option value="">Selecciona hora</option>
                         </select>
                     </div>
                     <button class="ttra-btn ttra-btn--outline ttra-btn--done" data-idx="${idx}">
@@ -304,7 +393,6 @@
             });
             container.innerHTML = html;
 
-            // Inicializar cada calendario
             this.state.selectedActivities.forEach((sel, idx) => {
                 this.buildCalendar(idx, sel.actividad_id, new Date().getFullYear(), new Date().getMonth() + 1);
             });
@@ -332,28 +420,22 @@
                 <div class="ttra-cal-day-header">S</div>
                 <div class="ttra-cal-day-header">D</div>`;
 
-            // Calcular primer día del mes
             const firstDay = new Date(year, month - 1, 1).getDay();
             const offset = firstDay === 0 ? 6 : firstDay - 1;
-            for (let i = 0; i < offset; i++) {
-                html += '<div class="ttra-cal-day ttra-cal-day--empty"></div>';
-            }
+            for (let i = 0; i < offset; i++) html += '<div class="ttra-cal-day ttra-cal-day--empty"></div>';
 
             const totalDays = new Date(year, month, 0).getDate();
             for (let d = 1; d <= totalDays; d++) {
                 const fecha = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
                 const info = dias[fecha];
                 const available = info && info.disponible;
-                const selected = this.state.selectedActivities[idx]?.fecha === fecha;
-
-                html += `<div class="ttra-cal-day ${available ? 'ttra-cal-day--available' : 'ttra-cal-day--disabled'} ${selected ? 'ttra-cal-day--selected' : ''}" 
-                          data-fecha="${fecha}" data-idx="${idx}" data-act="${actividadId}">${d}</div>`;
+                const selDay = this.state.selectedActivities[idx]?.fecha === fecha;
+                html += `<div class="ttra-cal-day ${available ? 'ttra-cal-day--available' : 'ttra-cal-day--disabled'} ${selDay ? 'ttra-cal-day--selected' : ''}"
+                              data-fecha="${fecha}" data-idx="${idx}" data-act="${actividadId}">${d}</div>`;
             }
-
             html += '</div>';
             cal.innerHTML = html;
 
-            // Bind events
             cal.querySelectorAll('.ttra-cal-day--available').forEach(day => {
                 day.addEventListener('click', () => this.selectDate(idx, actividadId, day.dataset.fecha));
             });
@@ -369,12 +451,10 @@
         },
 
         async selectDate(idx, actividadId, fecha) {
-            // Marcar día seleccionado visualmente
             const cal = document.getElementById(`ttra-cal-${idx}`);
             cal.querySelectorAll('.ttra-cal-day--selected').forEach(d => d.classList.remove('ttra-cal-day--selected'));
             cal.querySelector(`[data-fecha="${fecha}"]`)?.classList.add('ttra-cal-day--selected');
 
-            // Cargar slots
             const slots = await this.loadSlots(actividadId, fecha);
             const select = document.getElementById(`ttra-slots-${idx}`);
             if (select) {
@@ -395,7 +475,7 @@
             this.updateSummary();
         },
 
-        // ── Actividades: bind events ──
+        // ── Actividades events ─────────────────────────────────────────────
         bindActivityEvents() {
             document.querySelectorAll('.ttra-activity-card input[type="checkbox"]').forEach(cb => {
                 cb.addEventListener('change', () => this.toggleActivity(cb));
@@ -445,7 +525,6 @@
                 const sesiones = parseInt(card.querySelector('[data-field="sesiones"]').value);
                 sel.precio = this.calcPrice(act, personas, sesiones);
 
-                // Actualizar precio visual
                 const priceEl = card.querySelector('.ttra-price');
                 if (priceEl) priceEl.textContent = `${sel.precio} ${ttra_config.currency_symbol}`;
 
@@ -454,12 +533,16 @@
             }
         },
 
-        // ── Utilidades ──
+        // ── Utilidades ─────────────────────────────────────────────────────
         calcPrice(act, personas, sesiones) {
             if (act.precio_tipo === 'por_persona') {
-                return (parseFloat(act.precio_base) * personas * sesiones).toFixed(0);
+                return Math.round(parseFloat(act.precio_base) * personas * sesiones);
             }
-            return (parseFloat(act.precio_base) * sesiones).toFixed(0);
+            let base = parseFloat(act.precio_base) * sesiones;
+            if (act.precio_pax && parseFloat(act.precio_pax) > 0) {
+                base += parseFloat(act.precio_pax) * personas * sesiones;
+            }
+            return Math.round(base);
         },
 
         generateOptions(min, max, selected) {
@@ -471,7 +554,9 @@
         },
 
         updateTotal() {
-            this.state.total = this.state.selectedActivities.reduce((sum, a) => sum + parseFloat(a.precio || 0), 0);
+            this.state.total = this.state.selectedActivities.reduce(
+                (sum, a) => sum + parseFloat(a.precio || 0), 0
+            );
         },
 
         updateSummary() {
@@ -486,8 +571,11 @@
                 html += `
                 <div class="ttra-summary__item">
                     <div class="ttra-summary__item-header">
-                        <span>Actividad seleccionada ${String(idx + 1).padStart(2, '0')}</span>
+                        <span>Actividad ${String(idx + 1).padStart(2, '0')}</span>
                         <span>${sel.precio} ${ttra_config.currency_symbol}</span>
+                    </div>
+                    <div class="ttra-summary__item-detail">
+                        <span>${act.nombre} ${act.subtipo || ''}</span>
                     </div>
                     <div class="ttra-summary__item-detail">
                         <span>${ttra_config.i18n.personas}</span><span>${sel.personas}</span>
@@ -509,33 +597,23 @@
         },
 
         updateNextButton() {
-    const btn = document.querySelector('#ttra-step-1 .ttra-btn--next');
-    if (btn) btn.disabled = this.state.selectedActivities.length === 0;
-
-    // Sincronizar sidebar
-    this.updateSidebarCTA();
-},
+            const btn = document.querySelector('#ttra-step-1 .ttra-btn--next');
+            if (btn) btn.disabled = this.state.selectedActivities.length === 0;
+            this.updateSidebarCTA();
+        },
 
         updateSidebarCTA() {
             const btn = document.getElementById('ttra-sidebar-cta');
             if (!btn) return;
-
             const next = this.state.currentStep + 1;
-            if (next <= 4) {
-                btn.textContent = `${ttra_config.i18n.continuar} (PASO ${next}) →`;
-            } else {
-                btn.textContent = `${ttra_config.i18n.finalizar} →`;
-            }
+            btn.textContent = next <= 4
+                ? `${ttra_config.i18n.continuar} (PASO ${next}) →`
+                : `${ttra_config.i18n.finalizar} →`;
 
-            // Paso 1: deshabilitar hasta que haya al menos una actividad seleccionada
             if (this.state.currentStep === 1) {
                 btn.disabled = this.state.selectedActivities.length === 0;
-
-                // Paso 2: deshabilitar hasta que todas tengan fecha y hora
             } else if (this.state.currentStep === 2) {
-                const allDone = this.state.selectedActivities.every(a => a.fecha && a.hora);
-                btn.disabled = !allDone;
-
+                btn.disabled = !this.state.selectedActivities.every(a => a.fecha && a.hora);
             } else {
                 btn.disabled = false;
             }
@@ -543,17 +621,13 @@
 
         checkStep2Complete() {
             const allDone = this.state.selectedActivities.every(a => a.fecha && a.hora);
-
-            // Botón inferior del paso 2
             const btnNext = document.querySelector('#ttra-step-2 .ttra-btn--next');
-            if (btnNext) btnNext.disabled = !allDone;
-
-            // Botón del sidebar
             const btnSidebar = document.getElementById('ttra-sidebar-cta');
+            if (btnNext) btnNext.disabled = !allDone;
             if (btnSidebar && this.state.currentStep === 2) btnSidebar.disabled = !allDone;
         },
 
-        // ── Submit ──
+        // ── Submit ──────────────────────────────────────────────────────────
         async submitReservation() {
             if (!this.state.paymentMethod) {
                 alert('Selecciona un método de pago.');
@@ -571,7 +645,6 @@
                 actividades: this.state.selectedActivities,
             };
 
-            // Crear reserva
             const result = await this.api('reservas', {
                 method: 'POST',
                 body: JSON.stringify(formData),
@@ -582,7 +655,6 @@
                 return;
             }
 
-            // Iniciar pago
             const pagoData = await this.api('pago/iniciar', {
                 method: 'POST',
                 body: JSON.stringify({
@@ -591,7 +663,6 @@
                 }),
             });
 
-            // Redirigir a Redsys
             if (pagoData.url) {
                 const redsysForm = document.getElementById('ttra-redsys-form');
                 redsysForm.action = pagoData.url;
@@ -611,7 +682,6 @@
         },
     };
 
-    // Boot
     document.addEventListener('DOMContentLoaded', () => App.init());
 
 })();
