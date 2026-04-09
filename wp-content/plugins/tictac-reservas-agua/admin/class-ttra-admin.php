@@ -298,27 +298,51 @@ class TTRA_Admin {
        ══════════════════════════════════════════ */
 
     private function save_settings() {
-        $settings = array();
-        $fields = $_POST['ttra_settings'] ?? array();
-        foreach ( $fields as $key => $value ) {
-            $settings[ sanitize_key( $key ) ] = sanitize_text_field( $value );
-        }
-        // Checkboxes (si no vienen, están desactivados)
-        $checkboxes = array(
-            'confirmacion_auto', 'email_confirmacion', 'email_recordatorio',
-            'email_cancelacion', 'email_admin_nueva', 'pago_tarjeta',
-            'pago_bizum', 'pago_google_pay', 'pago_apple_pay',
+    $settings_actuales = get_option( 'ttra_settings', array() );
+ 
+    // Settings que llegan en el POST del tab actual
+    $fields = $_POST['ttra_settings'] ?? array();
+ 
+    // Empezamos con los settings actuales y los sobrescribimos con los del POST
+    $settings = $settings_actuales;
+ 
+    foreach ( $fields as $key => $value ) {
+        $settings[ sanitize_key( $key ) ] = sanitize_text_field( $value );
+    }
+ 
+    // Checkboxes por tab: los que NO lleguen en el POST se ponen a 0
+    // Solo afecta al tab que se está guardando (ttra_tab_actual)
+    $tab_actual = sanitize_text_field( $_POST['ttra_tab_actual'] ?? '' );
+ 
+    $checkboxes_por_tab = array(
+        'general'    => array(),
+        'reservas'   => array( 'confirmacion_auto' ),
+        'redsys'     => array(),
+        'emails'     => array(
+            'email_confirmacion', 'email_recordatorio',
+            'email_cancelacion', 'email_admin_nueva',
+        ),
+        'apariencia' => array(
             'mostrar_cancelacion_gratuita', 'mostrar_pago_seguro',
             'mostrar_sin_fianza', 'mostrar_equipo_seguridad',
-        );
-        foreach ( $checkboxes as $cb ) {
+        ),
+        'pagos'      => array(
+            'pago_tarjeta', 'pago_bizum', 'pago_google_pay', 'pago_apple_pay',
+        ),
+    );
+ 
+    // Si sabemos qué tab se guardó, ponemos a 0 los checkboxes no enviados de ese tab
+    if ( $tab_actual && isset( $checkboxes_por_tab[ $tab_actual ] ) ) {
+        foreach ( $checkboxes_por_tab[ $tab_actual ] as $cb ) {
+            // Si el checkbox no llegó en el POST → no está marcado → valor = 0
             $settings[ $cb ] = isset( $fields[ $cb ] ) ? 1 : 0;
         }
-
-        TTRA_Settings::save_all( $settings );
-        wp_redirect( add_query_arg( 'msg', 'saved', wp_get_referer() ) );
-        exit;
     }
+ 
+    TTRA_Settings::save_all( $settings );
+    wp_redirect( add_query_arg( 'msg', 'saved', wp_get_referer() ) );
+    exit;
+}
 
     private function save_categoria() {
         $id   = intval( $_POST['categoria_id'] ?? 0 );

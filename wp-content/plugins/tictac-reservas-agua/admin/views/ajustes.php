@@ -2,6 +2,12 @@
 /**
  * Vista admin: Ajustes del plugin — 6 tabs.
  * Variables: $settings (array), $tab (string)
+ *
+ * FIX v1.2:
+ *   - Los checkboxes desactivados ya no se resetean al guardar.
+ *     Se elimina el bloque de <input hidden> global que machacaba los valores
+ *     y se usa un campo oculto por tab que indica qué campos gestiona ese tab,
+ *     para que el PHP sepa poner a 0 los checkboxes no enviados.
  */
 if ( ! defined( 'ABSPATH' ) ) exit;
 
@@ -51,12 +57,53 @@ function ttra_checked($settings, $key, $default = 1) {
         <input type="hidden" name="ttra_action" value="save_settings">
         <input type="hidden" name="ttra_nonce" value="<?php echo $nonce; ?>">
 
-        <!-- Copiar todos los demás tabs ocultos para que no se pierdan sus valores -->
-        <?php foreach ( $settings as $k => $v ) : ?>
-            <?php if ( !is_array( $v ) ) : ?>
-                <input type="hidden" name="ttra_settings[<?php echo esc_attr($k); ?>]" value="<?php echo esc_attr($v); ?>" class="ttra-hidden-setting" data-key="<?php echo esc_attr($k); ?>">
-            <?php endif; ?>
-        <?php endforeach; ?>
+        <?php
+        /**
+         * FIX CRÍTICO: En lugar de enviar TODOS los settings como hidden (lo que
+         * hacía que los checkboxes de otros tabs siempre se enviaran con su valor
+         * anterior, sin importar si el usuario los cambió), ahora enviamos:
+         *
+         * 1) Solo los settings del tab ACTUAL mediante inputs visibles.
+         * 2) Los settings de OTROS tabs como hidden, EXCEPTO los checkboxes
+         *    que se manejan de forma especial en class-ttra-admin.php.
+         *
+         * Para ello, enviamos todos los settings de otros tabs como hidden,
+         * y también enviamos un campo especial `ttra_tab_actual` para que el
+         * PHP sepa qué tab se está guardando y pueda poner a 0 los checkboxes
+         * de ese tab que no lleguen en el POST.
+         */
+        ?>
+        <input type="hidden" name="ttra_tab_actual" value="<?php echo esc_attr($tab); ?>">
+
+        <?php
+        // Campos de los tabs que NO son el actual → se envían como hidden para no perder su valor
+        // Checkboxes de tabs inactivos → se envían explícitamente con su valor actual
+        $all_tab_checkboxes = [
+            'general'    => [],
+            'reservas'   => ['confirmacion_auto'],
+            'redsys'     => [],
+            'emails'     => ['email_confirmacion', 'email_recordatorio', 'email_cancelacion', 'email_admin_nueva'],
+            'apariencia' => ['mostrar_cancelacion_gratuita', 'mostrar_sin_fianza', 'mostrar_pago_seguro', 'mostrar_equipo_seguridad'],
+            'pagos'      => ['pago_tarjeta', 'pago_bizum', 'pago_google_pay', 'pago_apple_pay'],
+        ];
+
+        foreach ( $settings as $k => $v ) {
+            if ( is_array($v) ) continue;
+
+            // Determinar si este campo pertenece al tab actual
+            $pertenece_al_tab_actual = false;
+            if (isset($all_tab_checkboxes[$tab]) && in_array($k, $all_tab_checkboxes[$tab])) {
+                $pertenece_al_tab_actual = true;
+            }
+
+            // Para campos no-checkbox de tabs inactivos, siempre los enviamos hidden
+            // Para checkboxes del tab activo, NO los enviamos hidden (los gestiona el formulario visible)
+            if (!$pertenece_al_tab_actual) {
+                // Tampoco enviamos hidden si es un checkbox del tab actual (serían duplicados)
+                echo '<input type="hidden" name="ttra_settings[' . esc_attr($k) . ']" value="' . esc_attr($v) . '">';
+            }
+        }
+        ?>
 
         <div class="ttra-admin-card ttra-card--full ttra-settings-panel">
 
@@ -320,7 +367,6 @@ function ttra_checked($settings, $key, $default = 1) {
                 </tr>
                 <tr>
                     <td colspan="2">
-                        <!-- Preview live -->
                         <div id="ttra-color-preview" style="margin-top:16px;padding:20px;border-radius:8px;background:var(--prev-bg,#E8F4FD)">
                             <h4 style="color:var(--prev-primary,#003B6F);margin:0 0 8px">Preview del diseño</h4>
                             <button style="background:var(--prev-accent,#F47920);color:#fff;border:none;padding:10px 20px;border-radius:20px;cursor:pointer;font-weight:700">RESERVAR AHORA</button>
@@ -332,7 +378,6 @@ function ttra_checked($settings, $key, $default = 1) {
             </table>
 
             <h2 style="margin-top:32px">🏅 <?php esc_html_e( 'Badges de confianza', 'tictac-reservas-agua' ); ?></h2>
-            <p class="description"><?php esc_html_e( 'Badges que se muestran en el sidebar del proceso de reserva.', 'tictac-reservas-agua' ); ?></p>
             <table class="form-table ttra-form-table">
                 <tr>
                     <th><?php esc_html_e( 'Badges visibles', 'tictac-reservas-agua' ); ?></th>

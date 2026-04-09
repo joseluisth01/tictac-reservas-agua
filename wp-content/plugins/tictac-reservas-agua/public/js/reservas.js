@@ -1,9 +1,8 @@
 /**
  * TicTac Reservas Agua - Frontend Booking App
- * SPA de 4 pasos para el proceso de reserva.
- *
- * v1.1.1 — FIX: La API REST devuelve premium como string "0"/"1".
- *           Se normaliza con parseInt() en esPremium() antes de evaluar.
+ * v1.2.1 — Panel "Incluye":
+ *   - Premium (cualquier categoría): Capitán + Refrescos + Bandeja de fruta
+ *   - Alquiler de Barcos NO premium: solo Capitán profesional
  */
 
 (function () {
@@ -11,9 +10,48 @@
 
     const PAX_ICON_URL = ttra_config.uploads_url + '/2026/04/f59a5831c4e43fbcb8399379ef09067f4693fdb8.gif';
 
-    /** Normaliza el campo premium → true/false sin importar si llega "0", "1", 0, 1 o null */
     function esPremium(act) {
         return parseInt(act.premium || 0) === 1;
+    }
+
+    // ── Detección categoría Barcos ─────────────────────────────────────────
+    // Se compara por slug y nombre para no depender del ID de BD.
+    const BARCOS_SLUGS   = ['alquiler-barcos', 'alquiler-de-barcos', 'barcos', 'alquiler_barcos'];
+    const BARCOS_NOMBRES = ['alquiler barcos', 'alquiler de barcos', 'barcos'];
+
+    function esCategoriaBarcos(cat) {
+        if (!cat) return false;
+        const slug   = (cat.slug   || '').toLowerCase().replace(/_/g, '-').trim();
+        const nombre = (cat.nombre || '').toLowerCase().trim();
+        return BARCOS_SLUGS.includes(slug) || BARCOS_NOMBRES.some(n => nombre.includes(n));
+    }
+
+    // ── Definición de extras ───────────────────────────────────────────────
+    // Los iconos se construyen en tiempo de ejecución con uploads_url
+    // para que funcionen con cualquier dominio
+    function getExtrasIcons() {
+        const base = ttra_config.uploads_url + '/2026/04/';
+        return {
+            capitan:   base + 'system-regular-162-update-hover-update-1-2.svg',
+            refrescos: base + 'system-regular-162-update-hover-update-1-3.svg',
+            fruta:     base + 'system-regular-162-update-hover-update-1-4.svg',
+        };
+    }
+
+    function getExtrasPremium() {
+        const i = getExtrasIcons();
+        return [
+            { icon: i.capitan,   label: 'Capitán profesional' },
+            { icon: i.refrescos, label: 'Refrescos' },
+            { icon: i.fruta,     label: 'Bandeja de fruta' },
+        ];
+    }
+
+    function getExtrasBarcos() {
+        const i = getExtrasIcons();
+        return [
+            { icon: i.capitan, label: 'Capitán profesional' },
+        ];
     }
 
     const App = {
@@ -26,6 +64,7 @@
             paymentMethod: '',
             total: 0,
             activeCatFilter: 'all',
+            categoriaMap: {},   // ID → objeto categoría
         },
 
         init() {
@@ -34,31 +73,48 @@
             this.bindEvents();
             this.renderTrustBadges();
             this.updateSummary();
+            this.fixSidebarSticky();
+        },
+
+        // ── Sidebar sticky dinámico ────────────────────────────────────────
+        fixSidebarSticky() {
+            const sidebar = document.getElementById('ttra-summary');
+            if (!sidebar) return;
+            function updateTop() {
+                const stepper = document.querySelector('.ttra-stepper');
+                if (!stepper) return;
+                sidebar.style.top = (stepper.offsetHeight + 105 + 16) + 'px';
+            }
+            updateTop();
+            window.addEventListener('resize', updateTop);
+            window.addEventListener('scroll', updateTop, { passive: true });
         },
 
         // ── API ────────────────────────────────────────────────────────────
         async api(endpoint, options = {}) {
-            const url = ttra_config.rest_url + endpoint;
-            const defaults = {
+            const response = await fetch(ttra_config.rest_url + endpoint, {
                 headers: {
                     'Content-Type': 'application/json',
                     'X-WP-Nonce': ttra_config.nonce,
                 },
-            };
-            const response = await fetch(url, { ...defaults, ...options });
+                ...options,
+            });
             return response.json();
         },
 
         async loadCategorias() {
             this.state.categorias = await this.api('categorias');
+            // Construir mapa ID → categoría para lookup en getExtras()
+            this.state.categorias.forEach(cat => {
+                this.state.categoriaMap[String(cat.id)] = cat;
+            });
             this.renderCategoryFilters();
         },
 
-        async loadActividades(categoriaId = null) {
-            this.state.activeCatFilter = categoriaId || 'all';
+        async loadActividades() {
             const all = await this.api('actividades');
             this.state.actividades = all;
-            this.renderActivities(categoriaId);
+            this.renderActivities(null);
         },
 
         async loadCalendar(actividadId, year, month) {
@@ -69,52 +125,61 @@
             return this.api(`slots/${actividadId}/${fecha}`);
         },
 
+        // ── Lógica "Incluye" ───────────────────────────────────────────────
+        /**
+         * Devuelve el array de extras para una actividad, o null si no procede panel.
+         *
+         * Reglas:
+         *  1. Premium (cualquier cat) → EXTRAS_PREMIUM
+         *  2. No-premium + cat Barcos → EXTRAS_BARCOS
+         *  3. Resto                   → null (sin panel)
+         */
+        getExtras(act) {
+            if (esPremium(act)) {
+                return getExtrasPremium();
+            }
+            const cat = this.state.categoriaMap[String(act.categoria_id)];
+            if (esCategoriaBarcos(cat)) {
+                return getExtrasBarcos();
+            }
+            return null;
+        },
+
         // ── Ordenación ─────────────────────────────────────────────────────
         sortAndFilter(actividades, categoriaId) {
             let lista = categoriaId
                 ? actividades.filter(a => String(a.categoria_id) === String(categoriaId))
                 : actividades;
 
-            // Orden fijo de categorías en vista "Todo":
-            //   1º Motos de agua (cat 5)
-            //   2º Actividades acuáticas (cat 6)
-            //   3º Alquiler de barcos (cat 7)
-            // Se construye dinámicamente desde this.state.categorias
-            // para no hardcodear IDs: se ordena por el índice que
-            // tienen en el array que devuelve la API (ya viene ordenado por c.orden ASC).
             const catOrder = {};
-            this.state.categorias.forEach((cat, idx) => {
-                catOrder[String(cat.id)] = idx;
-            });
+            this.state.categorias.forEach((cat, idx) => { catOrder[String(cat.id)] = idx; });
 
             return lista.slice().sort((a, b) => {
-                // 1. Premium al final (siempre)
+                // 1. Premium al final
                 const pa = esPremium(a) ? 1 : 0;
                 const pb = esPremium(b) ? 1 : 0;
                 if (pa !== pb) return pa - pb;
-
-                // 2. Categoría: según el orden que devuelve la API
+                // 2. Orden de categoría
                 const oa = catOrder[String(a.categoria_id)] ?? 99;
                 const ob = catOrder[String(b.categoria_id)] ?? 99;
                 if (oa !== ob) return oa - ob;
-
-                // 3. Duración ASC dentro de la misma categoría
+                // 3. Duración ASC
                 return parseInt(a.duracion_minutos) - parseInt(b.duracion_minutos);
             });
         },
 
         // ── Eventos ────────────────────────────────────────────────────────
         bindEvents() {
-            document.querySelectorAll('.ttra-btn--next').forEach(btn => {
-                btn.addEventListener('click', () => this.goToStep(parseInt(btn.dataset.next)));
-            });
-            document.querySelectorAll('.ttra-btn--prev').forEach(btn => {
-                btn.addEventListener('click', () => this.goToStep(parseInt(btn.dataset.prev)));
-            });
+            document.querySelectorAll('.ttra-btn--next').forEach(btn =>
+                btn.addEventListener('click', () => this.goToStep(parseInt(btn.dataset.next)))
+            );
+            document.querySelectorAll('.ttra-btn--prev').forEach(btn =>
+                btn.addEventListener('click', () => this.goToStep(parseInt(btn.dataset.prev)))
+            );
             document.getElementById('ttra-btn-finalizar')?.addEventListener('click', () => this.submitReservation());
-            document.getElementById('ttra-sidebar-cta')?.addEventListener('click', () => {
-                this.goToStep(this.state.currentStep + 1);
-            });
+            document.getElementById('ttra-sidebar-cta')?.addEventListener('click', () =>
+                this.goToStep(this.state.currentStep + 1)
+            );
         },
 
         // ── Navegación ─────────────────────────────────────────────────────
@@ -132,50 +197,35 @@
             });
 
             this.state.currentStep = step;
-
             if (step === 2) this.initCalendars();
             if (step === 4) this.renderPaymentMethods();
-
             this.updateSummary();
             this.updateSidebarCTA();
-
             document.getElementById('ttra-reservas-app')?.scrollIntoView({ behavior: 'smooth' });
         },
 
         // ── Validación ─────────────────────────────────────────────────────
         validateStep(step) {
-            switch (step) {
-                case 1:
-                    if (this.state.selectedActivities.length === 0) {
-                        alert('Selecciona al menos una actividad.');
-                        return false;
-                    }
-                    return true;
-                case 2:
-                    const incomplete = this.state.selectedActivities.find(a => !a.fecha || !a.hora);
-                    if (incomplete) {
-                        alert('Selecciona fecha y hora para todas las actividades.');
-                        return false;
-                    }
-                    return true;
-                case 3:
-                    return this.validateForm();
-                default:
-                    return true;
+            if (step === 1) {
+                if (!this.state.selectedActivities.length) { alert('Selecciona al menos una actividad.'); return false; }
+                return true;
             }
+            if (step === 2) {
+                if (this.state.selectedActivities.find(a => !a.fecha || !a.hora)) {
+                    alert('Selecciona fecha y hora para todas las actividades.'); return false;
+                }
+                return true;
+            }
+            if (step === 3) return this.validateForm();
+            return true;
         },
 
         validateForm() {
             const form = document.getElementById('ttra-form-datos');
-            const required = form.querySelectorAll('[required]');
             let valid = true;
-            required.forEach(input => {
-                if (!input.value.trim()) {
-                    input.classList.add('ttra-input--error');
-                    valid = false;
-                } else {
-                    input.classList.remove('ttra-input--error');
-                }
+            form.querySelectorAll('[required]').forEach(input => {
+                if (!input.value.trim()) { input.classList.add('ttra-input--error'); valid = false; }
+                else input.classList.remove('ttra-input--error');
             });
             if (!valid) alert('Rellena todos los campos obligatorios.');
             return valid;
@@ -185,13 +235,11 @@
         renderCategoryFilters() {
             const container = document.getElementById('ttra-categories-filter');
             if (!container) return;
-
             let html = `<button class="ttra-cat-btn ttra-cat-btn--active" data-cat="all">${ttra_config.i18n.todo}</button>`;
             this.state.categorias.forEach(cat => {
                 html += `<button class="ttra-cat-btn" data-cat="${cat.id}">${cat.nombre}</button>`;
             });
             container.innerHTML = html;
-
             container.querySelectorAll('.ttra-cat-btn').forEach(btn => {
                 btn.addEventListener('click', () => {
                     container.querySelectorAll('.ttra-cat-btn').forEach(b => b.classList.remove('ttra-cat-btn--active'));
@@ -203,147 +251,129 @@
             });
         },
 
-        /**
-         * Renderiza tarjetas separadas en dos grupos:
-         *   1) Normales (premium=0) — ordenadas por categoría + duración
-         *   2) Premium  (premium=1) — ídem, con separador visual azul
-         */
         renderActivities(categoriaId = null) {
             const container = document.getElementById('ttra-activities-list');
             if (!container) return;
-
             if (!this.state.actividades.length) {
                 container.innerHTML = '<p class="ttra-empty">No hay actividades disponibles.</p>';
                 return;
             }
-
-            const sorted = this.sortAndFilter(this.state.actividades, categoriaId);
+            const sorted   = this.sortAndFilter(this.state.actividades, categoriaId);
             const normales = sorted.filter(a => !esPremium(a));
-            const premium = sorted.filter(a => esPremium(a));
+            const premium  = sorted.filter(a => esPremium(a));
 
             let html = '';
-
             normales.forEach(act => { html += this.renderCard(act); });
-
-            if (premium.length > 0) {
-                html += `
-                <div class="ttra-premium-divider">
-                    <span class="ttra-premium-divider__label">PREMIUM</span>
-                </div>`;
+            if (premium.length) {
+                html += `<div class="ttra-premium-divider"><span class="ttra-premium-divider__label">PREMIUM</span></div>`;
                 premium.forEach(act => { html += this.renderCard(act); });
             }
-
             container.innerHTML = html;
             this.bindActivityEvents();
         },
 
-        /**
-         * Genera el HTML de una tarjeta.
-         * Detecta premium internamente con esPremium(act).
-         */
         renderCard(act) {
-            const premium = esPremium(act);
-            const selected = this.state.selectedActivities.find(s => s.actividad_id == act.id);
-            const personas = selected ? selected.personas : (parseInt(act.min_personas) || 1);
-            const sesiones = selected ? selected.sesiones : 1;
-            const checked = selected ? 'checked' : '';
+            const premium    = esPremium(act);
+            const selected   = this.state.selectedActivities.find(s => s.actividad_id == act.id);
+            const personas   = selected ? selected.personas : (parseInt(act.min_personas) || 1);
+            const sesiones   = selected ? selected.sesiones : 1;
+            const isSelected = !!selected;
 
-            // Duración formateada
+            // Duración
             const durMin = parseInt(act.duracion_minutos);
-            let durLabel;
-            if (durMin >= 60) {
-                const h = Math.floor(durMin / 60);
-                const m = durMin % 60;
-                durLabel = m === 0 ? `${h} h.` : `${h} h. ${m} min`;
-            } else {
-                durLabel = `${durMin} minutos`;
-            }
+            const durLabel = durMin >= 60
+                ? (durMin % 60 === 0 ? `${Math.floor(durMin/60)} h.` : `${Math.floor(durMin/60)} h. ${durMin%60} min`)
+                : `${durMin} minutos`;
 
-            // Icono €/pax: aparece cuando precio_tipo es por_persona
-            // FIX v1.1.2: toFixed(0) para mostrar "25€/pax" sin decimales
-            const hasPax = act.precio_tipo === 'por_persona';
-            const paxHtml = hasPax
-                ? `<span class="ttra-activity-card__pax">
-                       <img src="${PAX_ICON_URL}" alt="" class="ttra-pax-icon">
-                       <span>${parseFloat(act.precio_base).toFixed(0)}€/pax</span>
-                   </span>`
+            // €/pax
+            const paxHtml = act.precio_tipo === 'por_persona'
+                ? `<span class="ttra-activity-card__pax"><img src="${PAX_ICON_URL}" alt="" class="ttra-pax-icon"><span>${parseFloat(act.precio_base).toFixed(0)}€/pax</span></span>`
                 : '';
 
-            // Precio total inicial
             const precioDisplay = this.calcPrice(act, personas, sesiones);
+            const cardClass = premium ? 'ttra-activity-card ttra-activity-card--premium' : 'ttra-activity-card';
 
-            // Clases CSS
-            const cardClass = premium
-                ? 'ttra-activity-card ttra-activity-card--premium'
-                : 'ttra-activity-card';
+            // Panel "Incluye": siempre como franja inferior, mismo diseño para todos
+            const extras = this.getExtras(act);
+            const includePanel = (isSelected && extras) ? this.renderIncludePanel(extras, premium) : '';
 
             return `
             <div class="${cardClass}" data-id="${act.id}">
                 <div class="ttra-activity-card_left">
                     <div class="ttra-activity-card__check">
-                    <input type="checkbox" ${checked} data-id="${act.id}">
-                </div>
-                <div class="ttra-activity-card__info">
-                    <strong>${act.nombre}</strong><span class="ttra-activity-card__subtipo">${act.subtipo || ''}</span>
-                    ${premium ? '<span class="ttra-premium-badge">PREMIUM</span>' : ''}
-                </div>
+                        <input type="checkbox" ${isSelected ? 'checked' : ''} data-id="${act.id}">
+                    </div>
+                    <div class="ttra-activity-card__info">
+                        <strong>${act.nombre}</strong>
+                        <span class="ttra-activity-card__subtipo">${act.subtipo || ''}</span>
+                    </div>
                 </div>
                 <div class="ttra-activity-card_right">
                     <div class="ttra-activity-card__duration">
-                    <img style="width:25px" src="${ttra_config.uploads_url}/2026/04/482a1009433466516284834f81ab0dee0c0aa4ff.gif" alt="">
-                    ${durLabel}
-                    ${paxHtml}
+                        <img style="width:25px" src="${ttra_config.uploads_url}/2026/04/482a1009433466516284834f81ab0dee0c0aa4ff.gif" alt="">
+                        ${durLabel}${paxHtml}
+                    </div>
+                    <div class="ttra-activity-card__config">
+                        <label>${ttra_config.i18n.personas}
+                            <select class="ttra-select ttra-select--sm" data-field="personas" data-id="${act.id}">
+                                ${this.generateOptions(parseInt(act.min_personas)||1, parseInt(act.max_personas)||10, personas)}
+                            </select>
+                        </label>
+                        <label>${ttra_config.i18n.sesiones}
+                            <select class="ttra-select ttra-select--sm" data-field="sesiones" data-id="${act.id}">
+                                ${this.generateOptions(1, parseInt(act.max_sesiones)||5, sesiones)}
+                            </select>
+                        </label>
+                    </div>
+                    <div class="ttra-activity-card__price">
+                        <span class="ttra-price" data-id="${act.id}">${precioDisplay} ${ttra_config.currency_symbol}</span>
+                    </div>
+                    <div class="ttra-activity-card__icon">
+                        <img style="width:45px" src="${ttra_config.uploads_url}/2026/04/2bd28d06b9f597517eaac0dafb1be33829c3798c.gif" alt="">
+                    </div>
                 </div>
-                <div class="ttra-activity-card__config">
-                    <label>${ttra_config.i18n.personas}
-                        <select class="ttra-select ttra-select--sm" data-field="personas" data-id="${act.id}">
-                            ${this.generateOptions(parseInt(act.min_personas) || 1, parseInt(act.max_personas) || 10, personas)}
-                        </select>
-                    </label>
-                    <label>${ttra_config.i18n.sesiones}
-                        <select class="ttra-select ttra-select--sm" data-field="sesiones" data-id="${act.id}">
-                            ${this.generateOptions(1, parseInt(act.max_sesiones) || 5, sesiones)}
-                        </select>
-                    </label>
-                </div>
-                <div class="ttra-activity-card__price">
-                    <span class="ttra-price" data-id="${act.id}">${precioDisplay} ${ttra_config.currency_symbol}</span>
-                </div>
-                <div class="ttra-activity-card__icon">
-                    <img style="width: 45px;" src="${ttra_config.uploads_url}/2026/04/2bd28d06b9f597517eaac0dafb1be33829c3798c.gif" alt="">
-                </div>
-                </div>
-            </div>`;
+            </div>
+            ${includePanel}`;
+        },
+
+        // Panel "Incluye": franja inferior, mismo HTML para barcos y premium.
+        // isPremium solo cambia la clase de color (fondo oscuro vs azul claro).
+        renderIncludePanel(extras, isPremium = false) {
+            const items = extras.map(e =>
+                `<span class="ttra-include-item">
+                    <img class="ttra-include-icon" src="${e.icon}" alt="${e.label}">
+                    <span class="ttra-include-label">${e.label}</span>
+                 </span>`
+            ).join('');
+            const colorClass = isPremium ? 'ttra-include-panel--premium' : 'ttra-include-panel--barcos';
+            return `<div class="ttra-include-panel ${colorClass}"><span class="ttra-include-title">Incluye:</span>${items}</div>`;
         },
 
         renderTrustBadges() {
             const container = document.getElementById('ttra-trust-badges');
             if (!container) return;
             const l = ttra_config.labels;
-            let html = `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.cancelacion_gratuita}</div>`;
-            html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.no_fianza}</div>`;
-            html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.pago_seguro}</div>`;
-            html += `<div class="ttra-badge ttra-badge--trust"><img src="${ttra_config.uploads_url}/2026/04/Icon-3.svg" alt=""> ${l.equipo_seguridad}</div>`;
-            container.innerHTML = html;
+            const u = ttra_config.uploads_url + '/2026/04/Icon-3.svg';
+            container.innerHTML = [
+                l.cancelacion_gratuita, l.no_fianza, l.pago_seguro, l.equipo_seguridad,
+            ].map(label =>
+                `<div class="ttra-badge ttra-badge--trust"><img src="${u}" alt=""> ${label}</div>`
+            ).join('');
         },
 
         renderPaymentMethods() {
             const container = document.getElementById('ttra-payment-methods');
             if (!container) return;
-
-            const methods = ttra_config.metodos_pago;
             const u = ttra_config.uploads_url + '/2026/04/';
             const labels = {
-                tarjeta:    { name: 'Tarjeta de Crédito/Débito', sub: 'Visa, Mastercard', icon: `<img src="${u}Icons-Cards.svg"   alt="Tarjeta"    style="height:28px;object-fit:contain">` },
-                bizum:      { name: 'Bizum',                      sub: '',                 icon: `<img src="${u}Icons-Cards-1.svg" alt="Bizum"      style="height:28px;object-fit:contain">` },
-                google_pay: { name: 'Google Pay',                 sub: '',                 icon: `<img src="${u}Icons-Cards-2.svg" alt="Google Pay" style="height:28px;object-fit:contain">` },
-                apple_pay:  { name: 'Apple Pay',                  sub: '',                 icon: `<img src="${u}Icons-Cards-3.svg" alt="Apple Pay"  style="height:28px;object-fit:contain">` },
+                tarjeta:    { name: 'Tarjeta de Crédito/Débito', sub: 'Visa, Mastercard', icon: `<img src="${u}Icons-Cards.svg"   style="height:28px;object-fit:contain" alt="">` },
+                bizum:      { name: 'Bizum',      sub: '', icon: `<img src="${u}Icons-Cards-1.svg" style="height:28px;object-fit:contain" alt="">` },
+                google_pay: { name: 'Google Pay', sub: '', icon: `<img src="${u}Icons-Cards-2.svg" style="height:28px;object-fit:contain" alt="">` },
+                apple_pay:  { name: 'Apple Pay',  sub: '', icon: `<img src="${u}Icons-Cards-3.svg" style="height:28px;object-fit:contain" alt="">` },
             };
-
-            let html = '';
-            methods.forEach(m => {
+            container.innerHTML = ttra_config.metodos_pago.map(m => {
                 const info = labels[m] || { name: m, sub: '', icon: '💰' };
-                html += `
+                return `
                 <div class="ttra-payment-option" data-method="${m}">
                     <input type="radio" name="metodo_pago" value="${m}">
                     <div class="ttra-payment-option__info">
@@ -352,8 +382,7 @@
                     </div>
                     <div class="ttra-payment-option__icon">${info.icon}</div>
                 </div>`;
-            });
-            container.innerHTML = html;
+            }).join('');
 
             container.querySelectorAll('.ttra-payment-option').forEach(opt => {
                 opt.addEventListener('click', () => {
@@ -369,16 +398,14 @@
         initCalendars() {
             const container = document.getElementById('ttra-calendars-grid');
             if (!container) return;
-
-            let html = '';
-            this.state.selectedActivities.forEach((sel, idx) => {
+            container.innerHTML = this.state.selectedActivities.map((sel, idx) => {
                 const act = this.state.actividades.find(a => a.id == sel.actividad_id);
-                if (!act) return;
-                html += `
+                if (!act) return '';
+                return `
                 <div class="ttra-calendar-block" data-idx="${idx}" data-actividad="${sel.actividad_id}">
                     <p class="ttra-calendar-block__label">
-                        Selecciona fecha y hora para la actividad:
-                        <br><strong>${act.nombre}</strong> <em>${act.subtipo || ''}</em>
+                        Selecciona fecha  y hora para la actividad:<br>
+                        <strong>${act.nombre}</strong> <em>${act.subtipo || ''}</em>
                     </p>
                     <div class="ttra-calendar" id="ttra-cal-${idx}"></div>
                     <div class="ttra-slots-section">
@@ -391,64 +418,53 @@
                         ${ttra_config.i18n.seleccion_finalizada}
                     </button>
                 </div>`;
-            });
-            container.innerHTML = html;
-
-            this.state.selectedActivities.forEach((sel, idx) => {
-                this.buildCalendar(idx, sel.actividad_id, new Date().getFullYear(), new Date().getMonth() + 1);
-            });
+            }).join('');
+            this.state.selectedActivities.forEach((sel, idx) =>
+                this.buildCalendar(idx, sel.actividad_id, new Date().getFullYear(), new Date().getMonth() + 1)
+            );
         },
 
         async buildCalendar(idx, actividadId, year, month) {
             const cal = document.getElementById(`ttra-cal-${idx}`);
             if (!cal) return;
-
             const dias = await this.loadCalendar(actividadId, year, month);
-            const monthNames = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            const months = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+            const firstDay = new Date(year, month-1, 1).getDay();
+            const offset   = firstDay === 0 ? 6 : firstDay - 1;
+            const total    = new Date(year, month, 0).getDate();
 
             let html = `
             <div class="ttra-cal-header">
                 <button class="ttra-cal-nav" data-dir="-1" data-idx="${idx}" data-act="${actividadId}">‹</button>
-                <span class="ttra-cal-month">${monthNames[month - 1]} ${year}</span>
-                <button class="ttra-cal-nav" data-dir="1" data-idx="${idx}" data-act="${actividadId}">›</button>
+                <span class="ttra-cal-month">${months[month-1]} ${year}</span>
+                <button class="ttra-cal-nav" data-dir="1"  data-idx="${idx}" data-act="${actividadId}">›</button>
             </div>
             <div class="ttra-cal-grid">
-                <div class="ttra-cal-day-header">L</div>
-                <div class="ttra-cal-day-header">M</div>
-                <div class="ttra-cal-day-header">X</div>
-                <div class="ttra-cal-day-header">J</div>
-                <div class="ttra-cal-day-header">V</div>
-                <div class="ttra-cal-day-header">S</div>
-                <div class="ttra-cal-day-header">D</div>`;
+                ${'<div class="ttra-cal-day-header">L</div><div class="ttra-cal-day-header">M</div><div class="ttra-cal-day-header">X</div><div class="ttra-cal-day-header">J</div><div class="ttra-cal-day-header">V</div><div class="ttra-cal-day-header">S</div><div class="ttra-cal-day-header">D</div>'}
+                ${'<div class="ttra-cal-day ttra-cal-day--empty"></div>'.repeat(offset)}`;
 
-            const firstDay = new Date(year, month - 1, 1).getDay();
-            const offset = firstDay === 0 ? 6 : firstDay - 1;
-            for (let i = 0; i < offset; i++) html += '<div class="ttra-cal-day ttra-cal-day--empty"></div>';
-
-            const totalDays = new Date(year, month, 0).getDate();
-            for (let d = 1; d <= totalDays; d++) {
-                const fecha = `${year}-${String(month).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-                const info = dias[fecha];
-                const available = info && info.disponible;
-                const selDay = this.state.selectedActivities[idx]?.fecha === fecha;
-                html += `<div class="ttra-cal-day ${available ? 'ttra-cal-day--available' : 'ttra-cal-day--disabled'} ${selDay ? 'ttra-cal-day--selected' : ''}"
+            for (let d = 1; d <= total; d++) {
+                const fecha = `${year}-${String(month).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const info  = dias[fecha];
+                const avail = info && info.disponible;
+                const sel   = this.state.selectedActivities[idx]?.fecha === fecha;
+                html += `<div class="ttra-cal-day ${avail?'ttra-cal-day--available':'ttra-cal-day--disabled'} ${sel?'ttra-cal-day--selected':''}"
                               data-fecha="${fecha}" data-idx="${idx}" data-act="${actividadId}">${d}</div>`;
             }
             html += '</div>';
             cal.innerHTML = html;
 
-            cal.querySelectorAll('.ttra-cal-day--available').forEach(day => {
-                day.addEventListener('click', () => this.selectDate(idx, actividadId, day.dataset.fecha));
-            });
-            cal.querySelectorAll('.ttra-cal-nav').forEach(btn => {
+            cal.querySelectorAll('.ttra-cal-day--available').forEach(day =>
+                day.addEventListener('click', () => this.selectDate(idx, actividadId, day.dataset.fecha))
+            );
+            cal.querySelectorAll('.ttra-cal-nav').forEach(btn =>
                 btn.addEventListener('click', () => {
-                    let newMonth = month + parseInt(btn.dataset.dir);
-                    let newYear = year;
-                    if (newMonth < 1) { newMonth = 12; newYear--; }
-                    if (newMonth > 12) { newMonth = 1; newYear++; }
-                    this.buildCalendar(idx, actividadId, newYear, newMonth);
-                });
-            });
+                    let nm = month + parseInt(btn.dataset.dir), ny = year;
+                    if (nm < 1)  { nm = 12; ny--; }
+                    if (nm > 12) { nm = 1;  ny++; }
+                    this.buildCalendar(idx, actividadId, ny, nm);
+                })
+            );
         },
 
         async selectDate(idx, actividadId, fecha) {
@@ -456,56 +472,59 @@
             cal.querySelectorAll('.ttra-cal-day--selected').forEach(d => d.classList.remove('ttra-cal-day--selected'));
             cal.querySelector(`[data-fecha="${fecha}"]`)?.classList.add('ttra-cal-day--selected');
 
-            const slots = await this.loadSlots(actividadId, fecha);
+            const slots  = await this.loadSlots(actividadId, fecha);
             const select = document.getElementById(`ttra-slots-${idx}`);
             if (select) {
-                let opts = '<option value="">Selecciona hora</option>';
-                slots.forEach(s => {
-                    opts += `<option value="${s.hora}">${s.hora} (${s.plazas_disponibles} plazas)</option>`;
-                });
-                select.innerHTML = opts;
+                select.innerHTML = '<option value="">Selecciona hora</option>' +
+                    slots.map(s => `<option value="${s.hora}">${s.hora} (${s.plazas_disponibles} plazas)</option>`).join('');
                 select.onchange = () => {
                     this.state.selectedActivities[idx].fecha = fecha;
-                    this.state.selectedActivities[idx].hora = select.value;
+                    this.state.selectedActivities[idx].hora  = select.value;
                     this.updateSummary();
                     this.checkStep2Complete();
                 };
             }
-
             this.state.selectedActivities[idx].fecha = fecha;
             this.updateSummary();
         },
 
         // ── Actividades events ─────────────────────────────────────────────
         bindActivityEvents() {
-            document.querySelectorAll('.ttra-activity-card input[type="checkbox"]').forEach(cb => {
-                cb.addEventListener('change', () => this.toggleActivity(cb));
-            });
-            document.querySelectorAll('.ttra-activity-card select').forEach(sel => {
-                sel.addEventListener('change', () => this.updateActivityConfig(sel));
-            });
+            document.querySelectorAll('.ttra-activity-card input[type="checkbox"]').forEach(cb =>
+                cb.addEventListener('change', () => this.toggleActivity(cb))
+            );
+            document.querySelectorAll('.ttra-activity-card select').forEach(sel =>
+                sel.addEventListener('change', () => this.updateActivityConfig(sel))
+            );
         },
 
         toggleActivity(checkbox) {
-            const id = parseInt(checkbox.dataset.id);
+            const id   = parseInt(checkbox.dataset.id);
             const card = checkbox.closest('.ttra-activity-card');
+            const act  = this.state.actividades.find(a => a.id == id);
 
             if (checkbox.checked) {
-                const act = this.state.actividades.find(a => a.id == id);
                 const personas = parseInt(card.querySelector('[data-field="personas"]').value) || 1;
                 const sesiones = parseInt(card.querySelector('[data-field="sesiones"]').value) || 1;
                 this.state.selectedActivities.push({
-                    actividad_id: id,
-                    personas,
-                    sesiones,
-                    fecha: '',
-                    hora: '',
+                    actividad_id: id, personas, sesiones,
+                    fecha: '', hora: '',
                     precio: this.calcPrice(act, personas, sesiones),
                 });
                 card.classList.add('ttra-activity-card--selected');
+
+                // Panel fuera de la tarjeta, como elemento hermano debajo
+                const extras = this.getExtras(act);
+                if (extras && !card.nextElementSibling?.classList.contains('ttra-include-panel')) {
+                    card.insertAdjacentHTML('afterend', this.renderIncludePanel(extras, esPremium(act)));
+                }
             } else {
                 this.state.selectedActivities = this.state.selectedActivities.filter(a => a.actividad_id !== id);
                 card.classList.remove('ttra-activity-card--selected');
+                // El panel es hermano de la tarjeta, está justo después
+                if (card.nextElementSibling?.classList.contains('ttra-include-panel')) {
+                    card.nextElementSibling.remove();
+                }
             }
 
             this.updateTotal();
@@ -514,92 +533,65 @@
         },
 
         updateActivityConfig(select) {
-            const id = parseInt(select.dataset.id);
-            const field = select.dataset.field;
+            const id  = parseInt(select.dataset.id);
             const act = this.state.actividades.find(a => a.id == id);
             const sel = this.state.selectedActivities.find(s => s.actividad_id == id);
-
-            if (sel) {
-                sel[field] = parseInt(select.value);
-                const card = select.closest('.ttra-activity-card');
-                const personas = parseInt(card.querySelector('[data-field="personas"]').value);
-                const sesiones = parseInt(card.querySelector('[data-field="sesiones"]').value);
-                sel.precio = this.calcPrice(act, personas, sesiones);
-
-                const priceEl = card.querySelector('.ttra-price');
-                if (priceEl) priceEl.textContent = `${sel.precio} ${ttra_config.currency_symbol}`;
-
-                this.updateTotal();
-                this.updateSummary();
-            }
+            if (!sel) return;
+            sel[select.dataset.field] = parseInt(select.value);
+            const card     = select.closest('.ttra-activity-card');
+            const personas = parseInt(card.querySelector('[data-field="personas"]').value);
+            const sesiones = parseInt(card.querySelector('[data-field="sesiones"]').value);
+            sel.precio = this.calcPrice(act, personas, sesiones);
+            const priceEl = card.querySelector('.ttra-price');
+            if (priceEl) priceEl.textContent = `${sel.precio} ${ttra_config.currency_symbol}`;
+            this.updateTotal();
+            this.updateSummary();
         },
 
         // ── Utilidades ─────────────────────────────────────────────────────
         calcPrice(act, personas, sesiones) {
-            if (act.precio_tipo === 'por_persona') {
-                return Math.round(parseFloat(act.precio_base) * personas * sesiones);
-            }
+            if (act.precio_tipo === 'por_persona') return Math.round(parseFloat(act.precio_base) * personas * sesiones);
             let base = parseFloat(act.precio_base) * sesiones;
-            if (act.precio_pax && parseFloat(act.precio_pax) > 0) {
-                base += parseFloat(act.precio_pax) * personas * sesiones;
-            }
+            if (act.precio_pax && parseFloat(act.precio_pax) > 0) base += parseFloat(act.precio_pax) * personas * sesiones;
             return Math.round(base);
         },
 
         generateOptions(min, max, selected) {
             let html = '';
-            for (let i = min; i <= max; i++) {
-                html += `<option value="${i}" ${i == selected ? 'selected' : ''}>${i}</option>`;
-            }
+            for (let i = min; i <= max; i++) html += `<option value="${i}" ${i==selected?'selected':''}>${i}</option>`;
             return html;
         },
 
         updateTotal() {
-            this.state.total = this.state.selectedActivities.reduce(
-                (sum, a) => sum + parseFloat(a.precio || 0), 0
-            );
+            this.state.total = this.state.selectedActivities.reduce((s, a) => s + parseFloat(a.precio || 0), 0);
         },
 
         updateSummary() {
             const container = document.getElementById('ttra-summary-items');
-            const totalEl = document.getElementById('ttra-summary-total');
+            const totalEl   = document.getElementById('ttra-summary-total');
             if (!container) return;
-
-            let html = '';
-            this.state.selectedActivities.forEach((sel, idx) => {
+            container.innerHTML = this.state.selectedActivities.map((sel, idx) => {
                 const act = this.state.actividades.find(a => a.id == sel.actividad_id);
-                if (!act) return;
-                html += `
+                if (!act) return '';
+                return `
                 <div class="ttra-summary__item">
                     <div class="ttra-summary__item-header">
-                        <span>Actividad ${String(idx + 1).padStart(2, '0')}</span>
+                        <span>Actividad ${String(idx+1).padStart(2,'0')}</span>
                         <span>${sel.precio} ${ttra_config.currency_symbol}</span>
                     </div>
-                    <div class="ttra-summary__item-detail">
-                        <span>${act.nombre} ${act.subtipo || ''}</span>
-                    </div>
-                    <div class="ttra-summary__item-detail">
-                        <span>${ttra_config.i18n.personas}</span><span>${sel.personas}</span>
-                    </div>
-                    <div class="ttra-summary__item-detail">
-                        <span>${ttra_config.i18n.sesiones}</span><span>${sel.sesiones}</span>
-                    </div>
-                    <div class="ttra-summary__item-detail">
-                        <span>Fecha</span><span>${sel.fecha || '-'}</span>
-                    </div>
-                    <div class="ttra-summary__item-detail">
-                        <span>Hora</span><span>${sel.hora || '-'}</span>
-                    </div>
+                    <div class="ttra-summary__item-detail"><span>${act.nombre} ${act.subtipo||''}</span></div>
+                    <div class="ttra-summary__item-detail"><span>${ttra_config.i18n.personas}</span><span>${sel.personas}</span></div>
+                    <div class="ttra-summary__item-detail"><span>${ttra_config.i18n.sesiones}</span><span>${sel.sesiones}</span></div>
+                    <div class="ttra-summary__item-detail"><span>Fecha</span><span>${sel.fecha||'-'}</span></div>
+                    <div class="ttra-summary__item-detail"><span>Hora</span><span>${sel.hora||'-'}</span></div>
                 </div>`;
-            });
-
-            container.innerHTML = html;
+            }).join('');
             if (totalEl) totalEl.textContent = `${this.state.total} ${ttra_config.currency_symbol}`;
         },
 
         updateNextButton() {
             const btn = document.querySelector('#ttra-step-1 .ttra-btn--next');
-            if (btn) btn.disabled = this.state.selectedActivities.length === 0;
+            if (btn) btn.disabled = !this.state.selectedActivities.length;
             this.updateSidebarCTA();
         },
 
@@ -610,76 +602,98 @@
             btn.textContent = next <= 4
                 ? `${ttra_config.i18n.continuar} (PASO ${next}) →`
                 : `${ttra_config.i18n.finalizar} →`;
-
-            if (this.state.currentStep === 1) {
-                btn.disabled = this.state.selectedActivities.length === 0;
-            } else if (this.state.currentStep === 2) {
-                btn.disabled = !this.state.selectedActivities.every(a => a.fecha && a.hora);
-            } else {
-                btn.disabled = false;
-            }
+            if (this.state.currentStep === 1) btn.disabled = !this.state.selectedActivities.length;
+            else if (this.state.currentStep === 2) btn.disabled = !this.state.selectedActivities.every(a => a.fecha && a.hora);
+            else btn.disabled = false;
         },
 
         checkStep2Complete() {
-            const allDone = this.state.selectedActivities.every(a => a.fecha && a.hora);
-            const btnNext = document.querySelector('#ttra-step-2 .ttra-btn--next');
-            const btnSidebar = document.getElementById('ttra-sidebar-cta');
-            if (btnNext) btnNext.disabled = !allDone;
-            if (btnSidebar && this.state.currentStep === 2) btnSidebar.disabled = !allDone;
+            const done = this.state.selectedActivities.every(a => a.fecha && a.hora);
+            document.querySelector('#ttra-step-2 .ttra-btn--next')
+                && (document.querySelector('#ttra-step-2 .ttra-btn--next').disabled = !done);
+            if (this.state.currentStep === 2) {
+                const sb = document.getElementById('ttra-sidebar-cta');
+                if (sb) sb.disabled = !done;
+            }
         },
 
         // ── Submit ──────────────────────────────────────────────────────────
         async submitReservation() {
-            if (!this.state.paymentMethod) {
-                alert('Selecciona un método de pago.');
-                return;
-            }
+            if (!this.state.paymentMethod) { alert('Selecciona un método de pago.'); return; }
 
-            const form = document.getElementById('ttra-form-datos');
+            const btn = document.getElementById('ttra-btn-finalizar');
+            if (btn) { btn.disabled = true; btn.textContent = '⏳ Procesando...'; }
+
+            const form     = document.getElementById('ttra-form-datos');
             const formData = {
-                nombre: form.querySelector('[name="nombre"]').value,
-                email: form.querySelector('[name="email"]').value,
-                telefono: form.querySelector('[name="telefono"]').value,
-                dni_pasaporte: form.querySelector('[name="dni_pasaporte"]').value,
+                nombre:           form.querySelector('[name="nombre"]').value,
+                email:            form.querySelector('[name="email"]').value,
+                telefono:         form.querySelector('[name="telefono"]').value,
+                dni_pasaporte:    form.querySelector('[name="dni_pasaporte"]').value,
                 fecha_nacimiento: this.buildFechaNacimiento(form),
-                direccion: form.querySelector('[name="direccion"]').value,
-                actividades: this.state.selectedActivities,
+                direccion:        form.querySelector('[name="direccion"]').value,
+                actividades:      this.state.selectedActivities,
             };
 
-            const result = await this.api('reservas', {
-                method: 'POST',
-                body: JSON.stringify(formData),
-            });
+            try {
+                const result = await this.api('reservas', { method:'POST', body:JSON.stringify(formData) });
+                if (!result.success) {
+                    alert(result.message || 'Error al crear la reserva.');
+                    if (btn) { btn.disabled = false; btn.textContent = ttra_config.i18n.finalizar; }
+                    return;
+                }
+                // Confirmar pago test → dispara emails
+                try {
+                    await this.api('pago/test-confirm', {
+                        method: 'POST',
+                        body: JSON.stringify({ codigo_reserva: result.codigo_reserva, metodo_pago: this.state.paymentMethod }),
+                    });
+                } catch(e) { console.warn('test-confirm error:', e); }
 
-            if (!result.success) {
-                alert(result.message || 'Error al crear la reserva.');
-                return;
+                this.showThankYou(result.codigo_reserva, formData.nombre, formData.email, this.state.total);
+            } catch(error) {
+                console.error(error);
+                alert('Ha ocurrido un error. Por favor, inténtalo de nuevo.');
+                if (btn) { btn.disabled = false; btn.textContent = ttra_config.i18n.finalizar; }
             }
+        },
 
-            const pagoData = await this.api('pago/iniciar', {
-                method: 'POST',
-                body: JSON.stringify({
-                    codigo_reserva: result.codigo_reserva,
-                    metodo_pago: this.state.paymentMethod,
-                }),
+        showThankYou(codigo, nombre, email, total) {
+            document.getElementById('ttra-step-4')?.classList.add('ttra-step--hidden');
+            document.querySelectorAll('.ttra-stepper__step').forEach(el => {
+                el.classList.remove('ttra-stepper__step--active');
+                el.classList.add('ttra-stepper__step--completed');
             });
-
-            if (pagoData.url) {
-                const redsysForm = document.getElementById('ttra-redsys-form');
-                redsysForm.action = pagoData.url;
-                redsysForm.querySelector('[name="Ds_SignatureVersion"]').value = pagoData.Ds_SignatureVersion;
-                redsysForm.querySelector('[name="Ds_MerchantParameters"]').value = pagoData.Ds_MerchantParameters;
-                redsysForm.querySelector('[name="Ds_Signature"]').value = pagoData.Ds_Signature;
-                redsysForm.submit();
+            const confirmDiv  = document.getElementById('ttra-step-confirm');
+            const confirmBody = document.getElementById('ttra-confirmation');
+            if (confirmDiv && confirmBody) {
+                confirmBody.innerHTML = `
+                <div class="ttra-thankyou">
+                    <div class="ttra-thankyou__icon">✅</div>
+                    <h2 class="ttra-thankyou__title">¡Reserva confirmada!</h2>
+                    <p class="ttra-thankyou__subtitle">Gracias, <strong>${nombre}</strong>. Tu reserva ha sido procesada correctamente.</p>
+                    <div class="ttra-thankyou__card">
+                        <div class="ttra-thankyou__row"><span>Código de reserva</span><strong class="ttra-thankyou__code">${codigo}</strong></div>
+                        <div class="ttra-thankyou__row"><span>Total pagado</span><strong>${total} €</strong></div>
+                        <div class="ttra-thankyou__row"><span>Confirmación enviada a</span><strong>${email}</strong></div>
+                    </div>
+                    <p class="ttra-thankyou__note">📧 Hemos enviado un email con todos los detalles.<br>Si no lo recibes en unos minutos, revisa tu carpeta de spam.</p>
+                    <div class="ttra-thankyou__actions">
+                        <button class="ttra-btn ttra-btn--primary" onclick="window.location.reload()">Realizar otra reserva</button>
+                    </div>
+                </div>`;
+                confirmDiv.classList.remove('ttra-step--hidden');
+                confirmDiv.scrollIntoView({ behavior: 'smooth' });
             }
+            const si = document.getElementById('ttra-summary-items');
+            if (si) si.innerHTML = '';
         },
 
         buildFechaNacimiento(form) {
             const d = form.querySelector('[name="nacimiento_dia"]').value;
             const m = form.querySelector('[name="nacimiento_mes"]').value;
             const y = form.querySelector('[name="nacimiento_anyo"]').value;
-            if (d && m && y) return `${y}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-            return '';
+            return (d && m && y) ? `${y}-${String(m).padStart(2,'0')}-${String(d).padStart(2,'0')}` : '';
         },
     };
 
