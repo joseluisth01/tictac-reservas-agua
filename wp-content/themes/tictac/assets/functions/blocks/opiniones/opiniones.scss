@@ -1,32 +1,182 @@
-/* ============================================
-   BLOQUE OPINIONES UNIFICADO
-   Trustindex + Manual con carrusel vanilla
-   ============================================ */
+// ============================================================
+// BLOQUE OPINIONES UNIFICADO
+// Trustindex + Manual con carrusel vanilla
+// ============================================================
 
 .opiniones {
     padding: 0;
+
+    // ── Trustindex: ocultar fuera del bloque ─────────────────
+    [id*="trustindex"] {
+        display: block !important;
+    }
 }
 
-.opiniones .containerancho {
-    box-shadow: 0px 0px 10px 0px #05050640;
-    border-radius: 40px;
+body>[id*="trustindex"],
+footer [id*="trustindex"],
+.site-footer [id*="trustindex"] {
+    display: none !important;
 }
 
-/* ============================================
-   HEADER TRUSTINDEX
-   ============================================ */
-.opiniones--trustindex .opiniones-header {
-    background: var(--Lila-TICTAC, #817DBA);
-    padding: 20px 10px;
-    text-align: center;
-    border-radius: 40px 40px 0 0;
+// ── Header Trustindex ────────────────────────────────────────
+.opiniones--trustindex {
+    .opiniones-header {
+        background: var(--Lila-TICTAC, #817DBA);
+        padding: 20px 10px;
+        text-align: center;
+        border-radius: 40px 40px 0 0;
+    }
+
+    .opiniones-contenido {
+        background: #ffffff;
+        padding: 50px;
+        border-radius: 0 0 40px 40px;
+        position: relative;
+    }
+
+    // ── Trustindex widget overrides ──────────────────────────
+    .ti-reviews-container {
+        position: relative;
+    }
+
+    .ti-review-item {
+        .ti-inner {
+            display: flex !important;
+            flex-direction: column !important;
+            height: 100% !important;
+        }
+
+        .ti-stars {
+            order: 1 !important;
+        }
+
+        .ti-review-text-container,
+        .ti-review-text {
+            order: 2 !important;
+            flex: 1 !important;
+        }
+
+        .ti-review-header {
+            order: 3 !important;
+            margin-top: auto !important;
+        }
+    }
+
+    .ti-footer .ti-profile-img img {
+        width: 60px !important;
+        height: 60px !important;
+        object-fit: contain !important;
+    }
+
+    // ── Trustindex controles ─────────────────────────────────
+    .ti-widget-container>.ti-controls {
+        display: none !important;
+    }
+
+    .ti-controls-inline {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 16px !important;
+        padding: 0 10px;
+        margin-top: 20px;
+    }
+
+    .ti-arrows-wrapper {
+        display: flex !important;
+        gap: 10px !important;
+        align-items: center !important;
+        flex-shrink: 0 !important;
+    }
+
+    .ti-custom-arrow {
+        width: 40px !important;
+        height: 40px !important;
+        background-color: rgba(0, 0, 0, 0.08) !important;
+        border: none !important;
+        border-radius: 50% !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s ease !important;
+        background-size: 50% !important;
+        background-repeat: no-repeat !important;
+        background-position: center !important;
+
+        &::before,
+        &::after {
+            display: none !important;
+        }
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.15) !important;
+        }
+    }
+
+    .ti-pagination-bar-wrapper {
+        display: flex !important;
+        align-items: center !important;
+        flex-grow: 1 !important;
+    }
+
+    .ti-pagination-bar {
+        display: flex !important;
+        gap: 0 !important;
+        width: 100% !important;
+        height: 4px !important;
+        background-color: transparent !important;
+    }
+
+    .ti-bar-segment {
+        flex: 1 !important;
+        height: 100% !important;
+        border-radius: 0 !important;
+        background-color: rgba(0, 0, 0, 0.1) !important;
+        border: none !important;
+        cursor: pointer !important;
+        padding: 0 !important;
+        transition: background-color 0.3s ease !important;
+
+        &:hover {
+            background-color: rgba(0, 0, 0, 0.25) !important;
+        }
+
+        &.active {
+            background-color: var(--Lila-TICTAC, #817DBA) !important;
+        }
+    }
+
+    .ti-controls-line .dot {
+        display: none !important;
+    }
 }
 
+.ti-reviews-container-wrapper .ti-review-item {
+    padding: 10px !important;
+}
+
+.ti-widget.ti-goog {
+    .ti-review-item>.ti-inner {
+        box-shadow: 0px 0px 10px 0px #05050640 !important;
+    }
+
+    .ti-controls-line {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        background: transparent !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+}
+
+// ── Título sección ───────────────────────────────────────────
 .opiniones-titulo {
     color: var(--Blanco, #FFF);
     font-family: Montserrat, sans-serif;
     font-size: 36px;
-    font-style: normal;
     font-weight: 800;
     line-height: 115%;
     letter-spacing: -1px;
@@ -34,176 +184,20 @@
     text-transform: uppercase;
 }
 
-/* Ocultar Trustindex fuera del bloque */
-body>[id*="trustindex"],
-footer [id*="trustindex"],
-.site-footer [id*="trustindex"] {
-    display: none !important;
-}
+// ── Modo manual: header ──────────────────────────────────────
+.opiniones--manual {
+    .resenas-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
 
-.opiniones [id*="trustindex"] {
-    display: block !important;
-}
-
-.opiniones--trustindex .opiniones-contenido {
-    background: #FFFFFF;
-    padding: 50px;
-    border-radius: 0 0 40px 40px;
-    position: relative;
-}
-
-/* ============================================
-   TRUSTINDEX WIDGET OVERRIDES
-   ============================================ */
-.opiniones .ti-reviews-container {
-    position: relative;
-}
-
-.ti-reviews-container-wrapper .ti-review-item {
-    padding: 10px !important;
-}
-
-.ti-widget.ti-goog .ti-review-item>.ti-inner {
-    box-shadow: 0px 0px 10px 0px #05050640 !important;
-}
-
-.opiniones .ti-footer .ti-profile-img img {
-    width: 60px !important;
-    height: 60px !important;
-    object-fit: contain !important;
-}
-
-/* Reordenar reviews Trustindex */
-.opiniones .ti-review-item .ti-inner {
-    display: flex !important;
-    flex-direction: column !important;
-    height: 100% !important;
-}
-
-.opiniones .ti-review-item .ti-stars {
-    order: 1 !important;
-}
-
-.opiniones .ti-review-item .ti-review-text-container,
-.opiniones .ti-review-item .ti-review-text {
-    order: 2 !important;
-    flex: 1 !important;
-}
-
-.opiniones .ti-review-item .ti-review-header {
-    order: 3 !important;
-    margin-top: auto !important;
-}
-
-/* ============================================
-   TRUSTINDEX CONTROLES (flechas + barra)
-   ============================================ */
-.opiniones .ti-widget-container>.ti-controls {
-    display: none !important;
-}
-
-.opiniones .ti-controls-inline {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 16px !important;
-    padding: 0 10px;
-    margin-top: 20px;
-}
-
-.opiniones .ti-arrows-wrapper {
-    display: flex !important;
-    gap: 10px !important;
-    align-items: center !important;
-    flex-shrink: 0 !important;
-}
-
-.opiniones .ti-custom-arrow {
-    width: 40px !important;
-    height: 40px !important;
-    background-color: rgba(0, 0, 0, 0.08) !important;
-    border: none !important;
-    border-radius: 50% !important;
-    cursor: pointer !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    transition: all 0.3s ease !important;
-    background-size: 50% !important;
-    background-repeat: no-repeat !important;
-    background-position: center !important;
-}
-
-.opiniones .ti-custom-arrow:hover {
-    background-color: rgba(0, 0, 0, 0.15) !important;
-}
-
-.opiniones .ti-custom-arrow::before,
-.opiniones .ti-custom-arrow::after {
-    display: none !important;
-}
-
-.opiniones .ti-pagination-bar-wrapper {
-    display: flex !important;
-    align-items: center !important;
-    flex-grow: 1 !important;
-}
-
-.opiniones .ti-pagination-bar {
-    display: flex !important;
-    gap: 0 !important;
-    width: 100% !important;
-    height: 4px !important;
-    background-color: transparent !important;
-}
-
-.opiniones .ti-bar-segment {
-    flex: 1 !important;
-    height: 100% !important;
-    border-radius: 0 !important;
-    background-color: rgba(0, 0, 0, 0.1) !important;
-    border: none !important;
-    cursor: pointer !important;
-    padding: 0 !important;
-    transition: background-color 0.3s ease !important;
-}
-
-.opiniones .ti-bar-segment:hover {
-    background-color: rgba(0, 0, 0, 0.25) !important;
-}
-
-.opiniones .ti-bar-segment.active {
-    background-color: var(--Lila-TICTAC, #817DBA) !important;
-}
-
-.ti-widget.ti-goog .ti-controls-line {
-    display: block !important;
-    width: 100% !important;
-    max-width: 100% !important;
-    margin: 0 !important;
-    background: transparent !important;
-    height: auto !important;
-    overflow: visible !important;
-}
-
-.opiniones .ti-controls-line .dot {
-    display: none !important;
-}
-
-/* ============================================
-   MODO MANUAL - HEADER
-   ============================================ */
-.opiniones--manual .resenas-header {
-    text-align: center;
-    margin-bottom: 40px;
-}
-
-.opiniones--manual .resenas-titulo {
-    font-family: 'Barlow', sans-serif;
-    font-size: clamp(28px, 3vw, 42px);
-    font-weight: 700;
-    margin: 0 0 15px 0;
-    text-align: center;
+    .resenas-titulo {
+        font-family: 'Barlow', sans-serif;
+        font-size: clamp(28px, 3vw, 42px);
+        font-weight: 700;
+        margin: 0 0 15px 0;
+        text-align: center;
+    }
 }
 
 .resenas-media {
@@ -224,20 +218,26 @@ footer [id*="trustindex"],
     }
 }
 
-/* ============================================
-   ESTRELLAS
-   ============================================ */
+// ── Estrellas ────────────────────────────────────────────────
 .estrella {
     font-size: 18px;
     color: #ddd;
     line-height: 1;
 }
 
-/* ============================================
-   MODO MANUAL - CARRUSEL VANILLA
-   ============================================ */
-.opiniones-manual-viewport {
+// ── Carrusel vanilla ─────────────────────────────────────────
+.opiniones-manual-clip {
     overflow: hidden;
+    box-sizing: content-box;
+    width: 100%;
+    margin-left: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.opiniones-manual-viewport {
+    padding: 30px 0 80px 0;
+    margin: -30px 0 -60px 0;
     width: 100%;
 }
 
@@ -251,20 +251,26 @@ footer [id*="trustindex"],
     flex-shrink: 0;
 }
 
-/* Controles manuales */
+// ── Controles: flechas izq + puntos derecha ──────────────────
 .opiniones-manual-controls {
     margin-top: 20px;
-
+    display: flex !important;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .opiniones-manual-arrows {
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .opiniones-manual-arrow {
     width: 40px;
     height: 40px;
-    background-color: rgba(0, 0, 0, 0.08);
+    background: none;
     border: none;
     border-radius: 50%;
     padding: 0;
@@ -272,61 +278,48 @@ footer [id*="trustindex"],
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: opacity 0.3s ease;
 
     svg {
         width: 12px;
         height: 19px;
     }
 
+    img {
+        width: 10px;
+        height: 15px;
+        object-fit: contain;
+    }
+
     &:hover {
-        background-color: rgba(0, 0, 0, 0.15);
+        opacity: 0.7;
     }
 }
 
-.opiniones-manual-bar-wrapper {
+// ── Puntos de paginación ─────────────────────────────────────
+.opiniones-dots {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
-.opiniones-manual-bar {
-    display: flex;
-    gap: 0;
-    width: 100%;
-    height: 4px;
-    background-color: transparent;
-    position: relative;
-}
-
-.opiniones-manual-bar-segment {
-    flex: 1;
-    height: 100%;
-    border-radius: 0;
-    background-color: rgba(0, 0, 0, 0.1);
-    border: none;
+.opiniones-dot {
+    all: unset;
     cursor: pointer;
-    padding: 0;
-    transition: background-color 0.3s ease;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: block;
+    // Colores via inline style scoped desde PHP
+    transition: background-color 0.3s ease, transform 0.3s ease;
 
-    &:hover {
-        background-color: rgba(0, 0, 0, 0.25);
+    &.active {
+        transform: scale(1.3);
     }
 }
 
-/* NUEVO: barra progress fill */
-.opiniones-manual-bar-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 0%;
-    transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-}
-
-/* ============================================
-   AVATAR GLOBAL (aplica a Google y Minimalista)
-   ============================================ */
+// ── Avatar ───────────────────────────────────────────────────
 .resena-card__avatar {
     width: 32px;
     height: 32px;
@@ -341,53 +334,52 @@ footer [id*="trustindex"],
     font-weight: 600;
     flex-shrink: 0;
     overflow: hidden;
-}
 
-.resena-card__avatar--foto {
-    background-color: transparent !important;
+    &--foto {
+        background-color: transparent !important;
 
-    img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        border-radius: 50%;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+    }
+
+    &--mini {
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
     }
 }
 
-.resena-card__avatar--mini {
-    width: 32px;
-    height: 32px;
-    font-size: 14px;
-}
-
-/* ============================================
-   TARJETAS BASE
-   ============================================ */
+// ── Tarjeta base ─────────────────────────────────────────────
 .resena-card {
-    border-radius: 5px;
-    padding: 50px;
+    border-radius: 40px;
+    padding: 30px 24px;
     height: 100%;
     display: flex;
     flex-direction: column;
-    transition: box-shadow 0.3s ease;
-
-    &:hover {
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-    }
+    box-shadow: 0 10px 15px -3px rgba(36, 36, 34, 0.25), 0 4px 6px -4px rgba(36, 36, 34, 0.25);
 }
 
-/* ============================================
-   ESTILO GOOGLE - Orden: estrellas → texto → nombre
-   ============================================ */
+// ── Estilo Google ────────────────────────────────────────────
 .resena-card--google {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+
+    .resena-card__header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 12px;
+        order: 1;
+    }
 
     .resena-card__estrellas {
         display: flex;
         align-items: center;
         gap: 2px;
         margin-bottom: 12px;
-        order: 1;
+        order: 2;
 
         .estrella {
             font-size: 16px;
@@ -415,26 +407,11 @@ footer [id*="trustindex"],
         -webkit-line-clamp: 4;
         -webkit-box-orient: vertical;
         overflow: hidden;
-        order: 2;
-
-
+        order: 3;
         color: #D1D5DB;
-
-        /* Text TANGO */
-        font-style: normal;
         font-weight: 400;
         line-height: 20px;
-        /* 142.857% */
         letter-spacing: 2px;
-    }
-
-    .resena-card__header {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        margin-top: auto;
-        padding-top: 12px;
-        order: 3;
     }
 
     .resena-card__info {
@@ -446,17 +423,10 @@ footer [id*="trustindex"],
 
     .resena-card__nombre {
         font-family: 'Montserrat', sans-serif;
-
-
-
         color: var(--Azul-TANGO, #6391CC);
-
-        /* Menú TANGO */
         font-size: 12px;
-        font-style: normal;
         font-weight: 500;
         line-height: 16px;
-        /* 133.333% */
         letter-spacing: 3px;
         text-transform: uppercase;
     }
@@ -489,10 +459,9 @@ footer [id*="trustindex"],
     }
 }
 
-/* ============================================
-   ESTILO MINIMALISTA
-   ============================================ */
+// ── Estilo Minimalista ───────────────────────────────────────
 .resena-card--minimalista {
+
     .resena-card__top {
         display: flex;
         justify-content: space-between;
@@ -528,10 +497,8 @@ footer [id*="trustindex"],
     .resena-card__nombre {
         font-family: 'Montserrat', sans-serif;
         font-size: 12px;
-        font-style: normal;
         font-weight: 500;
         line-height: 16px;
-        /* 133.333% */
         letter-spacing: 3px;
         text-transform: uppercase;
     }
@@ -539,24 +506,19 @@ footer [id*="trustindex"],
     .resena-card__tipo {
         font-family: 'Barlow', sans-serif;
         font-size: 14px;
-
     }
 
     .resena-card__texto {
         font-family: 'Montserrat', sans-serif;
         color: #D1D5DB;
         font-size: 14px;
-        font-style: normal;
         font-weight: 400;
         line-height: 20px;
-        /* 142.857% */
         letter-spacing: 2px;
     }
 }
 
-/* ============================================
-   RESPONSIVE
-   ============================================ */
+// ── Responsive ───────────────────────────────────────────────
 @media (max-width: 800px) {
     .opiniones-titulo {
         font-size: 20px;
@@ -566,7 +528,7 @@ footer [id*="trustindex"],
         padding: 25px;
     }
 
-    .opiniones .ti-custom-arrow {
+    .opiniones--trustindex .ti-custom-arrow {
         width: 35px !important;
         height: 35px !important;
     }
@@ -583,10 +545,15 @@ footer [id*="trustindex"],
     .opiniones {
         margin-top: 20px !important;
     }
+
+    .opiniones-dot {
+        width: 8px;
+        height: 8px;
+    }
 }
 
 @media (max-width: 600px) {
-    .opiniones .ti-controls-inline {
+    .opiniones--trustindex .ti-controls-inline {
         gap: 12px !important;
     }
 
@@ -594,7 +561,7 @@ footer [id*="trustindex"],
         margin-top: 10px !important;
     }
 
-    .opiniones .ti-custom-arrow {
+    .opiniones--trustindex .ti-custom-arrow {
         width: 32px !important;
         height: 32px !important;
     }
@@ -626,5 +593,14 @@ footer [id*="trustindex"],
 
     .opiniones--manual .resenas-header {
         margin-bottom: 25px;
+    }
+
+    .opiniones-dot {
+        width: 7px;
+        height: 7px;
+    }
+
+    .opiniones-dots {
+        gap: 6px;
     }
 }

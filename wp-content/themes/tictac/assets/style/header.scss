@@ -6,7 +6,7 @@ header {
     top: 10px;
     left: 0;
     right: 0;
-    z-index: 9999;
+    z-index: 10000;
     background: #213975;
     box-shadow: 0 4px 5px 0 rgba(33, 34, 33, 0.25);
     border-radius: 50px;
@@ -165,7 +165,6 @@ header {
             }
         }
 
-        // Ocultar los .sub-menu originales en desktop
         .sub-menu {
             display: none;
         }
@@ -177,7 +176,7 @@ header {
    =================================== */
 .submenu-panel {
     position: fixed;
-    z-index: 9998;
+    z-index: 9999;
     background: #27A5DE;
     border-radius: 0 0 40px 40px;
     padding: 0;
@@ -197,7 +196,7 @@ header {
         visibility: visible;
         max-height: 500px;
         padding-right: 43px;
-        padding-top: 125px;
+        padding-top: 70px;
         padding-bottom: 30px;
     }
 
@@ -446,29 +445,46 @@ body {
     header {
         padding: 15px 20px;
         border-radius: 50px;
-        // Necesario para que el panel mobile cuelgue del header
         overflow: visible;
         flex-wrap: wrap;
+        background: transparent;
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #213975;
+            border-radius: 50px;
+            box-shadow: 0 4px 5px 0 rgba(33, 34, 33, 0.25);
+            z-index: 0;
+        }
+
+        >* {
+            position: relative;
+            z-index: 2;
+        }
+
+        >.header-nav-wrapper {
+            z-index: -1;
+        }
     }
 
     .header-logo img {
         height: 50px;
     }
 
-    // El wrapper pasa a ser un panel persiana bajo el header
-    // Se posiciona absolute respecto al header
     .header-nav-wrapper {
-        // Resetear estilos desktop
         width: 100%;
         justify-content: flex-start;
         gap: 0;
 
-        // Panel persiana: cuelga del header, mismo ancho
         position: absolute;
-        top: 100%; // justo debajo del header
+        top: 100%;
         left: 0;
         right: 0;
-        z-index: 9998; // por detrás del header
 
         display: flex;
         flex-direction: column;
@@ -478,7 +494,6 @@ body {
         border-radius: 0 0 30px 30px;
         box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 
-        // Estado oculto: colapsado hacia arriba
         max-height: 0;
         overflow: hidden;
         opacity: 0;
@@ -487,15 +502,13 @@ body {
             opacity 0.3s ease,
             visibility 0.3s ease;
 
-        // Estado visible
         &.active {
-            max-height: 80vh; // suficiente para cualquier menú
+            max-height: 80vh;
             overflow-y: auto;
             opacity: 1;
             visibility: visible;
         }
 
-        // Ocultar el botón RESERVAR desktop dentro del wrapper en mobile
         .contacto-link.d-none {
             display: none !important;
         }
@@ -527,9 +540,8 @@ body {
                 border-bottom: none;
             }
 
-            // Ítem padre: azul oscuro, texto blanco
             >a {
-                padding: 18px 24px;
+                padding: 10px 24px;
                 font-size: 14px;
                 font-weight: 700;
                 letter-spacing: 1px;
@@ -550,7 +562,6 @@ body {
             }
         }
 
-        // Submenús: siempre visibles, fondo azul claro
         .sub-menu {
             position: static;
             display: block;
@@ -573,7 +584,7 @@ body {
                 }
 
                 a {
-                    padding: 16px 24px !important;
+                    padding: 8px 24px !important;
                     font-size: 13px;
                     font-weight: 700;
                     letter-spacing: 1px;
@@ -587,7 +598,6 @@ body {
                     background-color: transparent;
                     white-space: normal;
 
-                    // Flecha → azul oscuro
                     &::before {
                         content: '';
                         display: inline-block !important;
@@ -620,7 +630,6 @@ body {
                 }
             }
 
-            // Submenú segundo nivel
             .sub-menu {
                 background: #1a8bbf;
 

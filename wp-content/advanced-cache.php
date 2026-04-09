@@ -8,9 +8,9 @@ defined( 'ABSPATH' ) || exit;
 
 define( 'WP_ROCKET_ADVANCED_CACHE', true );
 
-$rocket_path        = '/Users/carlosalbendiz/Local Sites/marbella-jet/app/public/wp-content/plugins/wp-rocket/';
-$rocket_config_path = '/Users/carlosalbendiz/Local Sites/marbella-jet/app/public/wp-content/wp-rocket-config/';
-$rocket_cache_path  = '/Users/carlosalbendiz/Local Sites/marbella-jet/app/public/wp-content/cache/wp-rocket/';
+$rocket_path        = '/var/www/vhosts/dev-tictac.com/httpdocs/marbellajetxperience/wp-content/plugins/wp-rocket/';
+$rocket_config_path = '/var/www/vhosts/dev-tictac.com/httpdocs/marbellajetxperience/wp-content/wp-rocket-config/';
+$rocket_cache_path  = '/var/www/vhosts/dev-tictac.com/httpdocs/marbellajetxperience/wp-content/cache/wp-rocket/';
 
 if (
 	version_compare( phpversion(), '7.3', '<' )
