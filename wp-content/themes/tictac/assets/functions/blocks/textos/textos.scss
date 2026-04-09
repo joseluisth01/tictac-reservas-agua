@@ -1,52 +1,150 @@
 /* ===================================
-   TEXTOS - SECCIÓN
+   BLOQUE TEXTOS
    =================================== */
 
-.textos-section {
+.bloquetextos {
     padding-top: 60px;
+    padding-bottom: 60px;
+    text-align: center;
 }
 
 /* ===================================
-   ENCABEZADO
+   TÍTULO
+   =================================== */
+.bloquetextos__parrafo h2{
+    color: var(--Azul-01-XPERIENCE, #213975);
+        text-align: center;
+
+        /* Desktop Text/Tittles XPERIENCE (Desktop) */
+        font-family: "Genos";
+        font-size: 40px;
+        font-style: italic;
+        font-weight: 700;
+        line-height: 70%;
+        margin-bottom: 15px;
+}
+
+.bloquetextos__parrafo ul li{
+    text-align: left;
+}
+.bloquetextos__titulo {
+    margin: 0 0 16px 0;
+
+    /* Estilos por defecto para el contenido del wysiwyg */
+    h1,
+    h2,
+    h3,
+    h4 {
+        color: var(--Azul-01-XPERIENCE, #213975);
+        text-align: center;
+
+        /* Desktop Text/Tittles XPERIENCE (Desktop) */
+        font-family: "Genos";
+        font-size: 40px;
+        font-style: italic;
+        font-weight: 700;
+        line-height: 70%;
+        /* 29.4px */
+    }
+
+    h1 {
+        font-size: 72px;
+    }
+
+    h2 {
+        font-size: 56px;
+    }
+
+    h3 {
+        font-size: 42px;
+    }
+
+    h4 {
+        font-size: 32px;
+    }
+
+    p {
+        font-family: "Montserrat", sans-serif;
+        font-size: 18px;
+        font-weight: 500;
+        line-height: 1.5;
+        color: #213975;
+        margin: 0;
+        text-align: left;
+    }
+
+    strong,
+    b {
+        color: #27A5DE;
+    }
+
+    em,
+    i {
+        color: #FF5E00;
+        font-style: italic;
+    }
+}
+
+/* ===================================
+   IMAGEN DECORATIVA
    =================================== */
 
-.textos-encabezado {
-    text-align: center;
+.bloquetextos__imagen {
+    display: flex;
+    justify-content: center;
+    margin: 16px 0;
+
+    img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+    }
 }
 
-.textos-etiqueta {
-    display: inline-block;
-    background: #233D33;
-    color: white;
-    padding: 8px 24px;
-    border-radius: 25px;
-    font-family: "Montserrat", sans-serif;
-    font-size: 12px;
-    text-align: center;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 20px;
-}
+/* ===================================
+   PÁRRAFO
+   =================================== */
 
-.textos-titulo {
-    font-family: "DM Serif Display", serif;
-    font-size: 52px;
-    line-height: 1.2;
-    font-weight: 400;
-    color: #233D33;
-    margin: 0 0 20px 0;
-}
-
-.textos-parrafo {
-    font-family: "Montserrat", sans-serif;
-    font-size: 18px;
-    line-height: 1.6;
-    color: #233D33;
-    margin: 0;
-    max-width: 100%;
+.bloquetextos__parrafo {
     margin-left: auto;
     margin-right: auto;
+
+    p {
+        font-family: "Montserrat", sans-serif;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 20px;
+        letter-spacing: 2px;
+        color: #000000;
+        margin: 0 0 12px 0;
+        text-align: left;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+
+    strong,
+    b {
+        color: #213975;
+        font-weight: 700;
+    }
+
+    em,
+    i {
+        color: #27A5DE;
+    }
+
+    a {
+        color: #FF5E00;
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.2s ease;
+
+        &:hover {
+            color: #213975;
+        }
+    }
 }
 
 /* ===================================
@@ -54,30 +152,59 @@
    =================================== */
 
 @media (max-width: 1200px) {
-    .textos-titulo {
-        font-size: 42px;
+    .bloquetextos__titulo {
+        h1 {
+            font-size: 56px;
+        }
+
+        h2 {
+            font-size: 44px;
+        }
+
+        h3 {
+            font-size: 34px;
+        }
+
+        h4 {
+            font-size: 26px;
+        }
     }
 
-    .textos-parrafo {
-        font-size: 16px;
+    .bloquetextos__parrafo p {
+        font-size: 15px;
     }
 }
 
 @media (max-width: 768px) {
-    .textos-section {
+    .bloquetextos {
         padding-top: 40px;
+        padding-bottom: 40px;
     }
 
-    .textos-titulo {
-        font-size: 32px;
+    .bloquetextos__titulo {
+        h1 {
+            font-size: 42px;
+        }
+
+        h2 {
+            font-size: 35px;
+        }
+
+        h3 {
+            font-size: 28px;
+        }
+
+        h4 {
+            font-size: 22px;
+        }
+
+        p {
+            font-size: 16px;
+        }
     }
 
-    .textos-parrafo {
-        font-size: 15px;
-    }
-
-    .textos-etiqueta {
-        padding: 8px;
-        width: 100%;
+    .bloquetextos__parrafo p {
+        font-size: 14px;
+        letter-spacing: 1px;
     }
 }

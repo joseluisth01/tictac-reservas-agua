@@ -40,10 +40,7 @@ a:focus
 .bloquehero-secundario-descripcion strong{
 	font-weight:700;
 }
-h1{
-	text-shadow: 0px 0px 8px  #00000080;
 
-}
 .custom-product-container {
     display: flex;
     gap: 20px;

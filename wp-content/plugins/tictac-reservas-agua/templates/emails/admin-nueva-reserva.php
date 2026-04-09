@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 $nombre_negocio = TTRA_Settings::get( 'nombre_negocio', get_bloginfo('name') );
 $logo_url       = wp_get_attachment_image_url( (int) TTRA_Settings::get('logo_id', 0), 'medium' );
 if ( ! $logo_url ) {
-    $logo_url = home_url( '/wp-content/uploads/2026/04/Vector.png' );
+    $logo_url = home_url( '/wp-content/uploads/2026/04/cropped-Vector-1.png' );
 }
 
 $admin_url  = admin_url( 'admin.php?page=ttra-reservas&reserva_id=' . intval( $reserva->id ) );

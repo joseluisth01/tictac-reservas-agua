@@ -1,27 +1,4 @@
 <?php
-// 1. Registrar el bloque
-function bloquetextos_acf()
-{
-    if (function_exists('acf_register_block_type')) {
-        acf_register_block_type([
-            'name'              => 'textos',
-            'title'             => __('Bloque Textos', 'tictac'),
-            'description'       => __('Bloque con etiqueta, título y párrafo', 'tictac'),
-            'render_callback'   => 'bloquetextos',
-            'mode'              => 'edit',
-            'icon'              => 'editor-aligncenter',
-            'keywords'          => ['custom', 'textos', 'título', 'párrafo'],
-            'supports'          => [
-                'align' => false,
-                'mode' => false,
-                'jsx' => true
-            ],
-        ]);
-    }
-}
-add_action('acf/init', 'bloquetextos_acf');
-
-// 2. Registrar los campos ACF
 if (function_exists('acf_add_local_field_group')) :
 
     acf_add_local_field_group(array(
@@ -29,27 +6,33 @@ if (function_exists('acf_add_local_field_group')) :
         'title' => 'Bloque Textos',
         'fields' => array(
             array(
-                'key' => 'field_textos_etiqueta',
-                'label' => 'Etiqueta Superior',
-                'name' => 'textos_etiqueta',
-                'type' => 'text',
-                'required' => 0,
-            ),
-            array(
-                'key' => 'field_textos_titulo',
-                'label' => 'Título (H2)',
-                'name' => 'textos_titulo',
-                'type' => 'text',
-                'required' => 1,
-            ),
-            array(
-                'key' => 'field_textos_parrafo',
-                'label' => 'Párrafo',
-                'name' => 'textos_parrafo',
+                'key' => 'field_bt_titulo',
+                'label' => 'Título',
+                'name' => 'bt_titulo',
                 'type' => 'wysiwyg',
-                'required' => 0,
-                'rows' => 4,
-                'instructions' => 'Texto que aparecerá debajo del título',
+                'tabs' => 'all',
+                'toolbar' => 'full',
+                'media_upload' => 0,
+                'instructions' => 'Texto principal del bloque.',
+            ),
+            array(
+                'key' => 'field_bt_imagen',
+                'label' => 'Imagen decorativa',
+                'name' => 'bt_imagen',
+                'type' => 'image',
+                'return_format' => 'array',
+                'preview_size' => 'medium',
+                'instructions' => 'Imagen entre el título y el párrafo (ej: olas decorativas). Opcional.',
+            ),
+            array(
+                'key' => 'field_bt_parrafo',
+                'label' => 'Párrafo',
+                'name' => 'bt_parrafo',
+                'type' => 'wysiwyg',
+                'tabs' => 'all',
+                'toolbar' => 'full',
+                'media_upload' => 0,
+                'instructions' => 'Texto descriptivo debajo de la imagen.',
             ),
         ),
         'location' => array(
@@ -57,55 +40,86 @@ if (function_exists('acf_add_local_field_group')) :
                 array(
                     'param' => 'block',
                     'operator' => '==',
-                    'value' => 'acf/textos',
+                    'value' => 'acf/bloquetextos',
                 ),
             ),
         ),
+        'menu_order' => 0,
+        'position' => 'normal',
+        'style' => 'default',
+        'label_placement' => 'top',
+        'instruction_placement' => 'label',
+        'active' => true,
     ));
 
 endif;
 
-// 3. Encolar los estilos
-function bloquetextos_scripts()
-{
-    if (!is_admin()) {
-        wp_enqueue_style('bloquetextos', get_stylesheet_directory_uri() . '/assets/functions/blocks/textos/textos.min.css');
+if (!function_exists('tictac_bloquetextos_acf')) {
+    function tictac_bloquetextos_acf()
+    {
+        acf_register_block_type(array(
+            'name'            => 'bloquetextos',
+            'title'           => __('Bloque Textos', 'tictac'),
+            'description'     => __('Título + imagen decorativa + párrafo centrados.', 'tictac'),
+            'render_callback' => 'tictac_bloquetextos_render',
+            'mode'            => 'preview',
+            'supports'        => array(
+                'mode'  => true,
+                'align' => false,
+            ),
+            'icon'     => 'editor-aligncenter',
+            'keywords' => array('texto', 'titulo', 'parrafo'),
+        ));
     }
+    add_action('acf/init', 'tictac_bloquetextos_acf');
 }
-add_action('wp_enqueue_scripts', 'bloquetextos_scripts');
 
-// 4. Función de renderizado
-function bloquetextos($block)
-{
-    // Variables ACF
-    $etiqueta = get_field('textos_etiqueta');
-    $titulo = get_field('textos_titulo');
-    $parrafo = get_field('textos_parrafo');
+if (!function_exists('tictac_bloquetextos_scripts')) {
+    function tictac_bloquetextos_scripts()
+    {
+        if (!is_admin()) {
+            wp_enqueue_style('textos', get_stylesheet_directory_uri() . '/assets/functions/blocks/textos/textos.min.css', array(), '1.0');
+        }
+    }
+    add_action('wp_enqueue_scripts', 'tictac_bloquetextos_scripts');
+    add_action('admin_enqueue_scripts', 'tictac_bloquetextos_scripts');
+}
 
-    // Generar ID único para este bloque
-    $block_id = 'bloquetextos-' . uniqid();
-?>
+if (!function_exists('tictac_bloquetextos_render')) {
+    function tictac_bloquetextos_render($block)
+    {
+        $titulo  = get_field('bt_titulo');
+        $imagen  = get_field('bt_imagen');
+        $parrafo = get_field('bt_parrafo');
 
-<section class="textos-section <?php if (isset($block['className'])) { echo esc_attr($block['className']); } ?>" id="<?php echo $block_id; ?>">
-    <div class="containerancho">
-        
-        <!-- ENCABEZADO -->
-        <div class="textos-encabezado">
-            <?php if ($etiqueta) : ?>
-                <span class="textos-etiqueta"><?php echo esc_html($etiqueta); ?></span>
-            <?php endif; ?>
+        $block_class = isset($block['className']) ? esc_attr($block['className']) : '';
+        $anchor      = !empty($block['anchor']) ? ' id="' . esc_attr($block['anchor']) . '"' : '';
+        ?>
+
+        <section<?php echo $anchor; ?> class="bloquetextos<?php echo $block_class ? ' ' . $block_class : ''; ?> containerancho">
 
             <?php if ($titulo) : ?>
-                <h2 class="textos-titulo"><?php echo esc_html($titulo); ?></h2>
+                <div class="bloquetextos__titulo">
+                    <?php echo $titulo; ?>
+                </div>
+            <?php endif; ?>
+
+            <?php if ($imagen && !empty($imagen['url'])) : ?>
+                <div class="bloquetextos__imagen mt-3">
+                    <img src="<?php echo esc_url($imagen['url']); ?>"
+                         alt="<?php echo esc_attr($imagen['alt']); ?>"
+                         loading="lazy">
+                </div>
             <?php endif; ?>
 
             <?php if ($parrafo) : ?>
-                <p class="textos-parrafo"><?= $parrafo ?></p>
+                <div class="bloquetextos__parrafo">
+                    <?php echo $parrafo; ?>
+                </div>
             <?php endif; ?>
-        </div>
 
-    </div>
-</section>
+        </section>
 
-<?php
+        <?php
+    }
 }

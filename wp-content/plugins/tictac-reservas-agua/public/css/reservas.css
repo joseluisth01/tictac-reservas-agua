@@ -1,6 +1,6 @@
 /**
  * TicTac Reservas Agua - Frontend Booking Styles
- * v1.4 FINAL — limpio, sin duplicados
+ * v1.5 — Select estilizado, flechas calendario SVG, botón done con estado
  */
 
 /* ═══════════════════════════════════════
@@ -152,7 +152,6 @@
 .ttra-layout__sidebar {
     position: sticky;
     top: 220px;
-    /* fallback — JS lo recalcula dinámicamente */
     align-self: start;
 }
 
@@ -275,7 +274,7 @@
     letter-spacing: 1px;
 }
 
-.ttra-btn--outline:hover {
+.ttra-btn--outline:hover:not(:disabled) {
     background: var(--ttra-bg);
 }
 
@@ -285,15 +284,130 @@
     margin-top: 8px;
 }
 
+/* Botón "Selección finalizada" — estado disabled por defecto */
 .ttra-btn--done {
     margin-top: 16px;
     width: 100%;
+    max-width: 300px;
     justify-content: center;
     padding: 12px;
-    font-size: 14px;
+
+    /* Estado desactivado */
+    background: rgba(255, 255, 255, 0.50);
+    color: #a0aec0;
+    border: 2px solid #cbd5e0;
+    cursor: not-allowed;
+    opacity: 0.6;
+    transition: all var(--ttra-transition);
+
+    /* Desktop Text/CTAs XPERIENCE (Desktop) */
+    font-family: "Montserrat";
+    font-size: 15px;
+    font-style: normal;
+    font-weight: 800;
+    line-height: 20px;
+    /* 133.333% */
+    letter-spacing: 1px;
+}
+
+/* Estado activo del botón "Selección finalizada" */
+.ttra-btn--done.ttra-btn--done-active {
     background: var(--ttra-secondary);
     color: var(--ttra-white);
+    opacity: 1;
+    cursor: default;
+    box-shadow: 0 2.5px 5px 0 rgba(36, 36, 34, 0.60);
+    border: 0px !important;
+}
+
+/* ═══════════════════════════════════════
+   CUSTOM SELECT — Diseño pill estilizado
+   ═══════════════════════════════════════ */
+
+/* Wrapper para el select estilizado */
+.ttra-select-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.ttra-select-wrapper::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 30px;
+    background: #213975;
+    border-radius: 0 10px 10px 0;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1 1L7 7L13 1' stroke='white' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.ttra-select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 8px 44px 8px 14px;
+    border: 2px solid var(--ttra-gray-200);
+    border-radius: 10px;
+    font-family: "Montserrat", sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    color: #213975;
+    background: var(--ttra-white);
+    cursor: pointer;
+    min-width: 80px;
+    outline: none;
+    transition: border-color var(--ttra-transition);
+}
+
+.ttra-select:focus {
     border-color: var(--ttra-secondary);
+}
+
+.ttra-select--sm {
+    padding: 6px 35px 6px 12px;
+    font-size: 16px;
+    min-width: 80px;
+}
+
+/* Select de slots con label horizontal */
+.ttra-slots-section {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ttra-slots-label {
+    color: var(--Azul-01-XPERIENCE, #213975);
+    font-family: "Genos";
+    font-size: 25px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 80%;
+    text-transform: uppercase;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* El select de slots ocupa el espacio restante */
+.ttra-select-wrapper--slots {
+    flex: 1;
+}
+
+.ttra-select-wrapper--slots .ttra-select {
+    width: 100%;
+}
+
+/* Select de configuración de actividad (personas/sesiones) */
+.ttra-activity-card__config .ttra-select-wrapper {
+    display: inline-flex;
 }
 
 /* ═══════════════════════════════════════
@@ -351,7 +465,6 @@
     gap: 12px;
 }
 
-/* Tarjeta — exactamente igual que siempre, sin cambios */
 .ttra-activity-card {
     display: flex;
     justify-content: space-between;
@@ -370,7 +483,6 @@
     box-shadow: var(--ttra-shadow);
 }
 
-/* Tarjeta PREMIUM */
 .ttra-activity-card--premium {
     border-color: #27A5DE;
     background: #E8F4FD;
@@ -389,7 +501,6 @@
     accent-color: #27A5DE;
 }
 
-/* Columnas */
 .ttra-activity-card_left {
     display: flex;
     align-items: center;
@@ -405,7 +516,6 @@
     flex-wrap: nowrap;
 }
 
-/* Elementos */
 .ttra-activity-card__check {
     padding: 0;
     margin: 0;
@@ -497,7 +607,6 @@
     color: var(--ttra-gray-600);
 }
 
-/* €/pax */
 .ttra-activity-card__pax {
     display: inline-flex;
     align-items: center;
@@ -513,12 +622,10 @@
     width: 25px;
 }
 
-/* Badge PREMIUM oculto */
 .ttra-premium-badge {
     display: none;
 }
 
-/* Separador PREMIUM */
 .ttra-premium-divider {
     background: #27A5DE;
     border-radius: 20px;
@@ -557,8 +664,6 @@
 
 /* ═══════════════════════════════════════
    PANEL "INCLUYE"
-   Elemento HERMANO debajo de .ttra-activity-card.
-   La tarjeta no cambia en absoluto.
    ═══════════════════════════════════════ */
 .ttra-include-panel {
     display: flex;
@@ -568,7 +673,6 @@
     padding: 10px 24px;
     border-radius: 0 0 20px 20px;
     margin-top: -14px;
-    /* se pega visualmente a la tarjeta de arriba */
     animation: ttraIncludeFade 0.2s ease;
 }
 
@@ -589,10 +693,8 @@
     padding: 52px 20px 25px 25px;
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
-
     top: -32px;
     position: relative;
-    ;
 }
 
 .ttra-include-panel--premium {
@@ -600,21 +702,17 @@
     padding: 52px 20px 25px 25px;
     border-bottom-left-radius: 40px;
     border-bottom-right-radius: 40px;
-
     top: -32px;
     position: relative;
 }
 
 .ttra-include-title {
     color: var(--Azul-01-XPERIENCE, #213975);
-
-    /* Desktop Text/SubClaim 02  XPERIENCE (Desktop) */
     font-family: "Montserrat";
     font-size: 18px;
     font-style: normal;
     font-weight: 500;
     line-height: 24px;
-    /* 133.333% */
 }
 
 .ttra-include-item {
@@ -637,14 +735,11 @@
 
 .ttra-include-label {
     color: var(--Blanco, #FFF);
-
-    /* Desktop Text/SubClaim 02  XPERIENCE (Desktop) */
     font-family: "Montserrat", sans-serif;
     font-size: 18px;
     font-style: normal;
     font-weight: 500;
     line-height: 24px;
-    /* 133.333% */
 }
 
 @media (max-width: 900px) {
@@ -652,24 +747,6 @@
         padding: 10px 16px;
         gap: 6px 12px;
     }
-}
-
-/* ═══════════════════════════════════════
-   SELECT
-   ═══════════════════════════════════════ */
-.ttra-select {
-    padding: 6px 10px;
-    border: 2px solid var(--ttra-gray-200);
-    border-radius: var(--ttra-radius-sm);
-    font-size: 13px;
-    color: var(--ttra-gray-800);
-    background: var(--ttra-white);
-    cursor: pointer;
-}
-
-.ttra-select--sm {
-    padding: 4px 8px;
-    min-width: 50px;
 }
 
 /* ═══════════════════════════════════════
@@ -690,27 +767,21 @@
 
 .ttra-calendar-block__label {
     color: var(--Azul-01-XPERIENCE, #213975);
-
-    /* Desktop Text/SubClaim 02  XPERIENCE (Desktop) */
     font-family: "Montserrat";
     font-size: 18px;
     font-style: normal;
     font-weight: 500;
     text-align: center;
     line-height: 24px;
-    /* 133.333% */
 }
 
 .ttra-calendar-block__label strong {
     color: var(--Azul-02-XPERIENCE, #27A5DE);
-
-    /* Desktop Text/Cat.01 XPERIENCE (Desktop) */
     font-family: Genos;
     font-size: 35px;
     font-style: italic;
     font-weight: 700;
     line-height: 80%;
-    /* 28px */
 }
 
 .ttra-cal-header {
@@ -724,34 +795,42 @@
     color: var(--Azul-01-XPERIENCE, #213975);
     text-transform: uppercase;
     text-align: center;
-
-    /* Desktop Text/Cat. 04 XPERIENCE (Desktop) */
     font-family: "Genos";
     font-size: 30px;
     font-style: italic;
     font-weight: 700;
     line-height: 80%;
-    /* 24px */
 }
 
+/* Flechas del calendario — usando SVG externo */
 .ttra-cal-nav {
     width: 32px;
     height: 32px;
     border: none;
-    background: var(--ttra-bg);
+    background: transparent;
     border-radius: 50%;
     cursor: pointer;
-    font-size: 18px;
-    color: var(--ttra-primary);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background var(--ttra-transition);
+    transition: opacity var(--ttra-transition);
+    padding: 0;
+}
+
+.ttra-cal-nav img {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+    display: block;
+}
+
+/* La flecha derecha se obtiene volteando la misma imagen */
+.ttra-cal-nav--right img {
+    transform: scaleX(-1);
 }
 
 .ttra-cal-nav:hover {
-    background: var(--ttra-secondary);
-    color: var(--ttra-white);
+    opacity: 0.7;
 }
 
 .ttra-cal-grid {
@@ -764,15 +843,13 @@
     text-align: center;
     border-top: 1px solid #706F6F;
     border-bottom: 1px solid #706F6F;
-    /* Desktop Text/Cat. 03 XPERIENCE (Desktop) */
     font-family: "Montserrat";
     font-size: 20px;
     font-style: normal;
     font-weight: 600;
     line-height: 70%;
-    /* 17.5px */
     letter-spacing: 0.5px;
-        padding: 7px 0px;
+    padding: 7px 0px;
 }
 
 .ttra-cal-day {
@@ -790,15 +867,13 @@
 .ttra-cal-day--available {
     cursor: pointer;
     color: var(--Negro-XPERIENCE, #242422);
-text-align: center;
-
-/* Desktop Text/Cat. 03 XPERIENCE (Desktop) */
-font-family: "Montserrat";
-font-size: 20px;
-font-style: normal;
-font-weight: 600;
-line-height: 70%; /* 17.5px */
-letter-spacing: 0.5px;
+    text-align: center;
+    font-family: "Montserrat";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 70%;
+    letter-spacing: 0.5px;
 }
 
 .ttra-cal-day--available:hover {
@@ -811,54 +886,26 @@ letter-spacing: 0.5px;
     color: var(--ttra-white) !important;
     font-weight: 700;
     border-radius: 20px;
-    color: var(--Blanco, #FFF);
-text-align: center;
-
-/* Desktop Text/Cat. 03 XPERIENCE (Desktop) */
-font-family: "Montserrat";
-font-size: 20px;
-font-style: normal;
-font-weight: 600;
-line-height: 70%; /* 17.5px */
-letter-spacing: 0.5px;
+    text-align: center;
+    font-family: "Montserrat";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 70%;
+    letter-spacing: 0.5px;
 }
 
 .ttra-cal-day--disabled {
     opacity: 0.5;
     cursor: default;
-        color: var(--Negro-XPERIENCE, #242422);
-text-align: center;
-
-/* Desktop Text/Cat. 03 XPERIENCE (Desktop) */
-font-family: "Montserrat";
-font-size: 20px;
-font-style: normal;
-font-weight: 600;
-line-height: 70%; /* 17.5px */
-letter-spacing: 0.5px;
-}
-
-.ttra-slots-section {
-    margin-top: 16px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.ttra-slots-label {
-    color: var(--Azul-01-XPERIENCE, #213975);
-
-/* Desktop Text/Cat. 04 XPERIENCE (Desktop) */
-font-family: "Genos";
-font-size: 25px;
-font-style: italic;
-font-weight: 700;
-line-height: 80%; /* 24px */
-text-transform: uppercase;
-}
-
-.ttra-select--slots {
-    flex: 1;
+    color: var(--Negro-XPERIENCE, #242422);
+    text-align: center;
+    font-family: "Montserrat";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 70%;
+    letter-spacing: 0.5px;
 }
 
 /* ═══════════════════════════════════════
@@ -889,6 +936,8 @@ text-transform: uppercase;
     font-size: 16px;
     font-weight: 600;
     line-height: 22px;
+    display: block;
+    margin-bottom: 6px;
 }
 
 .ttra-form__field input,
@@ -900,6 +949,18 @@ text-transform: uppercase;
     font-size: 14px;
     color: var(--ttra-gray-800);
     transition: border-color var(--ttra-transition);
+    font-family: "Montserrat", sans-serif;
+    font-weight: 500;
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #fff;
+}
+
+.ttra-form__field select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9' fill='none'%3E%3Cpath d='M1 1L7 7L13 1' stroke='%23213975' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
 }
 
 .ttra-form__field input:focus,
@@ -912,10 +973,16 @@ text-transform: uppercase;
     border-color: var(--ttra-error) !important;
 }
 
+/* Grupo de fecha de nacimiento */
 .ttra-form__date-group {
     display: grid;
-    grid-template-columns: 70px 1fr 90px;
+    grid-template-columns: 80px 1fr 90px;
     gap: 8px;
+}
+
+.ttra-form__date-group select {
+    padding: 12px 32px 12px 12px;
+    background-position: right 10px center;
 }
 
 @media (max-width: 600px) {
@@ -981,7 +1048,6 @@ text-transform: uppercase;
     line-height: 22px;
 }
 
-/* Radio personalizado */
 .ttra-payment-option input[type="radio"] {
     appearance: none;
     -webkit-appearance: none;
@@ -1084,7 +1150,6 @@ text-transform: uppercase;
     color: #213975;
 }
 
-/* Trust badges */
 .ttra-trust-badges {
     display: flex;
     flex-direction: column;

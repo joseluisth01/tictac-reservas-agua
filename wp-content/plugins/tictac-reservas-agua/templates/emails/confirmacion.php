@@ -13,7 +13,7 @@ $logo_url       = plugins_url( 'assets/images/logo.png', TTRA_PLUGIN_DIR . 'tict
 $logo_url       = wp_get_attachment_image_url( (int) TTRA_Settings::get('logo_id', 0), 'medium' );
 if ( ! $logo_url ) {
     // Logo hardcodeado relativo al dominio actual (no depende de la URL del servidor)
-    $logo_url = home_url( '/wp-content/uploads/2026/04/Vector.png' );
+    $logo_url = home_url( '/wp-content/uploads/2026/04/cropped-Vector-1.png' );
 }
 
 $subtotal   = floatval( $reserva->subtotal );
