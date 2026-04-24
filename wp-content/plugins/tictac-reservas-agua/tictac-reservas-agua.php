@@ -2,7 +2,7 @@
 /**
  * Plugin Name: TicTac Reservas Agua
  * Plugin URI: https://tictaccomunicacion.com
- * Description: Sistema completo de reservas para actividades acuáticas con calendario, pasarela de pago Redsys, notificaciones por correo y panel de administración.
+ * Description: Sistema completo de reservas para actividadees acuáticas con calendario, pasarela de pago Redsys, notificaciones por correo y panel de administración.
  * Version: 1.0.0
  * Author: TicTac Comunicación
  * Author URI: https://tictaccomunicacion.com

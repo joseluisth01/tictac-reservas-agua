@@ -679,14 +679,28 @@
                     if (btn) { btn.disabled = false; btn.textContent = ttra_config.i18n.finalizar; }
                     return;
                 }
-                try {
-                    await this.api('pago/test-confirm', {
-                        method: 'POST',
-                        body: JSON.stringify({ codigo_reserva: result.codigo_reserva, metodo_pago: this.state.paymentMethod }),
-                    });
-                } catch (e) { console.warn('test-confirm error:', e); }
+                // FLUJO REAL REDSYS
+                const pagoData = await this.api('pago/iniciar', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        codigo_reserva: result.codigo_reserva,
+                        metodo_pago: this.state.paymentMethod,
+                    }),
+                });
 
-                this.showThankYou(result.codigo_reserva, formData.nombre, formData.email, this.state.total);
+                if (!pagoData || pagoData.code) {
+                    alert('Error al iniciar el pago. Por favor inténtalo de nuevo.');
+                    if (btn) { btn.disabled = false; btn.textContent = ttra_config.i18n.finalizar; }
+                    return;
+                }
+
+                // Rellenar y enviar el formulario oculto hacia el TPV de Redsys
+                const redsysForm = document.getElementById('ttra-redsys-form');
+                redsysForm.action = pagoData.url;
+                redsysForm.querySelector('[name="Ds_SignatureVersion"]').value = pagoData.Ds_SignatureVersion;
+                redsysForm.querySelector('[name="Ds_MerchantParameters"]').value = pagoData.Ds_MerchantParameters;
+                redsysForm.querySelector('[name="Ds_Signature"]').value = pagoData.Ds_Signature;
+                redsysForm.submit();
             } catch (error) {
                 console.error(error);
                 alert('Ha ocurrido un error. Por favor, inténtalo de nuevo.');
