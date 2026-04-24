@@ -118,7 +118,7 @@
 
       // Cerrar menú al hacer clic fuera
       document.addEventListener('click', function(e) {
-        if (window.innerWidth <= 1100) {
+        if (window.innerWidth <= 1450) {
           if (!e.target.closest('#header')) {
             if (navWrapper && navWrapper.classList.contains('active')) {
               toggle.classList.remove('active');
@@ -131,7 +131,7 @@
       });
 
       // Cerrar menú al hacer clic en un enlace de submenú (mobile)
-      if (window.innerWidth <= 1100) {
+      if (window.innerWidth <= 1450) {
         const menuLinks = document.querySelectorAll('.header-nav-wrapper .sub-menu a');
         menuLinks.forEach(link => {
           link.addEventListener('click', function() {
@@ -148,7 +148,7 @@
       window.addEventListener('resize', function() {
         clearTimeout(resizeTimer);
         resizeTimer = setTimeout(function() {
-          if (window.innerWidth > 1100) {
+          if (window.innerWidth > 1450) {
             toggle.classList.remove('active');
             navWrapper.classList.remove('active');
             header.classList.remove('menu-active');
@@ -186,7 +186,7 @@
         panel.style.right = (window.innerWidth - headerRect.right) + 'px';
         panel.style.borderRadius = '0 0 ' + getComputedStyle(header).borderRadius.split(' ')[0] + ' ' + getComputedStyle(header).borderRadius.split(' ')[0];
 
-        const contentLeft = itemRect.left - headerRect.left;
+        const contentLeft = (itemRect.left - headerRect.left) * 0.5; 
         panelContent.innerHTML = '';
         panelContent.style.paddingLeft = contentLeft + 'px';
 
@@ -207,7 +207,7 @@
         closeSubmenuPanel();
       });
 
-      if (window.innerWidth > 1100) {
+      if (window.innerWidth > 1450) {
         const menuItemsWithChildren = document.querySelectorAll('.main-nav .main-menu > li.menu-item-has-children');
 
         menuItemsWithChildren.forEach(function(menuItem) {
@@ -241,7 +241,7 @@
   </script>
 
   <style>
-    @media (max-width: 1100px) {
+    @media (max-width: 1450px) {
       #submenu-panel {
         display: none !important;
       }

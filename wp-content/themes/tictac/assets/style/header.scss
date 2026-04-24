@@ -423,11 +423,15 @@ body {
 }
 
 /* ===================================
-   RESPONSIVE - MOBILE (MAX 1100px)
+   RESPONSIVE - MOBILE (MAX 1450px)
    =================================== */
-@media (max-width: 1100px) {
+@media (max-width: 1520px) {
     .desktop-only {
         display: none !important;
+    }
+
+     .bloquehero-col-izq {
+        width: 100% !important;
     }
 
     .mobile-only {

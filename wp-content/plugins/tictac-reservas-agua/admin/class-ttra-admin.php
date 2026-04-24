@@ -49,6 +49,16 @@ class TTRA_Admin {
             array( $this, 'page_reservas' )
         );
 
+        // Calendario
+        add_submenu_page(
+            'ttra-dashboard',
+            __( 'Calendario', 'tictac-reservas-agua' ),
+            __( 'Calendario', 'tictac-reservas-agua' ),
+            'manage_options',
+            'ttra-calendario',
+            array( $this, 'page_calendario' )
+        );
+
         // Categorías
         add_submenu_page(
             'ttra-dashboard',
@@ -134,6 +144,14 @@ class TTRA_Admin {
             TTRA_VERSION
         );
 
+        // CSS extra del calendario
+        wp_enqueue_style(
+            'ttra-calendario-css',
+            TTRA_PLUGIN_URL . 'admin/css/calendario.css',
+            array( 'ttra-admin-css' ),
+            TTRA_VERSION
+        );
+
         wp_enqueue_script(
             'ttra-admin-js',
             TTRA_PLUGIN_URL . 'admin/js/admin.js',
@@ -143,9 +161,9 @@ class TTRA_Admin {
         );
 
         wp_localize_script( 'ttra-admin-js', 'ttra_admin', array(
-            'ajax_url'  => admin_url( 'admin-ajax.php' ),
-            'rest_url'  => rest_url( 'ttra/v1/' ),
-            'nonce'     => wp_create_nonce( 'ttra_admin_nonce' ),
+            'ajax_url'   => admin_url( 'admin-ajax.php' ),
+            'rest_url'   => rest_url( 'ttra/v1/' ),
+            'nonce'      => wp_create_nonce( 'ttra_admin_nonce' ),
             'rest_nonce' => wp_create_nonce( 'wp_rest' ),
         ) );
 
@@ -213,7 +231,7 @@ class TTRA_Admin {
     }
 
     public function page_reservas() {
-        $args     = array(
+        $args = array(
             'estado'      => sanitize_text_field( $_GET['estado'] ?? '' ),
             'buscar'      => sanitize_text_field( $_GET['buscar'] ?? '' ),
             'fecha_desde' => sanitize_text_field( $_GET['fecha_desde'] ?? '' ),
@@ -232,6 +250,10 @@ class TTRA_Admin {
         }
 
         include TTRA_PLUGIN_DIR . 'admin/views/reservas.php';
+    }
+
+    public function page_calendario() {
+        include TTRA_PLUGIN_DIR . 'admin/views/calendario.php';
     }
 
     public function page_categorias() {
@@ -254,15 +276,15 @@ class TTRA_Admin {
     }
 
     public function page_horarios() {
-        $actividades = TTRA_Actividad::get_all();
+        $actividades  = TTRA_Actividad::get_all();
         $actividad_id = intval( $_GET['actividad_id'] ?? 0 );
-        $horarios = $actividad_id ? TTRA_Horario::get_by_actividad( $actividad_id ) : array();
+        $horarios     = $actividad_id ? TTRA_Horario::get_by_actividad( $actividad_id ) : array();
         include TTRA_PLUGIN_DIR . 'admin/views/horarios.php';
     }
 
     public function page_bloqueos() {
         $actividades = TTRA_Actividad::get_all();
-        $bloqueos = TTRA_DB::get_all( 'bloqueos', '', 'fecha', 'ASC' );
+        $bloqueos    = TTRA_DB::get_all( 'bloqueos', '', 'fecha', 'ASC' );
         include TTRA_PLUGIN_DIR . 'admin/views/bloqueos.php';
     }
 
@@ -289,7 +311,7 @@ class TTRA_Admin {
 
     public function page_ajustes() {
         $settings = TTRA_Settings::get_all();
-        $tab = sanitize_text_field( $_GET['tab'] ?? 'general' );
+        $tab      = sanitize_text_field( $_GET['tab'] ?? 'general' );
         include TTRA_PLUGIN_DIR . 'admin/views/ajustes.php';
     }
 
@@ -298,61 +320,60 @@ class TTRA_Admin {
        ══════════════════════════════════════════ */
 
     private function save_settings() {
-    $settings_actuales = get_option( 'ttra_settings', array() );
- 
-    // Settings que llegan en el POST del tab actual
-    $fields = $_POST['ttra_settings'] ?? array();
- 
-    // Empezamos con los settings actuales y los sobrescribimos con los del POST
-    $settings = $settings_actuales;
- 
-    foreach ( $fields as $key => $value ) {
-        $settings[ sanitize_key( $key ) ] = sanitize_text_field( $value );
-    }
- 
-    // Checkboxes por tab: los que NO lleguen en el POST se ponen a 0
-    // Solo afecta al tab que se está guardando (ttra_tab_actual)
-    $tab_actual = sanitize_text_field( $_POST['ttra_tab_actual'] ?? '' );
- 
-    $checkboxes_por_tab = array(
-        'general'    => array(),
-        'reservas'   => array( 'confirmacion_auto' ),
-        'redsys'     => array(),
-        'emails'     => array(
-            'email_confirmacion', 'email_recordatorio',
-            'email_cancelacion', 'email_admin_nueva',
-        ),
-        'apariencia' => array(
-            'mostrar_cancelacion_gratuita', 'mostrar_pago_seguro',
-            'mostrar_sin_fianza', 'mostrar_equipo_seguridad',
-        ),
-        'pagos'      => array(
-            'pago_tarjeta', 'pago_bizum', 'pago_google_pay', 'pago_apple_pay',
-        ),
-    );
- 
-    // Si sabemos qué tab se guardó, ponemos a 0 los checkboxes no enviados de ese tab
-    if ( $tab_actual && isset( $checkboxes_por_tab[ $tab_actual ] ) ) {
-        foreach ( $checkboxes_por_tab[ $tab_actual ] as $cb ) {
-            // Si el checkbox no llegó en el POST → no está marcado → valor = 0
-            $settings[ $cb ] = isset( $fields[ $cb ] ) ? 1 : 0;
+        $settings_actuales = get_option( 'ttra_settings', array() );
+
+        // Settings que llegan en el POST del tab actual
+        $fields = $_POST['ttra_settings'] ?? array();
+
+        // Empezamos con los settings actuales y los sobrescribimos con los del POST
+        $settings = $settings_actuales;
+
+        foreach ( $fields as $key => $value ) {
+            $settings[ sanitize_key( $key ) ] = sanitize_text_field( $value );
         }
+
+        // Checkboxes por tab: los que NO lleguen en el POST se ponen a 0
+        // Solo afecta al tab que se está guardando (ttra_tab_actual)
+        $tab_actual = sanitize_text_field( $_POST['ttra_tab_actual'] ?? '' );
+
+        $checkboxes_por_tab = array(
+            'general'    => array(),
+            'reservas'   => array( 'confirmacion_auto' ),
+            'redsys'     => array(),
+            'emails'     => array(
+                'email_confirmacion', 'email_recordatorio',
+                'email_cancelacion', 'email_admin_nueva',
+            ),
+            'apariencia' => array(
+                'mostrar_cancelacion_gratuita', 'mostrar_pago_seguro',
+                'mostrar_sin_fianza', 'mostrar_equipo_seguridad',
+            ),
+            'pagos'      => array(
+                'pago_tarjeta', 'pago_bizum', 'pago_google_pay', 'pago_apple_pay',
+            ),
+        );
+
+        // Si sabemos qué tab se guardó, ponemos a 0 los checkboxes no enviados de ese tab
+        if ( $tab_actual && isset( $checkboxes_por_tab[ $tab_actual ] ) ) {
+            foreach ( $checkboxes_por_tab[ $tab_actual ] as $cb ) {
+                $settings[ $cb ] = isset( $fields[ $cb ] ) ? 1 : 0;
+            }
+        }
+
+        TTRA_Settings::save_all( $settings );
+        wp_redirect( add_query_arg( 'msg', 'saved', wp_get_referer() ) );
+        exit;
     }
- 
-    TTRA_Settings::save_all( $settings );
-    wp_redirect( add_query_arg( 'msg', 'saved', wp_get_referer() ) );
-    exit;
-}
 
     private function save_categoria() {
         $id   = intval( $_POST['categoria_id'] ?? 0 );
         $data = array(
-            'nombre'     => sanitize_text_field( $_POST['nombre'] ),
-            'slug'       => sanitize_title( $_POST['slug'] ?: $_POST['nombre'] ),
+            'nombre'      => sanitize_text_field( $_POST['nombre'] ),
+            'slug'        => sanitize_title( $_POST['slug'] ?: $_POST['nombre'] ),
             'descripcion' => sanitize_textarea_field( $_POST['descripcion'] ?? '' ),
-            'icono'      => sanitize_text_field( $_POST['icono'] ?? '' ),
-            'orden'      => intval( $_POST['orden'] ?? 0 ),
-            'activa'     => isset( $_POST['activa'] ) ? 1 : 0,
+            'icono'       => sanitize_text_field( $_POST['icono'] ?? '' ),
+            'orden'       => intval( $_POST['orden'] ?? 0 ),
+            'activa'      => isset( $_POST['activa'] ) ? 1 : 0,
         );
 
         if ( $id ) {
@@ -375,44 +396,43 @@ class TTRA_Admin {
     private function save_actividad() {
         $id   = intval( $_POST['actividad_id'] ?? 0 );
         $data = array(
-            'categoria_id'          => intval( $_POST['categoria_id'] ),
-            'nombre'                => sanitize_text_field( $_POST['nombre'] ),
-            'slug'                  => sanitize_title( $_POST['slug'] ?: $_POST['nombre'] ),
-            'subtipo'               => sanitize_text_field( $_POST['subtipo'] ?? '' ),
-            'descripcion'           => sanitize_textarea_field( $_POST['descripcion'] ?? '' ),
-            'duracion_minutos'      => intval( $_POST['duracion_minutos'] ),
-            'precio_base'           => floatval( $_POST['precio_base'] ),
-            'precio_tipo'           => sanitize_text_field( $_POST['precio_tipo'] ?? 'fijo' ),
- 
-            // ── NUEVO: precio adicional por persona ──────────────────────
-            // Guardamos NULL si el campo llega vacío para no afectar al cálculo
-            'precio_pax'            => ( isset( $_POST['precio_pax'] ) && $_POST['precio_pax'] !== '' )
-                                        ? floatval( $_POST['precio_pax'] )
-                                        : null,
- 
-            'min_personas'          => intval( $_POST['min_personas'] ?? 1 ),
-            'max_personas'          => intval( $_POST['max_personas'] ?? 10 ),
-            'max_sesiones'          => intval( $_POST['max_sesiones'] ?? 5 ),
-            'imagen_id'             => intval( $_POST['imagen_id'] ?? 0 ),
-            'icono'                 => sanitize_text_field( $_POST['icono'] ?? '' ),
- 
-            // ── NUEVO: premium ───────────────────────────────────────────
-            'premium'               => isset( $_POST['premium'] ) ? 1 : 0,
- 
-            'requiere_equipo'       => isset( $_POST['requiere_equipo'] ) ? 1 : 0,
-            'cancelacion_gratuita'  => isset( $_POST['cancelacion_gratuita'] ) ? 1 : 0,
-            'requiere_fianza'       => isset( $_POST['requiere_fianza'] ) ? 1 : 0,
-            'importe_fianza'        => floatval( $_POST['importe_fianza'] ?? 0 ),
-            'orden'                 => intval( $_POST['orden'] ?? 0 ),
-            'activa'                => isset( $_POST['activa'] ) ? 1 : 0,
+            'categoria_id'         => intval( $_POST['categoria_id'] ),
+            'nombre'               => sanitize_text_field( $_POST['nombre'] ),
+            'slug'                 => sanitize_title( $_POST['slug'] ?: $_POST['nombre'] ),
+            'subtipo'              => sanitize_text_field( $_POST['subtipo'] ?? '' ),
+            'descripcion'          => sanitize_textarea_field( $_POST['descripcion'] ?? '' ),
+            'duracion_minutos'     => intval( $_POST['duracion_minutos'] ),
+            'precio_base'          => floatval( $_POST['precio_base'] ),
+            'precio_tipo'          => sanitize_text_field( $_POST['precio_tipo'] ?? 'fijo' ),
+
+            // Precio adicional por persona
+            'precio_pax'           => ( isset( $_POST['precio_pax'] ) && $_POST['precio_pax'] !== '' )
+                                       ? floatval( $_POST['precio_pax'] )
+                                       : null,
+
+            'min_personas'         => intval( $_POST['min_personas'] ?? 1 ),
+            'max_personas'         => intval( $_POST['max_personas'] ?? 10 ),
+            'max_sesiones'         => intval( $_POST['max_sesiones'] ?? 5 ),
+            'imagen_id'            => intval( $_POST['imagen_id'] ?? 0 ),
+            'icono'                => sanitize_text_field( $_POST['icono'] ?? '' ),
+
+            // Premium
+            'premium'              => isset( $_POST['premium'] ) ? 1 : 0,
+
+            'requiere_equipo'      => isset( $_POST['requiere_equipo'] ) ? 1 : 0,
+            'cancelacion_gratuita' => isset( $_POST['cancelacion_gratuita'] ) ? 1 : 0,
+            'requiere_fianza'      => isset( $_POST['requiere_fianza'] ) ? 1 : 0,
+            'importe_fianza'       => floatval( $_POST['importe_fianza'] ?? 0 ),
+            'orden'                => intval( $_POST['orden'] ?? 0 ),
+            'activa'               => isset( $_POST['activa'] ) ? 1 : 0,
         );
- 
+
         if ( $id ) {
             TTRA_Actividad::update( $id, $data );
         } else {
             TTRA_Actividad::create( $data );
         }
- 
+
         wp_redirect( admin_url( 'admin.php?page=ttra-actividades&msg=saved' ) );
         exit;
     }
@@ -427,22 +447,19 @@ class TTRA_Admin {
 
     private function save_horario() {
         $actividad_id = intval( $_POST['actividad_id'] );
- 
+
         // Borrar todos los horarios existentes de esta actividad
         TTRA_Horario::delete_by_actividad( $actividad_id );
- 
+
         $horarios = $_POST['horarios'] ?? array();
- 
+
         foreach ( $horarios as $h ) {
-            // Validación básica
             if ( empty( $h['hora_inicio'] ) || empty( $h['hora_fin'] ) ) continue;
- 
-            // Días seleccionados para esta franja (array de valores 0-6)
+
             $dias = isset( $h['dias'] ) ? (array) $h['dias'] : array();
- 
-            if ( empty( $dias ) ) continue; // franja sin días → ignorar
- 
-            // Crear UN REGISTRO POR DÍA
+            if ( empty( $dias ) ) continue;
+
+            // Crear un registro por día
             foreach ( $dias as $dia ) {
                 TTRA_Horario::create( array(
                     'actividad_id'      => $actividad_id,
@@ -455,7 +472,7 @@ class TTRA_Admin {
                 ) );
             }
         }
- 
+
         wp_redirect( admin_url( 'admin.php?page=ttra-horarios&actividad_id=' . $actividad_id . '&msg=saved' ) );
         exit;
     }

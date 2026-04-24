@@ -121,6 +121,8 @@
     .ttra-stepper {
         flex-wrap: wrap;
         gap: 6px;
+        padding: 0px;
+        top: 90px;
     }
 
     .ttra-stepper__step {
@@ -135,7 +137,7 @@
     }
 
     .ttra-stepper__label {
-        font-size: 13px;
+        font-size: 16px;
     }
 }
 
@@ -158,12 +160,13 @@
 @media (max-width: 960px) {
     .ttra-layout {
         grid-template-columns: 1fr;
+        margin-top: 115px;
     }
 
     .ttra-layout__sidebar {
         position: static;
         top: auto;
-        order: -1;
+
     }
 }
 
@@ -242,7 +245,8 @@
 }
 
 .ttra-btn--primary {
-    background: var(--ttra-accent);
+    background: #ff5e00;
+    background-color: #ff5e00;
     color: white;
     box-shadow: 0 2.5px 5px 0 rgba(36, 36, 34, 0.60);
     font-family: "Montserrat";
@@ -250,10 +254,13 @@
     font-weight: 800;
     line-height: 20px;
     letter-spacing: 1px;
+    transition: all .3s ease;
 }
 
 .ttra-btn--primary:hover:not(:disabled) {
     transform: translateY(-1px);
+    background: #27A5DE;
+    background-color: #27A5DE;
 }
 
 .ttra-btn--primary:disabled {
@@ -382,6 +389,7 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
 }
 
 .ttra-slots-label {
@@ -643,7 +651,7 @@
     text-transform: uppercase;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 850px) {
     .ttra-activity-card {
         flex-wrap: wrap;
         padding: 16px;
@@ -659,6 +667,10 @@
 
     .ttra-activity-card__pax {
         margin-left: 0;
+    }
+
+    .ttra-step__actions {
+        flex-direction: column;
     }
 }
 
@@ -746,6 +758,17 @@
     .ttra-include-panel {
         padding: 10px 16px;
         gap: 6px 12px;
+        padding-top: 50px;
+        justify-content: center;
+    }
+
+    .ttra-activity-card_right{
+        gap: 10px !important;
+    }
+
+    .ttra-activity-card__duration{
+        width: 100%;
+        margin-top: 15px;
     }
 }
 
@@ -1116,12 +1139,26 @@
     font-family: "Montserrat";
 }
 
+.ttra-summary__item-header span:last-child {
+    color: var(--Azul-01-XPERIENCE, #213975);
+    text-align: right;
+
+    /* Mobile Text/Cat. 04 XPERIENCE (Mobile) */
+    font-family: "Genos";
+    font-size: 22px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 70%;
+    /* 15.4px */
+
+}
+
 .ttra-summary__item-detail {
     display: flex;
     justify-content: space-between;
     font-size: 14px;
     color: black;
-    padding: 2px 0;
+    padding: 4px 0;
     font-weight: 500;
 }
 
@@ -1185,6 +1222,7 @@
 .garantias__item {
     flex: 1;
     display: flex;
+    height: 250px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -1223,7 +1261,7 @@
     line-height: 80%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
     .garantias {
         flex-wrap: wrap;
         gap: 12px;
@@ -1231,6 +1269,10 @@
 
     .garantias__item {
         flex: 1 1 calc(50% - 12px);
+    }
+
+    .ttra-categories {
+        flex-wrap: wrap !important;
     }
 }
 
